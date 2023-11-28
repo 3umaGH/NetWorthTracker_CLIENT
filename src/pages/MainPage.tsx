@@ -10,16 +10,23 @@ export const MainPage = () => {
   return (
     <Box sx={{ backgroundColor: "" }}>
       <Grid container rowSpacing={6} columnSpacing={0.25}>
-        <Grid item xs={12} md={4}>
+        <Grid item xs={12} md={3}>
           <Container maxWidth={false} disableGutters sx={{ height: "45vh" }}>
             <CellTitle title="Asset Allocation" />
 
-            <Box sx={{ width: "90%", height: "90%", p: 4 }}>
+            <Box
+              sx={{
+                width: "100%",
+                height: "100%",
+                m:"auto",
+                ml:6
+              }}
+            >
               <AssetAllocationChart />
             </Box>
           </Container>
         </Grid>
-        <Grid item xs={12} md={8}>
+        <Grid item xs={12} md={9}>
           <Container maxWidth={false} disableGutters sx={{ height: "45vh" }}>
             <CellTitle title="Snapshots" />
             <NetWorthSnapshotTable />
