@@ -3,6 +3,7 @@ import { PieChart, pieArcLabelClasses } from "@mui/x-charts/PieChart";
 export const AssetAllocationChart = () => {
   return (
     <PieChart
+      slotProps={{ legend: { hidden: true } }}
       colors={["#f0851a", "#39e355", "#3958e3"]}
       series={[
         {
