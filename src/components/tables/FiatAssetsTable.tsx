@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
 import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
-import { positiveColor } from "../../constants";
+import { fiatColor, textColor } from "../../constants";
 import { formatCurrency } from "../../util";
 import { TableActions } from "./TableActions";
 
@@ -59,7 +59,7 @@ export const FiatAssetsTable = () => {
         return (
           <Box
             sx={{
-              color: "#575757",
+              color: textColor,
               fontWeight: "200",
             }}
           >
@@ -70,7 +70,7 @@ export const FiatAssetsTable = () => {
         return (
           <Box
             sx={{
-              color: positiveColor,
+              color: fiatColor,
               fontWeight: "500",
             }}
           >
@@ -81,7 +81,7 @@ export const FiatAssetsTable = () => {
         return (
           <Box
             sx={{
-              color: "#575757",
+              color: textColor,
               fontWeight: "500",
             }}
           >

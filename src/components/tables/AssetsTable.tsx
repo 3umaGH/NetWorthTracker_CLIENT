@@ -2,7 +2,12 @@ import { Box } from "@mui/material";
 import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import { TableActions } from "./TableActions";
 import { formatCurrency, getColor } from "../../util";
-import { positiveColor } from "../../constants";
+import {
+  cryptoColor,
+  positiveColor,
+  stockColor,
+  textColor,
+} from "../../constants";
 
 export const AssetsTable = () => {
   const rows = [
@@ -173,7 +178,7 @@ export const AssetsTable = () => {
         return (
           <Box
             sx={{
-              color: "#575757",
+              color: textColor,
               fontWeight: "200",
             }}
           >
@@ -184,7 +189,7 @@ export const AssetsTable = () => {
         return (
           <Box
             sx={{
-              color: "#575757",
+              color: textColor,
               fontWeight: "700",
             }}
           >
@@ -195,7 +200,7 @@ export const AssetsTable = () => {
         return (
           <Box
             sx={{
-              color: value === "Crypto" ? "#f0851a" : "#3958e3",
+              color: value === "Crypto" ? cryptoColor : stockColor,
               fontWeight: "600",
             }}
           >
@@ -206,7 +211,7 @@ export const AssetsTable = () => {
         return (
           <Box
             sx={{
-              color: "#575757",
+              color: textColor,
               fontWeight: "200",
             }}
           >

@@ -1,6 +1,11 @@
 import { Box } from "@mui/material";
 import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
-import { currencySymbol } from "../../constants";
+import {
+  conversionColor,
+  cryptoColor,
+  currencySymbol,
+  textColor,
+} from "../../constants";
 import {
   formatBTC,
   formatCurrency,
@@ -209,7 +214,7 @@ export const NetWorthSnapshotTable = () => {
         return (
           <Box
             sx={{
-              color: "#575757",
+              color: textColor,
               fontWeight: "200",
             }}
           >
@@ -220,7 +225,7 @@ export const NetWorthSnapshotTable = () => {
         return (
           <Box
             sx={{
-              color: "#575757",
+              color: textColor,
               fontWeight: "500",
             }}
           >
@@ -231,7 +236,7 @@ export const NetWorthSnapshotTable = () => {
         return (
           <Box
             sx={{
-              color: "#f57e0f",
+              color: cryptoColor,
               fontWeight: "500",
             }}
           >
@@ -243,7 +248,7 @@ export const NetWorthSnapshotTable = () => {
         return (
           <Box
             sx={{
-              color: "#2aa5b0",
+              color: conversionColor,
               fontWeight: "500",
             }}
           >
@@ -285,7 +290,7 @@ export const NetWorthSnapshotTable = () => {
         return (
           <Box
             sx={{
-              color: "#f57e0f",
+              color: cryptoColor,
               fontWeight: "500",
             }}
           >

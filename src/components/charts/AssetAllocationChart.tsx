@@ -1,10 +1,11 @@
 import { PieChart, pieArcLabelClasses } from "@mui/x-charts/PieChart";
+import { cryptoColor, positiveColor, stockColor } from "../../constants";
 
 export const AssetAllocationChart = () => {
   return (
     <PieChart
       slotProps={{ legend: { hidden: true } }}
-      colors={["#f0851a", "#39e355", "#3958e3"]}
+      colors={[cryptoColor, positiveColor, stockColor]}
       series={[
         {
           innerRadius: 68,
@@ -27,7 +28,7 @@ export const AssetAllocationChart = () => {
         [`& .${pieArcLabelClasses.root}`]: {
           fill: "white",
           fontFamily: "roboto",
-          fontWeight: 400,
+          fontWeight: 600,
         },
       }}
     />

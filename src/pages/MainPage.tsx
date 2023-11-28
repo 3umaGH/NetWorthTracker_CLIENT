@@ -8,7 +8,7 @@ import { BalanceFooter } from "../components/BalanceFooter";
 
 export const MainPage = () => {
   return (
-    <Box sx={{ backgroundColor: "" }}>
+    <Box>
       <Grid container rowSpacing={6} columnSpacing={0.25}>
         <Grid item xs={12} md={3}>
           <Container maxWidth={false} disableGutters sx={{ height: "45vh" }}>
