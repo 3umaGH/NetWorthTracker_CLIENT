@@ -210,23 +210,12 @@ export const NetWorthSnapshotTable = () => {
     const { field, value } = params;
 
     switch (field) {
-      case "note":
-        return (
-          <Box
-            sx={{
-              color: textColor,
-              fontWeight: "200",
-            }}
-          >
-            {value}
-          </Box>
-        );
       case "dateTime":
         return (
           <Box
             sx={{
               color: textColor,
-              fontWeight: "500",
+              fontWeight: "300",
             }}
           >
             {formatTimeMillis(value)}
@@ -295,6 +284,17 @@ export const NetWorthSnapshotTable = () => {
             }}
           >
             {formatBTC(value)}
+          </Box>
+        );
+      case "note":
+        return (
+          <Box
+            sx={{
+              color: textColor,
+              fontWeight: "200",
+            }}
+          >
+            {value}
           </Box>
         );
       case "actions":

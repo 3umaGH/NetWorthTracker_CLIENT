@@ -1,13 +1,11 @@
 export const currencySymbol = "$";
 
-export const positiveColor = "#1ec912";
-export const negativeColor = "#e00211";
+export const positiveColor = "#4CAF50";
+export const negativeColor = "#FF3D00";
 
-export const textColor = "#ededed";
+export const textColor = "#FFFFFF";
 
-
-export const stockColor = "#5145ff";
-export const fiatColor = "#a9db4d";
-export const cryptoColor = "#f09a07";
-
-export const conversionColor= "#10877b";
+export const stockColor = "#7986CB";
+export const fiatColor = "#8BC34A";
+export const cryptoColor = "#FFC107"; 
+export const conversionColor = "#1b78c4";
