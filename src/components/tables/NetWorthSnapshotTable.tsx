@@ -193,7 +193,7 @@ export const NetWorthSnapshotTable = () => {
     },
     {
       field: "actions",
-      headerName: "",
+      headerName: "Actions",
       flex: 0.07,
 
       align: "center",

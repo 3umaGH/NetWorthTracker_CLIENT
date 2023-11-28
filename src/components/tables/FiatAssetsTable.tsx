@@ -43,7 +43,7 @@ export const FiatAssetsTable = () => {
     },
     {
       field: "actions",
-      headerName: "",
+      headerName: "Actions",
       flex: 0.2,
 
       align: "center",
