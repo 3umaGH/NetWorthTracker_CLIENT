@@ -1,113 +1,117 @@
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { Box } from "@mui/material";
+import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
+import { TableActions } from "./TableActions";
+import { formatCurrency, getColor } from "../../util";
+import { positiveColor } from "../../constants";
 
 export const AssetsTable = () => {
   const rows = [
     {
       id: 1,
-      description: "My secret stash of bitcoins",
+      note: "Bitcoin Investment",
       ticker: "BTC",
       type: "Crypto",
-      amount: "15.06598",
-      lastPrice: "696969.69",
-      change: "-1584",
-      totalPrice: "10,454,535",
+      amount: 100,
+      lastPrice: 100000,
+      change: -10,
+      totalPrice: 10000000,
     },
     {
       id: 2,
-      description: "My SP500",
-      ticker: "SP500:NSQ",
-      type: "Stocks",
-      amount: "1337",
-      lastPrice: "4250",
-      change: "1584",
-      totalPrice: "100,874",
+      note: "Amazon Inc.",
+      ticker: "AMZN",
+      type: "Stock",
+      amount: 500,
+      lastPrice: 5500.75,
+      change: 20,
+      totalPrice: 2750375,
     },
     {
       id: 3,
-      description: "Ethereum investment",
+      note: "Ethereum Holdings",
       ticker: "ETH",
       type: "Crypto",
-      amount: "8.257",
-      lastPrice: "3500",
-      change: "-1584",
-      totalPrice: "28,954",
+      amount: 300,
+      lastPrice: 4800,
+      change: 15,
+      totalPrice: 1440000,
     },
     {
       id: 4,
-      description: "Tech company stocks",
-      ticker: "AAPL",
-      type: "Stocks",
-      amount: "20",
-      lastPrice: "150",
-      change: "1584",
-      totalPrice: "3,000",
+      note: "Microsoft Corporation",
+      ticker: "MSFT",
+      type: "Stock",
+      amount: 1000,
+      lastPrice: 400.5,
+      change: -8,
+      totalPrice: 400500,
     },
     {
       id: 5,
-      description: "Gold bars",
-      ticker: "XAU",
-      type: "Commodities",
-      amount: "5",
-      lastPrice: "1800",
-      change: "-1584",
-      totalPrice: "9,000",
+      note: "Litecoin Investment",
+      ticker: "LTC",
+      type: "Crypto",
+      amount: 500,
+      lastPrice: 450,
+      change: 30,
+      totalPrice: 225000,
     },
     {
       id: 6,
-      description: "Real estate property",
-      ticker: "RE:NYC",
-      type: "Real Estate",
-      amount: "1",
-      lastPrice: "1,200,000",
-      change: "1584",
-      totalPrice: "1,200,000",
+      note: "Google Alphabet Inc.",
+      ticker: "GOOGL",
+      type: "Stock",
+      amount: 200,
+      lastPrice: 4200.25,
+      change: 25,
+      totalPrice: 840050,
     },
     {
       id: 7,
-      description: "Cryptocurrency mining equipment",
-      ticker: "MINER",
-      type: "Equipment",
-      amount: "3",
-      lastPrice: "5000",
-      change: "-1584",
-      totalPrice: "15,000",
+      note: "Ripple XRP Holdings",
+      ticker: "XRP",
+      type: "Crypto",
+      amount: 1000,
+      lastPrice: 5.75,
+      change: 35,
+      totalPrice: 5750,
     },
     {
       id: 8,
-      description: "Government bonds",
-      ticker: "BOND:US",
-      type: "Bonds",
-      amount: "50",
-      lastPrice: "100",
-      change: "1584",
-      totalPrice: "5,000",
+      note: "Facebook Inc.",
+      ticker: "FB",
+      type: "Stock",
+      amount: 300,
+      lastPrice: 600.5,
+      change: 30,
+      totalPrice: 180150,
     },
     {
       id: 9,
-      description: "Solar energy stocks",
-      ticker: "SOLAR",
-      type: "Stocks",
-      amount: "15",
-      lastPrice: "80",
-      change: "-1584",
-      totalPrice: "1,200",
+      note: "Cardano ADA Investment",
+      ticker: "ADA",
+      type: "Crypto",
+      amount: 800,
+      lastPrice: 9.5,
+      change: -5,
+      totalPrice: 7600,
     },
     {
       id: 10,
-      description: "Art collection",
-      ticker: "ART",
-      type: "Collectibles",
-      amount: "7",
-      lastPrice: "5000",
-      change: "1584",
-      totalPrice: "35,000",
+      note: "Tesla Inc.",
+      ticker: "TSLA",
+      type: "Stock",
+      amount: 150,
+      lastPrice: 2000.75,
+      change: 40,
+      totalPrice: 300112.5,
     },
   ];
 
   const columns: GridColDef[] = [
     {
-      field: "description",
-      headerName: "Description",
+      field: "note",
+      headerName: "Note",
       editable: true,
       flex: 0.375,
     },
@@ -144,14 +148,6 @@ export const AssetsTable = () => {
       headerAlign: "center",
     },
     {
-      field: "change",
-      headerName: "Change",
-      flex: 0.05,
-
-      align: "center",
-      headerAlign: "center",
-    },
-    {
       field: "totalPrice",
       headerName: "Total Price",
       flex: 0.125,
@@ -161,7 +157,7 @@ export const AssetsTable = () => {
     },
     {
       field: "actions",
-      headerName: "",
+      headerName: "Actions",
       flex: 0.07,
 
       align: "center",
@@ -169,10 +165,95 @@ export const AssetsTable = () => {
     },
   ];
 
+  const cellRenderer = (params: GridRenderCellParams) => {
+    const { field, value } = params;
+
+    switch (field) {
+      case "note":
+        return (
+          <Box
+            sx={{
+              color: "#575757",
+              fontWeight: "200",
+            }}
+          >
+            {value}
+          </Box>
+        );
+      case "ticker":
+        return (
+          <Box
+            sx={{
+              color: "#575757",
+              fontWeight: "700",
+            }}
+          >
+            {value}
+          </Box>
+        );
+      case "type":
+        return (
+          <Box
+            sx={{
+              color: value === "Crypto" ? "#f0851a" : "#3958e3",
+              fontWeight: "600",
+            }}
+          >
+            {value}
+          </Box>
+        );
+      case "amount":
+        return (
+          <Box
+            sx={{
+              color: "#575757",
+              fontWeight: "200",
+            }}
+          >
+            {`${value.toFixed(8)} ${params.row.ticker}`}
+          </Box>
+        );
+
+      case "lastPrice":
+        return (
+          <Box
+            sx={{
+              color: getColor(params.row.change),
+              fontWeight: "500",
+            }}
+          >
+            {`${formatCurrency(value, "USD")} (${formatCurrency(
+              params.row.change * value,
+              "USD",
+              0
+            )})`}
+          </Box>
+        );
+      case "totalPrice":
+        return (
+          <Box
+            sx={{
+              color: positiveColor,
+              fontWeight: "500",
+            }}
+          >
+            {`${formatCurrency(value, "USD")}`}
+          </Box>
+        );
+      case "actions":
+        return <TableActions />;
+      default:
+        return value;
+    }
+  };
+
   return (
     <DataGrid
       rows={rows}
-      columns={columns}
+      columns={columns.map((column) => ({
+        ...column,
+        renderCell: cellRenderer,
+      }))}
       hideFooter={true}
       disableRowSelectionOnClick
       density={"compact"}
