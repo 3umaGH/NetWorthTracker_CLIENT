@@ -12,8 +12,7 @@ export const formatCurrency = (
   currency: string,
   digits = 0
 ) => {
-  const style = currency === "USD" ? "us-US" : "de-DE";
-  return new Intl.NumberFormat(style, {
+  return new Intl.NumberFormat(undefined, {
     style: "currency",
     currency: currency,
     minimumFractionDigits: digits,
