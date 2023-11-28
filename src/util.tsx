@@ -7,19 +7,15 @@ export const getColor = (inputNum: number) => {
   else if (inputNum < 0) return negativeColor;
 };
 
-export const formatEUR = (inputNum: number, digits = 0) => {
-  return new Intl.NumberFormat("de-DE", {
+export const formatCurrency = (
+  inputNum: number,
+  currency: string,
+  digits = 0
+) => {
+  const style = currency === "USD" ? "us-US" : "de-DE";
+  return new Intl.NumberFormat(style, {
     style: "currency",
-    currency: "EUR",
-    minimumFractionDigits: digits,
-    maximumFractionDigits: digits,
-  }).format(inputNum);
-};
-
-export const formatUSD = (inputNum: number, digits = 0) => {
-  return new Intl.NumberFormat("us-US", {
-    style: "currency",
-    currency: "USD",
+    currency: currency,
     minimumFractionDigits: digits,
     maximumFractionDigits: digits,
   }).format(inputNum);
@@ -32,7 +28,7 @@ export const formatBTC = (inputNum: number, digits = 5) => {
 export const formatTimeMillis = (inputNum: number) => {
   const fullDate = new Date(inputNum);
 
-  return `${fullDate.getFullYear()}-${
+  return `${fullDate.getFullYear()}/${
     fullDate.getMonth() + 1
-  }-${fullDate.getDate()}`;
+  }/${fullDate.getDate()}`;
 };
