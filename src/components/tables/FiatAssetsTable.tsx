@@ -1,4 +1,8 @@
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { Box } from "@mui/material";
+import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
+import { positiveColor } from "../../constants";
+import { formatCurrency } from "../../util";
+import { TableActions } from "./TableActions";
 
 export const FiatAssetsTable = () => {
   const rows = [
@@ -47,10 +51,57 @@ export const FiatAssetsTable = () => {
     },
   ];
 
+  const cellRenderer = (params: GridRenderCellParams) => {
+    const { field, value } = params;
+
+    switch (field) {
+      case "note":
+        return (
+          <Box
+            sx={{
+              color: "#575757",
+              fontWeight: "200",
+            }}
+          >
+            {value}
+          </Box>
+        );
+      case "amount":
+        return (
+          <Box
+            sx={{
+              color: positiveColor,
+              fontWeight: "500",
+            }}
+          >
+            {formatCurrency(value, params.row.currency)}
+          </Box>
+        );
+      case "currency":
+        return (
+          <Box
+            sx={{
+              color: "#575757",
+              fontWeight: "500",
+            }}
+          >
+            {value}
+          </Box>
+        );
+      case "actions":
+        return <TableActions />;
+      default:
+        return value;
+    }
+  };
+
   return (
     <DataGrid
       rows={rows}
-      columns={columns}
+      columns={columns.map((column) => ({
+        ...column,
+        renderCell: cellRenderer,
+      }))}
       hideFooter={true}
       disableRowSelectionOnClick
       density={"compact"}

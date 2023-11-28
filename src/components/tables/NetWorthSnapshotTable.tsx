@@ -1,7 +1,13 @@
 import { Box } from "@mui/material";
 import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import { currencySymbol } from "../../constants";
-import { formatBTC, formatEUR, formatTimeMillis, formatUSD, getColor } from "../../util";
+import {
+  formatBTC,
+  formatCurrency,
+  formatTimeMillis,
+  getColor,
+} from "../../util";
+import { TableActions } from "./TableActions";
 
 export const NetWorthSnapshotTable = () => {
   const rows = [
@@ -198,9 +204,18 @@ export const NetWorthSnapshotTable = () => {
   const cellRenderer = (params: GridRenderCellParams) => {
     const { field, value } = params;
 
-    console.log(params.row);
-
     switch (field) {
+      case "note":
+        return (
+          <Box
+            sx={{
+              color: "#575757",
+              fontWeight: "200",
+            }}
+          >
+            {value}
+          </Box>
+        );
       case "dateTime":
         return (
           <Box
@@ -244,7 +259,11 @@ export const NetWorthSnapshotTable = () => {
               fontWeight: "500",
             }}
           >
-            {`${formatEUR(value)} (${formatEUR(params.row.changeEUR, 0)})`}
+            {`${formatCurrency(value, "EUR")} (${formatCurrency(
+              params.row.changeEUR,
+              "EUR",
+              0
+            )})`}
           </Box>
         );
       case "totalUSD":
@@ -255,7 +274,11 @@ export const NetWorthSnapshotTable = () => {
               fontWeight: "500",
             }}
           >
-            {`${formatUSD(value)} (${formatUSD(params.row.changeUSD, 0)})`}
+            {`${formatCurrency(value, "USD")} (${formatCurrency(
+              params.row.changeUSD,
+              "USD",
+              0
+            )})`}
           </Box>
         );
       case "totalBTC":
@@ -269,6 +292,8 @@ export const NetWorthSnapshotTable = () => {
             {formatBTC(value)}
           </Box>
         );
+      case "actions":
+        return <TableActions />;
       default:
         return value;
     }
