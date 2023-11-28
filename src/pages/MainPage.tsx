@@ -1,98 +1,11 @@
-import { Container, Grid, Box, Typography } from "@mui/material";
+import { Container, Grid, Box, Typography, Divider } from "@mui/material";
 import { PieChart, pieArcLabelClasses } from "@mui/x-charts/PieChart";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
-
-const savedColumns: GridColDef[] = [
-  {
-    field: "dateTime",
-    headerName: "Date & Time",
-    flex: 0.125,
-  },
-  {
-    field: "btcPrice",
-    headerName: "BTC Price",
-    flex: 0.125,
-  },
-  {
-    field: "eurUSD",
-    headerName: "EUR/USD",
-    flex: 0.125,
-  },
-  {
-    field: "totalEUR",
-    headerName: "Total EUR",
-    flex: 0.125,
-  },
-  {
-    field: "totalUSD",
-    headerName: "Total USD",
-    flex: 0.125,
-  },
-  {
-    field: "totalBTC",
-    headerName: "Total BTC",
-    flex: 0.125,
-  },
-  {
-    field: "note",
-    headerName: "Note",
-    editable: true,
-    flex: 0.25,
-  },
-];
-
-const assetsColumns: GridColDef[] = [
-  {
-    field: "description",
-    headerName: "Description",
-    editable: true,
-    flex: 0.375,
-  },
-  {
-    field: "ticker",
-    headerName: "Ticker",
-    flex: 0.125,
-  },
-  {
-    field: "type",
-    headerName: "Type",
-    flex: 0.125,
-  },
-  {
-    field: "amount",
-    headerName: "Amount",
-    flex: 0.125,
-  },
-  {
-    field: "lastPrice",
-    headerName: "Last Price",
-    flex: 0.125,
-  },
-  {
-    field: "totalPrice",
-    headerName: "Total Price",
-    flex: 0.125,
-  },
-];
-
-const fiatColumns: GridColDef[] = [
-  {
-    field: "note",
-    headerName: "Note",
-    editable: true,
-    flex: 0.4,
-  },
-  {
-    field: "amount",
-    headerName: "Amount",
-    flex: 0.4,
-  },
-  {
-    field: "currency",
-    headerName: "Currency",
-    flex: 0.2,
-  },
-];
+import { DataGrid } from "@mui/x-data-grid";
+import {
+  assetsColumns,
+  fiatAssetsColumns,
+  networthSnapshotTableColumns,
+} from "../constants";
 
 const fiatRows_MOCK = [
   { id: 1, note: "Lorem ipsum", amount: 1000, currency: "USD" },
@@ -309,11 +222,14 @@ export const MainPage = () => {
       <Grid container rowSpacing={6} columnSpacing={0.25}>
         <Grid item xs={12} md={4}>
           <Container maxWidth={false} disableGutters sx={{ height: "45vh" }}>
-            <Box style={{ border: "1px solid black" }}>
-              <Typography textAlign="center" variant="h4">
+            <Box textAlign={"center"}>
+              <Divider />
+              <Typography variant="button" color={"primary"} fontSize={20}>
                 Asset Allocation
               </Typography>
+              <Divider />
             </Box>
+
             <Box sx={{ width: "90%", height: "90%", p: 4 }}>
               <PieChart
                 colors={["red", "blue", "green"]}
@@ -347,47 +263,73 @@ export const MainPage = () => {
         </Grid>
         <Grid item xs={12} md={8}>
           <Container maxWidth={false} disableGutters sx={{ height: "45vh" }}>
-            <Box style={{ border: "1px solid black" }}>
-              <Typography textAlign="center" variant="h4">
-                Total net worth:{" "}
-                <span style={{ color: "greenyellow" }}>$123.456.000</span>
+            <Box textAlign={"center"}>
+              <Divider />
+              <Typography variant="button" color={"primary"} fontSize={20}>
+                Net Worth Snapshots
               </Typography>
+              <Divider />
             </Box>
             <DataGrid
               rows={savedRows_MOCK}
-              columns={savedColumns}
+              columns={networthSnapshotTableColumns}
               hideFooter={true}
               disableRowSelectionOnClick
+              density={"compact"}
+              sx={{ maxWidth: "100%", maxHeight: "100%" }}
             />
           </Container>
         </Grid>
 
+        <Grid
+          item
+          xs={12}
+          sx={{ maxHeight: { xs: "20vh", md: "5vh" }, mb: { xs: 4, md: 0 } }}
+        >
+          <Box textAlign={"center"}>
+            <Divider />
+            <Typography variant="h2" color={"black"} fontSize={28}>
+              Total net worth:{" "}
+              <span style={{ color: "green" }}>
+                $1.203M (-$1231) / €1.203M (-€1450)
+              </span>
+            </Typography>
+            <Divider />
+          </Box>
+        </Grid>
+
         <Grid item xs={12} md={9}>
-          <Container maxWidth={false} disableGutters sx={{ height: "44vh" }}>
-            <Box style={{ border: "1px solid black" }}>
-              <Typography textAlign="center" variant="h4">
-                Asset Allocation
+          <Container maxWidth={false} disableGutters sx={{ height: "50vh" }}>
+            <Box textAlign={"center"}>
+              <Divider />
+              <Typography variant="button" color={"primary"} fontSize={20}>
+                Asset allocation
               </Typography>
+              <Divider />
             </Box>
             <DataGrid
               rows={assetsRows_MOCK}
               columns={assetsColumns}
               hideFooter={true}
+              density={"compact"}
               disableRowSelectionOnClick
             />
           </Container>
         </Grid>
         <Grid item xs={12} md={3}>
-          <Container maxWidth={false} disableGutters sx={{ height: "44vh" }}>
-            <Box style={{ border: "1px solid black" }}>
-              <Typography textAlign="center" variant="h4">
-                Fiat
+          <Container maxWidth={false} disableGutters sx={{ height: "50vh" }}>
+            <Box textAlign={"center"}>
+              <Divider />
+              <Typography variant="button" color={"primary"} fontSize={20}>
+                Fiat Assets
               </Typography>
+              <Divider />
             </Box>
             <DataGrid
               rows={fiatRows_MOCK}
-              columns={fiatColumns}
+              columns={fiatAssetsColumns}
               hideFooter={true}
+              density={"compact"}
               disableRowSelectionOnClick
             />
           </Container>
