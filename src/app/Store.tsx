@@ -1,9 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 import userParamsReducer from "../features/userParams/userParamsSlice";
+import assetsReducer from "../features/assets/assetsSlice"
 
 export const store = configureStore({
   reducer: {
     userParams: userParamsReducer,
+    assets: assetsReducer,
   },
 });
 
