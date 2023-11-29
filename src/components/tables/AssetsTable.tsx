@@ -3,8 +3,12 @@ import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import { TableActions } from "./TableActions";
 import { formatCurrency } from "../../util";
 import { useTheme } from "@emotion/react";
+import { RootState } from "../../app/Store";
+import { useSelector } from "react-redux";
+
 
 export const AssetsTable = () => {
+  const assets = useSelector((state: RootState) => state.assets);
   const theme = useTheme();
 
   const getColor = (inputNum: number) => {
@@ -14,108 +18,12 @@ export const AssetsTable = () => {
     else if (inputNum < 0) return theme.palette.negativeColor.main;
   };
 
-  const rows = [
-    {
-      id: 1,
-      note: "Bitcoin Investment",
-      ticker: "BTC",
-      type: "Crypto",
-      amount: 100,
-      lastPrice: 100000,
-      change: -10,
-      totalPrice: 10000000,
-    },
-    {
-      id: 2,
-      note: "Amazon Inc.",
-      ticker: "AMZN",
-      type: "Stock",
-      amount: 500,
-      lastPrice: 5500.75,
-      change: 20,
-      totalPrice: 2750375,
-    },
-    {
-      id: 3,
-      note: "Ethereum Holdings",
-      ticker: "ETH",
-      type: "Crypto",
-      amount: 300,
-      lastPrice: 4800,
-      change: 15,
-      totalPrice: 1440000,
-    },
-    {
-      id: 4,
-      note: "Microsoft Corporation",
-      ticker: "MSFT",
-      type: "Stock",
-      amount: 1000,
-      lastPrice: 400.5,
-      change: -8,
-      totalPrice: 400500,
-    },
-    {
-      id: 5,
-      note: "Litecoin Investment",
-      ticker: "LTC",
-      type: "Crypto",
-      amount: 500,
-      lastPrice: 450,
-      change: 30,
-      totalPrice: 225000,
-    },
-    {
-      id: 6,
-      note: "Google Alphabet Inc.",
-      ticker: "GOOGL",
-      type: "Stock",
-      amount: 200,
-      lastPrice: 4200.25,
-      change: 25,
-      totalPrice: 840050,
-    },
-    {
-      id: 7,
-      note: "Ripple XRP Holdings",
-      ticker: "XRP",
-      type: "Crypto",
-      amount: 1000,
-      lastPrice: 5.75,
-      change: 35,
-      totalPrice: 5750,
-    },
-    {
-      id: 8,
-      note: "Facebook Inc.",
-      ticker: "FB",
-      type: "Stock",
-      amount: 300,
-      lastPrice: 600.5,
-      change: 30,
-      totalPrice: 180150,
-    },
-    {
-      id: 9,
-      note: "Cardano ADA Investment",
-      ticker: "ADA",
-      type: "Crypto",
-      amount: 800,
-      lastPrice: 9.5,
-      change: -5,
-      totalPrice: 7600,
-    },
-    {
-      id: 10,
-      note: "Tesla Inc.",
-      ticker: "TSLA",
-      type: "Stock",
-      amount: 150,
-      lastPrice: 2000.75,
-      change: 40,
-      totalPrice: 300112.5,
-    },
-  ];
+
+  const rows = assets.assets.map((row) => ({
+    ...row,
+    change: row.price - row.lastPrice,
+    totalPrice: row.price * row.amount,
+  }));
 
   const columns: GridColDef[] = [
     {
@@ -149,7 +57,7 @@ export const AssetsTable = () => {
       headerAlign: "center",
     },
     {
-      field: "lastPrice",
+      field: "price",
       headerName: "Last Price",
       flex: 0.125,
 
@@ -226,7 +134,7 @@ export const AssetsTable = () => {
           </Box>
         );
 
-      case "lastPrice":
+      case "price":
         return (
           <Box
             sx={{
@@ -235,7 +143,7 @@ export const AssetsTable = () => {
             }}
           >
             {`${formatCurrency(value, "USD")} (${formatCurrency(
-              params.row.change * value,
+              params.row.change,
               "USD",
               0
             )})`}
@@ -245,11 +153,15 @@ export const AssetsTable = () => {
         return (
           <Box
             sx={{
-              color: theme.palette.positiveColor.main,
+              color: getColor(params.row.change * value),
               fontWeight: "500",
             }}
           >
-            {`${formatCurrency(value, "USD")}`}
+            {`${formatCurrency(value, "USD")} (${formatCurrency(
+              params.row.change * params.row.amount,
+              "USD",
+              0
+            )})`}
           </Box>
         );
       case "actions":

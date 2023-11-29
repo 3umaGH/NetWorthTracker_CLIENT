@@ -3,22 +3,14 @@ import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import { formatCurrency } from "../../util";
 import { TableActions } from "./TableActions";
 import { useTheme } from "@emotion/react";
+import { useSelector } from "react-redux";
+import { RootState } from "../../app/Store";
 
 export const FiatAssetsTable = () => {
+  const assets = useSelector((state: RootState) => state.assets);
   const theme = useTheme();
 
-  const rows = [
-    { id: 1, note: "Lorem ipsum", amount: 1000, currency: "USD" },
-    { id: 2, note: "Dolor sit amet", amount: 750, currency: "EUR" },
-    { id: 3, note: "Consectetur adipiscing", amount: 1200, currency: "GBP" },
-    { id: 4, note: "Sed do eiusmod", amount: 500, currency: "JPY" },
-    { id: 5, note: "Incididunt ut labore", amount: 900, currency: "CAD" },
-    { id: 6, note: "Et dolore magna", amount: 1500, currency: "AUD" },
-    { id: 7, note: "Ut enim ad minim", amount: 800, currency: "CHF" },
-    { id: 8, note: "Quis nostrud exercitation", amount: 1100, currency: "SEK" },
-    { id: 9, note: "Sunt in culpa", amount: 600, currency: "INR" },
-    { id: 10, note: "Cillum dolore eu", amount: 1300, currency: "NZD" },
-  ];
+  const rows = assets.fiatAssets;
 
   const columns: GridColDef[] = [
     {
