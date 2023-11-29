@@ -44,7 +44,7 @@ export const LoginPage = () => {
 
         <Divider sx={{ width: "60%", my: 2 }} />
 
-        <Typography align="center" variant="caption">
+        <Typography align="center" variant="caption" color="textColor.main">
           Lorem ipsum dolor sit amet consectetur adipisicing elit.
           VoluptatibusLorem ipsum dolor sit amet consectetur adipisicing elit.
           Voluptatibus
