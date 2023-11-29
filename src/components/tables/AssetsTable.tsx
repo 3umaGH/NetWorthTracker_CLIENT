@@ -1,15 +1,19 @@
 import { Box } from "@mui/material";
 import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import { TableActions } from "./TableActions";
-import { formatCurrency, getColor } from "../../util";
-import {
-  cryptoColor,
-  positiveColor,
-  stockColor,
-  textColor,
-} from "../../constants";
+import { formatCurrency } from "../../util";
+import { useTheme } from "@emotion/react";
 
 export const AssetsTable = () => {
+  const theme = useTheme();
+
+  const getColor = (inputNum: number) => {
+    if (inputNum === null || inputNum === undefined) return "black";
+
+    if (inputNum > 0) return theme.palette.positiveColor.main;
+    else if (inputNum < 0) return theme.palette.negativeColor.main;
+  };
+
   const rows = [
     {
       id: 1,
@@ -178,7 +182,7 @@ export const AssetsTable = () => {
         return (
           <Box
             sx={{
-              color: textColor,
+              color: theme.palette.textColor.main,
               fontWeight: "200",
             }}
           >
@@ -189,7 +193,7 @@ export const AssetsTable = () => {
         return (
           <Box
             sx={{
-              color: textColor,
+              color: theme.palette.textColor.main,
               fontWeight: "700",
             }}
           >
@@ -200,7 +204,10 @@ export const AssetsTable = () => {
         return (
           <Box
             sx={{
-              color: value === "Crypto" ? cryptoColor : stockColor,
+              color:
+                value === "Crypto"
+                  ? theme.palette.cryptoColor.main
+                  : theme.palette.stockColor.main,
               fontWeight: "600",
             }}
           >
@@ -211,7 +218,7 @@ export const AssetsTable = () => {
         return (
           <Box
             sx={{
-              color: textColor,
+              color: theme.palette.textColor.main,
               fontWeight: "200",
             }}
           >
@@ -238,7 +245,7 @@ export const AssetsTable = () => {
         return (
           <Box
             sx={{
-              color: positiveColor,
+              color: theme.palette.positiveColor.main,
               fontWeight: "500",
             }}
           >

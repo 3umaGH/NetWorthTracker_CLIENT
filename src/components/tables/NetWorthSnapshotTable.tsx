@@ -1,20 +1,20 @@
 import { Box } from "@mui/material";
 import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
-import {
-  conversionColor,
-  cryptoColor,
-  currencySymbol,
-  textColor,
-} from "../../constants";
-import {
-  formatBTC,
-  formatCurrency,
-  formatTimeMillis,
-  getColor,
-} from "../../util";
+import { currencySymbol } from "../../constants";
+import { formatBTC, formatCurrency, formatTimeMillis } from "../../util";
 import { TableActions } from "./TableActions";
+import { useTheme } from "@emotion/react";
 
 export const NetWorthSnapshotTable = () => {
+  const theme = useTheme();
+
+  const getColor = (inputNum: number) => {
+    if (inputNum === null || inputNum === undefined) return "black";
+
+    if (inputNum > 0) return theme.palette.positiveColor.main;
+    else if (inputNum < 0) return theme.palette.negativeColor.main;
+  };
+
   const rows = [
     {
       id: 1,
@@ -214,7 +214,7 @@ export const NetWorthSnapshotTable = () => {
         return (
           <Box
             sx={{
-              color: textColor,
+              color: theme.palette.textColor.main,
               fontWeight: "300",
             }}
           >
@@ -225,7 +225,7 @@ export const NetWorthSnapshotTable = () => {
         return (
           <Box
             sx={{
-              color: cryptoColor,
+              color: theme.palette.cryptoColor.main,
               fontWeight: "500",
             }}
           >
@@ -237,7 +237,7 @@ export const NetWorthSnapshotTable = () => {
         return (
           <Box
             sx={{
-              color: conversionColor,
+              color: theme.palette.conversionColor.main,
               fontWeight: "500",
             }}
           >
@@ -279,7 +279,7 @@ export const NetWorthSnapshotTable = () => {
         return (
           <Box
             sx={{
-              color: cryptoColor,
+              color: theme.palette.cryptoColor.main,
               fontWeight: "500",
             }}
           >
@@ -290,7 +290,7 @@ export const NetWorthSnapshotTable = () => {
         return (
           <Box
             sx={{
-              color: textColor,
+              color: theme.palette.textColor.main,
               fontWeight: "200",
             }}
           >

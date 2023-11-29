@@ -1,12 +1,3 @@
-import { negativeColor, positiveColor } from "./constants";
-
-export const getColor = (inputNum: number) => {
-  if (inputNum === null || inputNum === undefined) return "black";
-
-  if (inputNum > 0) return positiveColor;
-  else if (inputNum < 0) return negativeColor;
-};
-
 export const formatCurrency = (
   inputNum: number,
   currency: string,

@@ -1,10 +1,12 @@
 import { Box } from "@mui/material";
 import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
-import { fiatColor, textColor } from "../../constants";
 import { formatCurrency } from "../../util";
 import { TableActions } from "./TableActions";
+import { useTheme } from "@emotion/react";
 
 export const FiatAssetsTable = () => {
+  const theme = useTheme();
+
   const rows = [
     { id: 1, note: "Lorem ipsum", amount: 1000, currency: "USD" },
     { id: 2, note: "Dolor sit amet", amount: 750, currency: "EUR" },
@@ -59,7 +61,7 @@ export const FiatAssetsTable = () => {
         return (
           <Box
             sx={{
-              color: textColor,
+              color: theme.palette.textColor.main,
               fontWeight: "200",
             }}
           >
@@ -70,7 +72,7 @@ export const FiatAssetsTable = () => {
         return (
           <Box
             sx={{
-              color: fiatColor,
+              color: theme.palette.fiatColor.main,
               fontWeight: "500",
             }}
           >
@@ -81,7 +83,7 @@ export const FiatAssetsTable = () => {
         return (
           <Box
             sx={{
-              color: textColor,
+              color: theme.palette.textColor.main,
               fontWeight: "500",
             }}
           >

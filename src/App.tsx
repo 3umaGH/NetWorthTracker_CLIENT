@@ -2,18 +2,14 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { MainPage } from "./pages/MainPage";
 import { LoginPage } from "./pages/LoginPage";
 
-import { ThemeProvider, createTheme } from "@mui/material/styles";
+import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
+import { darkTheme, lightTheme } from "./theme/theme";
 
-const darkTheme = createTheme({
-  palette: {
-    mode: "dark",
-  },
-});
 
 function App() {
   return (
-    <ThemeProvider theme={darkTheme}>
+    <ThemeProvider theme={lightTheme}>
       <CssBaseline />
       <BrowserRouter>
         <Routes>

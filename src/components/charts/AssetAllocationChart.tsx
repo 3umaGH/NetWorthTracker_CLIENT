@@ -1,11 +1,17 @@
+import { useTheme } from "@emotion/react";
 import { PieChart, pieArcLabelClasses } from "@mui/x-charts/PieChart";
-import { cryptoColor, positiveColor, stockColor } from "../../constants";
 
 export const AssetAllocationChart = () => {
+  const theme = useTheme();
+
   return (
     <PieChart
       slotProps={{ legend: { hidden: true } }}
-      colors={[cryptoColor, positiveColor, stockColor]}
+      colors={[
+        theme.palette.cryptoColor.main,
+        theme.palette.positiveColor.main,
+        theme.palette.stockColor.main,
+      ]}
       series={[
         {
           innerRadius: 68,
