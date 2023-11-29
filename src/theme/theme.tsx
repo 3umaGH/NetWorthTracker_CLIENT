@@ -123,7 +123,7 @@ export const lightTheme = createTheme({
     }),
     fiatColor: theme.palette.augmentColor({
       color: {
-        main: "#69f0ae", // Green A400
+        main: "#53bd89",
       },
       name: "fiatColor",
     }),
