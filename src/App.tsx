@@ -5,11 +5,14 @@ import { LoginPage } from "./pages/LoginPage";
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import { darkTheme, lightTheme } from "./theme/theme";
-
+import { RootState } from "./app/Store";
+import { useSelector } from "react-redux";
 
 function App() {
+  const userParams = useSelector((state: RootState) => state.userParams);
+
   return (
-    <ThemeProvider theme={lightTheme}>
+    <ThemeProvider theme={userParams.isLightTheme ? lightTheme : darkTheme}>
       <CssBaseline />
       <BrowserRouter>
         <Routes>
