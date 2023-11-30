@@ -69,4 +69,17 @@ export const getStockPrice = (state: AssetsState, ticker: string) => {
 
 export const getLastSnapshot = (state: AssetsState) => {
   return state.networthSnapshots[state.networthSnapshots.length - 1];
-}
+};
+export const formatTotalCurrency = (inputNum: number) => {
+  const absNum = Math.abs(inputNum);
+
+  if (absNum >= 1000000) {
+    return (
+      (inputNum >= 0 ? absNum / 1000000 : -absNum / 1000000).toFixed(3) + "M"
+    );
+  } else if (absNum >= 1000) {
+    return (inputNum >= 0 ? absNum / 1000 : -absNum / 1000).toFixed(2) + "K";
+  } else {
+    return inputNum.toFixed().toString();
+  }
+};
