@@ -74,18 +74,8 @@ const initialState: AssetsState = {
       changeUSD: -1503,
       totalBTC: 15.353456454,
       note: "Bought a space ship",
-    },
-    {
-      id: 2,
-      dateTime: 2135132456234,
-      btcPrice: 45000,
-      eurUSD: 1.12,
-      totalEUR: 12956165,
-      changeEUR: -1503,
-      totalUSD: 14524262.5,
-      changeUSD: 1503,
-      totalBTC: 23.801,
-      note: "Investment portfolio",
+
+      lastAssetPrices: [],
     },
   ],
 
@@ -100,7 +90,49 @@ export const assetsSlice = createSlice({
   name: "assets",
   initialState,
   reducers: {
-   
+    addSnapshot: (state) => {
+      const lastSnapshot =
+        state.networthSnapshots[state.networthSnapshots.length - 1];
+      const btcPrice = (state.cryptoPrices.find(
+        (val) => val.symbol === "BTCUSDT"
+      )?.price || -1) as number;
+      const totalUSD = state.assets.reduce(
+        (sum, obj) => sum + (obj.totalPrice as number),
+        0
+      ) +  state.fiatAssets.reduce(
+        (sum, obj) => sum + (obj.amount as number),
+        0
+      );
+      const eurUSDRate =
+        state.stockPrices.find((val) => val.ticker === "EURUSD")?.price || -1;
+
+      state.networthSnapshots = [
+        ...state.networthSnapshots,
+        {
+          id: state.networthSnapshots.length + 1,
+          dateTime: Date.now(),
+          btcPrice: btcPrice.toFixed(0) || -1,
+          eurUSD: eurUSDRate,
+          totalEUR: totalUSD / eurUSDRate,
+          changeEUR: totalUSD / eurUSDRate - lastSnapshot.totalEUR,
+          totalUSD: totalUSD,
+          changeUSD: totalUSD - lastSnapshot.totalUSD,
+          totalBTC: state.assets.reduce(
+            (sum, obj) =>
+              obj.ticker.startsWith("BTC") // Need a better way to determine if asset is in fact BTC.
+                ? sum + (obj.amount as number)
+                : (sum = sum),
+            0
+          ),
+          note: state.networthSnapshots.length + "",
+
+          lastAssetPrices: state.assets.map((asset) => ({
+            ticker: asset.ticker,
+            lastPrice: asset.price,
+          })),
+        } as NetworthSnapshot,
+      ];
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchCryptoPrices.pending, (state) => {
@@ -109,11 +141,20 @@ export const assetsSlice = createSlice({
     builder.addCase(
       fetchCryptoPrices.fulfilled,
       (state, action: PayloadAction<CryptoPrice[]>) => {
-        state.cryptoPrices = action.payload;
+        state.cryptoPrices = action.payload.map((pair) => {
+          // Binance api returns number as a string for some reason, so parsing the price to a number.
+          return {
+            ...pair,
+            price: parseFloat(String(pair.price)),
+          };
+        });
+
         state.fetching = false;
         state.error = "";
 
         state.assets = state.assets.map((asset) => {
+          const lastSnapshot =
+            state.networthSnapshots[state.networthSnapshots.length - 1];
           const price =
             state.cryptoPrices.find((val) => val.symbol === asset.ticker)
               ?.price || -1;
@@ -121,7 +162,10 @@ export const assetsSlice = createSlice({
           if (asset.type === "Crypto") {
             return {
               ...asset,
-              lastPrice: asset.price,
+              lastPrice:
+                lastSnapshot.lastAssetPrices?.find(
+                  (val) => val.ticker === asset.ticker
+                )?.lastPrice || 0,
               price: price,
               change: price - asset.lastPrice,
               totalPrice: price * asset.amount,
@@ -147,6 +191,8 @@ export const assetsSlice = createSlice({
         state.error = "";
 
         state.assets = state.assets.map((asset) => {
+          const lastSnapshot =
+            state.networthSnapshots[state.networthSnapshots.length - 1];
           const price =
             state.stockPrices.find((val) => val.ticker === asset.ticker)
               ?.price || -1;
@@ -154,7 +200,10 @@ export const assetsSlice = createSlice({
           if (asset.type === "Stock") {
             return {
               ...asset,
-              lastPrice: asset.price,
+              lastPrice:
+                lastSnapshot.lastAssetPrices?.find(
+                  (val) => val.ticker === asset.ticker
+                )?.lastPrice || 0,
               price: price,
               change: price - asset.lastPrice,
               totalPrice: price * asset.amount,
