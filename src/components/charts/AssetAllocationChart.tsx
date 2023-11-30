@@ -21,32 +21,17 @@ export const AssetAllocationChart = () => {
           data: [
             {
               id: 0,
-              value: assets.assets.reduce(
-                (sum, obj) =>
-                  obj.type === "Crypto"
-                    ? sum + (obj.totalPrice as number)
-                    : (sum = sum),
-                0
-              ),
+              value: assets.totals.crypto,
               label: "Crypto",
             },
             {
               id: 1,
-              value: assets.fiatAssets.reduce(
-                (sum, obj) => sum + (obj.amount as number),
-                0
-              ),
+              value: assets.totals.fiat,
               label: "Fiat",
             },
             {
               id: 2,
-              value: assets.assets.reduce(
-                (sum, obj) =>
-                  obj.type === "Stock"
-                    ? sum + (obj.totalPrice as number)
-                    : (sum = sum),
-                0
-              ),
+              value: assets.totals.stocks,
               label: "Stocks",
             },
           ],

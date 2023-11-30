@@ -1,8 +1,14 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { Asset, NetworthSnapshot, fiatAsset } from "../../constants";
 import { fetchCryptoPrices, fetchStockPrices } from "./thunks";
+import {
+  getCryptoPrice,
+  getLastSnapshot,
+  getStockPrice,
+  updateTotals,
+} from "../../util";
 
-type AssetsState = {
+export type AssetsState = {
   assets: Asset[];
   fiatAssets: fiatAsset[];
   networthSnapshots: NetworthSnapshot[];
@@ -12,6 +18,18 @@ type AssetsState = {
 
   fetching: boolean;
   error: string;
+
+  totals: {
+    USD: number;
+    EUR: number;
+    BTC: number;
+
+    stocks: number;
+    crypto: number;
+    fiat: number;
+  };
+
+  eurUSDRate: number;
 };
 
 type CryptoPrice = {
@@ -51,7 +69,7 @@ const initialState: AssetsState = {
       note: "Bitcoin Investment",
       ticker: "VWCE:FRA:EUR",
       type: "Stock",
-      amount: 1,
+      amount: 885,
       lastPrice: 1,
       totalPrice: 0,
       price: 12,
@@ -84,6 +102,17 @@ const initialState: AssetsState = {
 
   fetching: false,
   error: "",
+
+  totals: {
+    USD: 0,
+    EUR: 0,
+    BTC: 0,
+    stocks: 0,
+    crypto: 0,
+    fiat: 0,
+  },
+
+  eurUSDRate: 0,
 };
 
 export const assetsSlice = createSlice({
@@ -91,20 +120,9 @@ export const assetsSlice = createSlice({
   initialState,
   reducers: {
     addSnapshot: (state) => {
-      const lastSnapshot =
-        state.networthSnapshots[state.networthSnapshots.length - 1];
       const btcPrice = (state.cryptoPrices.find(
         (val) => val.symbol === "BTCUSDT"
       )?.price || -1) as number;
-      const totalUSD = state.assets.reduce(
-        (sum, obj) => sum + (obj.totalPrice as number),
-        0
-      ) +  state.fiatAssets.reduce(
-        (sum, obj) => sum + (obj.amount as number),
-        0
-      );
-      const eurUSDRate =
-        state.stockPrices.find((val) => val.ticker === "EURUSD")?.price || -1;
 
       state.networthSnapshots = [
         ...state.networthSnapshots,
@@ -112,18 +130,12 @@ export const assetsSlice = createSlice({
           id: state.networthSnapshots.length + 1,
           dateTime: Date.now(),
           btcPrice: btcPrice.toFixed(0) || -1,
-          eurUSD: eurUSDRate,
-          totalEUR: totalUSD / eurUSDRate,
-          changeEUR: totalUSD / eurUSDRate - lastSnapshot.totalEUR,
-          totalUSD: totalUSD,
-          changeUSD: totalUSD - lastSnapshot.totalUSD,
-          totalBTC: state.assets.reduce(
-            (sum, obj) =>
-              obj.ticker.startsWith("BTC") // Need a better way to determine if asset is in fact BTC.
-                ? sum + (obj.amount as number)
-                : (sum = sum),
-            0
-          ),
+          eurUSD: state.eurUSDRate,
+          totalEUR: state.totals.EUR,
+          changeEUR: state.totals.EUR - getLastSnapshot(state).totalEUR,
+          totalUSD: state.totals.USD,
+          changeUSD: state.totals.USD - getLastSnapshot(state).totalUSD,
+          totalBTC: state.totals.BTC,
           note: state.networthSnapshots.length + "",
 
           lastAssetPrices: state.assets.map((asset) => ({
@@ -153,17 +165,13 @@ export const assetsSlice = createSlice({
         state.error = "";
 
         state.assets = state.assets.map((asset) => {
-          const lastSnapshot =
-            state.networthSnapshots[state.networthSnapshots.length - 1];
-          const price =
-            state.cryptoPrices.find((val) => val.symbol === asset.ticker)
-              ?.price || -1;
+          const price = getCryptoPrice(state, asset.ticker);
 
           if (asset.type === "Crypto") {
             return {
               ...asset,
               lastPrice:
-                lastSnapshot.lastAssetPrices?.find(
+                getLastSnapshot(state).lastAssetPrices?.find(
                   (val) => val.ticker === asset.ticker
                 )?.lastPrice || 0,
               price: price,
@@ -172,10 +180,11 @@ export const assetsSlice = createSlice({
             };
           } else return asset;
         });
+
+        updateTotals(state);
       }
     );
     builder.addCase(fetchCryptoPrices.rejected, (state, action) => {
-      state.cryptoPrices = [];
       state.fetching = false;
       state.error = action.error.message || "Something went wrong";
     });
@@ -191,17 +200,13 @@ export const assetsSlice = createSlice({
         state.error = "";
 
         state.assets = state.assets.map((asset) => {
-          const lastSnapshot =
-            state.networthSnapshots[state.networthSnapshots.length - 1];
-          const price =
-            state.stockPrices.find((val) => val.ticker === asset.ticker)
-              ?.price || -1;
+          const price = getStockPrice(state, asset.ticker);
 
           if (asset.type === "Stock") {
             return {
               ...asset,
               lastPrice:
-                lastSnapshot.lastAssetPrices?.find(
+                getLastSnapshot(state).lastAssetPrices?.find(
                   (val) => val.ticker === asset.ticker
                 )?.lastPrice || 0,
               price: price,
@@ -210,10 +215,11 @@ export const assetsSlice = createSlice({
             };
           } else return asset;
         });
+
+        updateTotals(state);
       }
     );
     builder.addCase(fetchStockPrices.rejected, (state, action) => {
-      state.stockPrices = [];
       state.fetching = false;
       state.error = action.error.message || "Something went wrong";
     });
