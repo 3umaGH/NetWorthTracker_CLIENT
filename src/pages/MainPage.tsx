@@ -11,6 +11,7 @@ import { AppDispatch } from "../app/Store";
 import { toggleThemeMode } from "../features/userParams/userParamsSlice";
 import { useEffect } from "react";
 import { fetchCryptoPrices, fetchStockPrices } from "../features/assets/thunks";
+import { addSnapshot } from "../features/assets/assetsSlice";
 
 export const MainPage = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -31,7 +32,7 @@ export const MainPage = () => {
           <Container maxWidth={false} disableGutters sx={{ height: "45vh" }}>
             <CellTitle title="Asset Allocation" />
 
-            <Button onClick={() => dispatch(toggleThemeMode())}>test</Button>
+            <Button onClick={() => dispatch(addSnapshot())}>test</Button>
 
             <Box
               sx={{
