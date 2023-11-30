@@ -6,7 +6,6 @@ import { useTheme } from "@emotion/react";
 import { RootState } from "../../app/Store";
 import { useSelector } from "react-redux";
 
-
 export const AssetsTable = () => {
   const assets = useSelector((state: RootState) => state.assets);
   const theme = useTheme();
@@ -18,12 +17,7 @@ export const AssetsTable = () => {
     else if (inputNum < 0) return theme.palette.negativeColor.main;
   };
 
-
-  const rows = assets.assets.map((row) => ({
-    ...row,
-    change: row.price - row.lastPrice,
-    totalPrice: row.price * row.amount,
-  }));
+  const rows = assets.assets;
 
   const columns: GridColDef[] = [
     {

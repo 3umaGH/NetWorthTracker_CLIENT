@@ -9,9 +9,21 @@ import { BalanceFooter } from "../components/BalanceFooter";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../app/Store";
 import { toggleThemeMode } from "../features/userParams/userParamsSlice";
+import { useEffect } from "react";
+import { fetchCryptoPrices, fetchStockPrices } from "../features/assets/thunks";
 
 export const MainPage = () => {
   const dispatch = useDispatch<AppDispatch>();
+
+  useEffect(() => {
+    dispatch(fetchCryptoPrices())
+    setInterval(() => dispatch(fetchCryptoPrices()), 10000);
+
+    dispatch(fetchStockPrices())
+    setInterval(() => dispatch(fetchStockPrices()), 30000);
+
+  }, []);
+
   return (
     <Box>
       <Grid container rowSpacing={6} columnSpacing={0.25}>
@@ -25,8 +37,8 @@ export const MainPage = () => {
               sx={{
                 width: "100%",
                 height: "100%",
-                m:"auto",
-                ml:6
+                m: "auto",
+                ml: 6,
               }}
             >
               <AssetAllocationChart />
