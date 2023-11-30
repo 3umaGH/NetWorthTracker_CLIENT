@@ -31,4 +31,6 @@ export type NetworthSnapshot = {
   changeUSD: number;
   totalBTC: number;
   note: string;
+
+  lastAssetPrices: {ticker: string, lastPrice: number}[]
 };
