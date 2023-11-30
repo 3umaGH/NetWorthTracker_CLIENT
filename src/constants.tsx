@@ -1,5 +1,11 @@
 export const currencySymbol = "$";
 
+export const currencySymbols = {
+  "USD": "$",
+  "EUR": "€",
+}
+
+
 export type Ticker = string;
 
 export type Asset = {
@@ -7,9 +13,10 @@ export type Asset = {
   note: string;
   ticker: Ticker;
   type: "Crypto" | "Stock";
+  currency: keyof typeof currencySymbols;
   amount: number;
   lastPrice: number;
-  totalPrice: number,
+  totalPrice: number;
   price: number;
 };
 
@@ -17,7 +24,7 @@ export type fiatAsset = {
   id: number;
   note: string;
   amount: number;
-  currency: string;
+  currency: keyof typeof currencySymbols;
 };
 
 export type NetworthSnapshot = {
@@ -32,5 +39,5 @@ export type NetworthSnapshot = {
   totalBTC: number;
   note: string;
 
-  lastAssetPrices: {ticker: string, lastPrice: number}[]
+  lastAssetPrices: { ticker: string; lastPrice: number }[];
 };

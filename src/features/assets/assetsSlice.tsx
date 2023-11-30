@@ -49,16 +49,7 @@ const initialState: AssetsState = {
       note: "Bitcoin Investment",
       ticker: "BTCUSDT",
       type: "Crypto",
-      amount: 1,
-      lastPrice: 1,
-      totalPrice: 0,
-      price: 12,
-    },
-    {
-      id: 2,
-      note: "Bitcoin Investment",
-      ticker: "ETHUSDT",
-      type: "Crypto",
+      currency:"USD",
       amount: 1,
       lastPrice: 1,
       totalPrice: 0,
@@ -69,6 +60,7 @@ const initialState: AssetsState = {
       note: "Bitcoin Investment",
       ticker: "VWCE:FRA:EUR",
       type: "Stock",
+      currency:"EUR",
       amount: 885,
       lastPrice: 1,
       totalPrice: 0,
@@ -78,7 +70,6 @@ const initialState: AssetsState = {
   fiatAssets: [
     { id: 1, note: "Lorem ipsum", amount: 1000, currency: "USD" },
     { id: 2, note: "Dolor sit amet", amount: 750, currency: "EUR" },
-    { id: 3, note: "Consectetur adipiscing", amount: 1200, currency: "GBP" },
   ],
   networthSnapshots: [
     {

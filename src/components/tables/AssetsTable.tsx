@@ -136,9 +136,9 @@ export const AssetsTable = () => {
               fontWeight: "500",
             }}
           >
-            {`${formatCurrency(value, "USD")} (${formatCurrency(
+            {`${formatCurrency(value, params.row.currency)} (${formatCurrency(
               params.row.change,
-              "USD",
+              params.row.currency,
               0
             )})`}
           </Box>
@@ -151,9 +151,9 @@ export const AssetsTable = () => {
               fontWeight: "500",
             }}
           >
-            {`${formatCurrency(value, "USD")} (${formatCurrency(
+            {`${formatCurrency(value, params.row.currency)} (${formatCurrency(
               params.row.change * params.row.amount,
-              "USD",
+              params.row.currency,
               0
             )})`}
           </Box>

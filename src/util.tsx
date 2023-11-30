@@ -30,8 +30,16 @@ export const updateTotals = (state: AssetsState) => {
     state.stockPrices.find((val) => val.ticker === "EURUSD")?.price || -1;
 
   state.totals.USD =
-    state.assets.reduce((sum, obj) => sum + (obj.totalPrice as number), 0) +
-    state.fiatAssets.reduce((sum, obj) => sum + (obj.amount as number), 0);
+    state.assets.reduce(
+      (sum, obj) =>
+        sum + (convertCurrency(state, obj.currency, obj.totalPrice) as number),
+      0
+    ) +
+    state.fiatAssets.reduce(
+      (sum, obj) =>
+        sum + (convertCurrency(state, obj.currency, obj.amount) as number),
+      0
+    );
 
   state.totals.EUR = state.totals.USD / state.eurUSDRate;
 
@@ -44,19 +52,40 @@ export const updateTotals = (state: AssetsState) => {
   )),
     (state.totals.crypto = state.assets.reduce(
       (sum, obj) =>
-        obj.type === "Crypto" ? sum + (obj.totalPrice as number) : (sum = sum),
+        obj.type === "Crypto"
+          ? sum +
+            (convertCurrency(state, obj.currency, obj.totalPrice) as number)
+          : (sum = sum),
       0
     ));
   state.totals.fiat = state.fiatAssets.reduce(
-    // TODO: Convert different currencies to usd
-    (sum, obj) => sum + (obj.amount as number),
+    (sum, obj) =>
+      sum + (convertCurrency(state, obj.currency, obj.amount) as number),
     0
   );
   state.totals.stocks = state.assets.reduce(
     (sum, obj) =>
-      obj.type === "Stock" ? sum + (obj.totalPrice as number) : (sum = sum),
+      obj.type === "Stock"
+        ? sum + (convertCurrency(state, obj.currency, obj.totalPrice) as number)
+        : (sum = sum),
     0
   );
+};
+
+export const convertCurrency = ( // TODO: Check if its possible to support more currencies
+  state: AssetsState,
+  currency: string,
+  value: number
+) => {
+  if (currency === "USD") return value;
+
+  const rate =
+    state.stockPrices.find((val) => val.ticker === `${currency}USD`)?.price ||
+    -1;
+
+  if (rate === -1) return value;
+
+  return value * rate;
 };
 
 export const getCryptoPrice = (state: AssetsState, ticker: string) => {
