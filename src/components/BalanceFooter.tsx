@@ -24,7 +24,12 @@ export const BalanceFooter = () => {
           {assets.fetching && (
             <CircularProgress
               size={24}
-              sx={{ color: theme.palette.textColor.main, position: "absolute", right: 15, mt: 0.5 }}
+              sx={{
+                color: theme.palette.textColor.main,
+                position: "absolute",
+                right: 15,
+                mt: 0.5,
+              }}
             />
           )}
           <Grid
@@ -48,8 +53,8 @@ export const BalanceFooter = () => {
             }}
           >
             <span>
-              Total (EUR): €{formatTotalCurrency(assets.totals.EUR)} (
-              {formatTotalCurrency(EURChange)}€)
+              Total (EUR): €{formatTotalCurrency(assets.totals.EUR)} (€
+              {formatTotalCurrency(EURChange)})
             </span>
           </Grid>
           <Grid
