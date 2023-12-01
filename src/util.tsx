@@ -29,50 +29,64 @@ export const updateTotals = (state: AssetsState) => {
   state.eurUSDRate =
     state.stockPrices.find((val) => val.ticker === "EURUSD")?.price || -1;
 
-  state.totals.USD =
-    state.assets.reduce(
-      (sum, obj) =>
-        sum + (convertCurrency(state, obj.currency, obj.totalPrice) as number),
-      0
-    ) +
-    state.fiatAssets.reduce(
-      (sum, obj) =>
-        sum + (convertCurrency(state, obj.currency, obj.amount) as number),
-      0
-    );
+  state.totals = {
+    // USD
+    USD:
+      state.assets.reduce(
+        (sum, obj) =>
+          sum +
+          (convertCurrency(state, obj.currency, obj.totalPrice) as number),
+        0
+      ) +
+      state.fiatAssets.reduce(
+        (sum, obj) =>
+          sum + (convertCurrency(state, obj.currency, obj.amount) as number),
+        0
+      ),
 
-  state.totals.EUR = state.totals.USD / state.eurUSDRate;
+    // EUR
+    EUR: state.totals.USD / state.eurUSDRate,
 
-  (state.totals.BTC = state.assets.reduce(
-    (sum, obj) =>
-      obj.ticker.startsWith("BTC") // Need a better way to determine if asset is in fact BTC.
-        ? sum + (obj.amount as number)
-        : (sum = sum),
-    0
-  )),
-    (state.totals.crypto = state.assets.reduce(
+    // BTC
+    BTC: state.assets.reduce(
+      (sum, obj) =>
+        obj.ticker.startsWith("BTC") // Need a better way to determine if asset is in fact BTC.
+          ? sum + (obj.amount as number)
+          : (sum = sum),
+      0
+    ),
+
+    // Crypto
+    crypto: state.assets.reduce(
       (sum, obj) =>
         obj.type === "Crypto"
           ? sum +
             (convertCurrency(state, obj.currency, obj.totalPrice) as number)
           : (sum = sum),
       0
-    ));
-  state.totals.fiat = state.fiatAssets.reduce(
-    (sum, obj) =>
-      sum + (convertCurrency(state, obj.currency, obj.amount) as number),
-    0
-  );
-  state.totals.stocks = state.assets.reduce(
-    (sum, obj) =>
-      obj.type === "Stock"
-        ? sum + (convertCurrency(state, obj.currency, obj.totalPrice) as number)
-        : (sum = sum),
-    0
-  );
+    ),
+
+    // Fiat
+    fiat: state.fiatAssets.reduce(
+      (sum, obj) =>
+        sum + (convertCurrency(state, obj.currency, obj.amount) as number),
+      0
+    ),
+
+    // Stocks
+    stocks: state.assets.reduce(
+      (sum, obj) =>
+        obj.type === "Stock"
+          ? sum +
+            (convertCurrency(state, obj.currency, obj.totalPrice) as number)
+          : (sum = sum),
+      0
+    ),
+  };
 };
 
-export const convertCurrency = ( // TODO: Check if its possible to support more currencies
+export const convertCurrency = (
+  // TODO: Check if its possible to support more currencies
   state: AssetsState,
   currency: string,
   value: number
