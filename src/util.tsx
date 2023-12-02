@@ -29,23 +29,24 @@ export const updateTotals = (state: AssetsState) => {
   state.eurUSDRate =
     state.stockPrices.find((val) => val.ticker === "EURUSD")?.price || -1;
 
+  const totalUSD =
+    state.assets.reduce(
+      (sum, obj) =>
+        sum + (convertCurrency(state, obj.currency, obj.totalPrice) as number),
+      0
+    ) +
+    state.fiatAssets.reduce(
+      (sum, obj) =>
+        sum + (convertCurrency(state, obj.currency, obj.amount) as number),
+      0
+    );
+
   state.totals = {
     // USD
-    USD:
-      state.assets.reduce(
-        (sum, obj) =>
-          sum +
-          (convertCurrency(state, obj.currency, obj.totalPrice) as number),
-        0
-      ) +
-      state.fiatAssets.reduce(
-        (sum, obj) =>
-          sum + (convertCurrency(state, obj.currency, obj.amount) as number),
-        0
-      ),
+    USD: totalUSD,
 
     // EUR
-    EUR: state.totals.USD / state.eurUSDRate,
+    EUR: totalUSD / state.eurUSDRate,
 
     // BTC
     BTC: state.assets.reduce(
