@@ -157,9 +157,10 @@ export const assetsSlice = createSlice({
     },
 
     updateFiatAsset: (state, action) => {
-      state.fiatAssets = state.fiatAssets.map(
-        (asset) => asset.id === action.payload.id && { ...action.payload }
+      state.fiatAssets = state.fiatAssets.map((asset) =>
+        asset.id === action.payload.id ? { ...asset, ...action.payload } : asset
       );
+
       updateTotals(state);
     },
 
@@ -171,10 +172,10 @@ export const assetsSlice = createSlice({
     },
 
     updateAsset: (state, action) => {
-      state.assets = state.assets.map(
-        (asset) => asset.id === action.payload.id && { ...action.payload }
+      state.assets = state.assets.map((asset) =>
+        asset.id === action.payload.id ? { ...asset, ...action.payload } : asset
       );
-      
+
       updateTotals(state);
     },
   },
