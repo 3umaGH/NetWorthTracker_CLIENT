@@ -67,26 +67,8 @@ const initialState: AssetsState = {
       price: 12,
     },
   ],
-  fiatAssets: [
-    { id: 1, note: "Lorem ipsum", amount: 1000, currency: "USD" },
-    { id: 2, note: "Dolor sit amet", amount: 750, currency: "EUR" },
-  ],
-  networthSnapshots: [
-    {
-      id: 1,
-      dateTime: 53245623634,
-      btcPrice: 589452,
-      eurUSD: 1.09,
-      totalEUR: 12956165,
-      changeEUR: 1503,
-      totalUSD: 14113125.85,
-      changeUSD: -1503,
-      totalBTC: 15.353456454,
-      note: "Bought a space ship",
-
-      lastAssetPrices: [],
-    },
-  ],
+  fiatAssets: [],
+  networthSnapshots: [],
 
   cryptoPrices: [],
   stockPrices: [],
@@ -150,12 +132,12 @@ export const assetsSlice = createSlice({
     },
 
     addFiatAsset: (state, action: PayloadAction<fiatAsset>) => {
-      const id = state.fiatAssets.length > 0 ? state.fiatAssets[state.fiatAssets.length - 1].id + 1 : 0;
+      const id =
+        state.fiatAssets.length > 0
+          ? state.fiatAssets[state.fiatAssets.length - 1].id + 1
+          : 0;
 
-      state.fiatAssets = [
-        ...state.fiatAssets,
-        {...action.payload, id: id},
-      ]
+      state.fiatAssets = [...state.fiatAssets, { ...action.payload, id: id }];
 
       updateTotals(state);
     },
@@ -175,6 +157,29 @@ export const assetsSlice = createSlice({
       updateTotals(state);
     },
 
+    addAsset: (state, action: PayloadAction<Asset>) => {
+      const id =
+        state.assets.length > 0
+          ? state.assets[state.assets.length - 1].id + 1
+          : 0;
+      const price =
+        action.payload.type === "Crypto"
+          ? getCryptoPrice(state, action.payload.ticker)
+          : getStockPrice(state, action.payload.ticker);
+
+      state.assets = [
+        ...state.assets,
+        {
+          ...action.payload,
+          id: id,
+          price: price,
+          totalPrice: price * action.payload.amount,
+        },
+      ];
+
+      updateTotals(state);
+    },
+
     deleteAsset: (state, action) => {
       state.assets = state.assets.filter(
         (asset) => asset.id !== action.payload.id
@@ -184,7 +189,13 @@ export const assetsSlice = createSlice({
 
     updateAsset: (state, action) => {
       state.assets = state.assets.map((asset) =>
-        asset.id === action.payload.id ? { ...asset, ...action.payload } : asset
+        asset.id === action.payload.id
+          ? {
+              ...asset,
+              ...action.payload,
+              totalPrice: action.payload.price * action.payload.amount,
+            }
+          : asset
       );
 
       updateTotals(state);
@@ -273,6 +284,7 @@ export const assetsSlice = createSlice({
 export const {
   addSnapshot,
   addFiatAsset,
+  addAsset,
   deleteSnapshot,
   deleteFiatAsset,
   deleteAsset,

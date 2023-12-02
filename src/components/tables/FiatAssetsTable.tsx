@@ -18,6 +18,7 @@ import {
 import { useState } from "react";
 import BasicModal from "../modals/BasicModal";
 import { AddFiatAsset } from "../modals/AddFiatAsset";
+import { availableCurrencies } from "../../constants";
 
 export const FiatAssetsTable = () => {
   const assets = useSelector((state: RootState) => state.assets);
@@ -27,8 +28,6 @@ export const FiatAssetsTable = () => {
   const [addIsOpen, setAddIsOpen] = useState(false);
 
   const rows = assets.fiatAssets;
-
-  const availableCurrencies = ["USD", "EUR"]; // TODO: make dynamic
 
   const columns: GridColDef[] = [
     {
@@ -75,7 +74,6 @@ export const FiatAssetsTable = () => {
   }) => {
     return (
       <Box sx={{ "& button": { m: 0, p: 0, minWidth: "30px" } }}>
-        <>
           <Button
             variant="text"
             color="success"
@@ -93,7 +91,6 @@ export const FiatAssetsTable = () => {
           >
             X
           </Button>
-        </>
       </Box>
     );
   };

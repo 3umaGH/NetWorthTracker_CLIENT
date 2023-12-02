@@ -1,4 +1,4 @@
-import { Box, Button } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import {
   DataGrid,
   GridColDef,
@@ -11,13 +11,18 @@ import { RootState } from "../../app/Store";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../app/Store";
-import { deleteAsset } from "../../features/assets/assetsSlice";
-import BasicModal from "../modals/Modal";
+import { deleteAsset, updateAsset } from "../../features/assets/assetsSlice";
+import BasicModal from "../modals/BasicModal";
+import { useState } from "react";
+import { AddAsset } from "../modals/AddAsset";
+import { availableCurrencies } from "../../constants";
 
 export const AssetsTable = () => {
   const assets = useSelector((state: RootState) => state.assets);
   const dispatch = useDispatch<AppDispatch>();
   const theme = useTheme();
+
+  const [addIsOpen, setAddIsOpen] = useState(false);
 
   const getColor = (inputNum: number) => {
     if (inputNum === null || inputNum === undefined) return "black";
@@ -54,6 +59,8 @@ export const AssetsTable = () => {
     {
       field: "amount",
       headerName: "Amount",
+      type: "number",
+      editable: true,
       flex: 0.125,
 
       align: "center",
@@ -94,10 +101,11 @@ export const AssetsTable = () => {
       <Box sx={{ "& button": { m: 0, p: 0, minWidth: "30px" } }}>
         <Button
           variant="text"
-          color="primary"
-          sx={{ fontSize: 18, p: 0, m: 0 }}
+          color="success"
+          sx={{ fontSize: 22 }}
+          onClick={() => setAddIsOpen(true)}
         >
-          ✓
+          +
         </Button>
         <Button
           variant="text"
@@ -202,8 +210,49 @@ export const AssetsTable = () => {
     }
   };
 
+  const NoRowsComponent = () => {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100%",
+        }}
+      >
+        <Typography variant="body1">No assets here yet...</Typography>
+        <Button
+          variant="text"
+          color="success"
+          sx={{ fontSize: 18, p: 0, m: 0 }}
+          onClick={() => setAddIsOpen(true)}
+        >
+          Add Asset
+        </Button>
+      </Box>
+    );
+  };
+
   return (
     <>
+      {addIsOpen && (
+        <BasicModal
+          onClose={() => setAddIsOpen(false)}
+          sx={{ minWidth: "260px", maxWidth: "500px" }}
+        >
+          <AddAsset
+            availableCryptoPairs={Object.values(assets.cryptoPrices)
+              .filter((pair) => pair.symbol.endsWith("USDT"))
+              .map((pair) => pair.symbol)}
+            availableStocksPairs={assets.stockPrices.map(
+              (ticker) => ticker.ticker
+            )}
+            availableCurrencies={availableCurrencies}
+            onClose={() => setAddIsOpen(false)}
+          />
+        </BasicModal>
+      )}
       <DataGrid
         rows={rows}
         columns={columns.map((column) => ({
@@ -213,6 +262,22 @@ export const AssetsTable = () => {
         hideFooter={true}
         disableRowSelectionOnClick
         density={"compact"}
+        slots={{
+          noRowsOverlay: NoRowsComponent,
+        }}
+        processRowUpdate={(updatedRow, originalRow) => {
+          if (updatedRow.note.length > 100) {
+            alert("Maximum 100 symbols!");
+            return originalRow;
+          }
+
+          if (updatedRow.amount <= 0 || updatedRow.amount >= 1000000000)
+            return originalRow;
+
+          dispatch(updateAsset(updatedRow));
+          return updatedRow;
+        }}
+        onProcessRowUpdateError={(e) => console.log(e)}
       />
     </>
   );
