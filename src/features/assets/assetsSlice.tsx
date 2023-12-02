@@ -141,6 +141,13 @@ export const assetsSlice = createSlice({
         (snapshot) => snapshot.id !== action.payload
       );
     },
+    updateSnapshot: (state, action) => {
+      console.log(state.networthSnapshots);
+      state.networthSnapshots = state.networthSnapshots.map(
+        (snapshot) => snapshot.id === action.payload.id && { ...action.payload }
+      );
+      console.log(state.networthSnapshots);
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchCryptoPrices.pending, (state) => {
@@ -222,5 +229,6 @@ export const assetsSlice = createSlice({
   },
 });
 
-export const { addSnapshot, deleteSnapshot } = assetsSlice.actions;
+export const { addSnapshot, deleteSnapshot, updateSnapshot } =
+  assetsSlice.actions;
 export default assetsSlice.reducer;
