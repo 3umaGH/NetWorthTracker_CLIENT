@@ -124,7 +124,9 @@ export const AssetsTable = () => {
               fontWeight: "200",
             }}
           >
-            {`${value.toFixed(8)} ${params.row.ticker}`}
+            {`${value.toFixed(params.row.type === "Crypto" ? 4 : 0)} ${
+              params.row.ticker
+            }`}
           </Box>
         );
 
