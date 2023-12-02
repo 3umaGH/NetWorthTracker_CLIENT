@@ -12,9 +12,11 @@ import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../app/Store";
 import { deleteAsset } from "../../features/assets/assetsSlice";
+import BasicModal from "../modals/Modal";
 
 export const AssetsTable = () => {
   const assets = useSelector((state: RootState) => state.assets);
+  const dispatch = useDispatch<AppDispatch>();
   const theme = useTheme();
 
   const getColor = (inputNum: number) => {
@@ -88,7 +90,6 @@ export const AssetsTable = () => {
   }: {
     row: GridRenderCellParams<any, any, any, GridTreeNodeWithRender>;
   }) => {
-    const dispatch = useDispatch<AppDispatch>();
     return (
       <Box sx={{ "& button": { m: 0, p: 0, minWidth: "30px" } }}>
         <Button
@@ -173,7 +174,7 @@ export const AssetsTable = () => {
             }}
           >
             {`${formatCurrency(value, params.row.currency)} (${formatCurrency(
-              params.row.change,
+              params.row.change ?? 0,
               params.row.currency,
               0
             )})`}
@@ -188,7 +189,7 @@ export const AssetsTable = () => {
             }}
           >
             {`${formatCurrency(value, params.row.currency)} (${formatCurrency(
-              params.row.change * params.row.amount,
+              params.row.change ?? 0 * params.row.amount,
               params.row.currency,
               0
             )})`}
@@ -202,15 +203,17 @@ export const AssetsTable = () => {
   };
 
   return (
-    <DataGrid
-      rows={rows}
-      columns={columns.map((column) => ({
-        ...column,
-        renderCell: cellRenderer,
-      }))}
-      hideFooter={true}
-      disableRowSelectionOnClick
-      density={"compact"}
-    />
+    <>
+      <DataGrid
+        rows={rows}
+        columns={columns.map((column) => ({
+          ...column,
+          renderCell: cellRenderer,
+        }))}
+        hideFooter={true}
+        disableRowSelectionOnClick
+        density={"compact"}
+      />
+    </>
   );
 };
