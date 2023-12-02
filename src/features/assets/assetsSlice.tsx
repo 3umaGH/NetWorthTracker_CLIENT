@@ -136,11 +136,13 @@ export const assetsSlice = createSlice({
         } as NetworthSnapshot,
       ];
     },
+
     deleteSnapshot: (state, action) => {
       state.networthSnapshots = state.networthSnapshots.filter(
         (snapshot) => snapshot.id !== action.payload.id
       );
     },
+
     updateSnapshot: (state, action) => {
       state.networthSnapshots = state.networthSnapshots.map(
         (snapshot) => snapshot.id === action.payload.id && { ...action.payload }
@@ -149,9 +151,10 @@ export const assetsSlice = createSlice({
 
     deleteFiatAsset: (state, action) => {
       state.fiatAssets = state.fiatAssets.filter(
-        (snapshot) => snapshot.id !== action.payload
+        (asset) => asset.id !== action.payload.id
       );
     },
+
     updateFiatAsset: (state, action) => {
       state.fiatAssets = state.fiatAssets.map(
         (asset) => asset.id === action.payload.id && { ...action.payload }
@@ -160,9 +163,10 @@ export const assetsSlice = createSlice({
 
     deleteAsset: (state, action) => {
       state.assets = state.assets.filter(
-        (snapshot) => snapshot.id !== action.payload
+        (asset) => asset.id !== action.payload.id
       );
     },
+
     updateAsset: (state, action) => {
       state.assets = state.assets.map(
         (asset) => asset.id === action.payload.id && { ...action.payload }
