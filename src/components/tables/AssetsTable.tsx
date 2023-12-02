@@ -1,9 +1,17 @@
 import { Box, Button } from "@mui/material";
-import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
+import {
+  DataGrid,
+  GridColDef,
+  GridRenderCellParams,
+  GridTreeNodeWithRender,
+} from "@mui/x-data-grid";
 import { formatCurrency } from "../../util";
 import { useTheme } from "@emotion/react";
 import { RootState } from "../../app/Store";
 import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../../app/Store";
+import { deleteAsset } from "../../features/assets/assetsSlice";
 
 export const AssetsTable = () => {
   const assets = useSelector((state: RootState) => state.assets);
@@ -75,7 +83,12 @@ export const AssetsTable = () => {
     },
   ];
 
-  const TableActions = () => {
+  const TableActions = ({
+    row,
+  }: {
+    row: GridRenderCellParams<any, any, any, GridTreeNodeWithRender>;
+  }) => {
+    const dispatch = useDispatch<AppDispatch>();
     return (
       <Box sx={{ "& button": { m: 0, p: 0, minWidth: "30px" } }}>
         <Button
@@ -85,7 +98,12 @@ export const AssetsTable = () => {
         >
           ✓
         </Button>
-        <Button variant="text" color="error" sx={{ fontSize: 18 }}>
+        <Button
+          variant="text"
+          color="error"
+          sx={{ fontSize: 18 }}
+          onClick={() => dispatch(deleteAsset(row))}
+        >
           X
         </Button>
       </Box>
@@ -177,7 +195,7 @@ export const AssetsTable = () => {
           </Box>
         );
       case "actions":
-        return <TableActions />;
+        return <TableActions row={params.row} />;
       default:
         return value;
     }

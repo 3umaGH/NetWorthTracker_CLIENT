@@ -1,9 +1,17 @@
 import { Box, Button } from "@mui/material";
-import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
+import {
+  DataGrid,
+  GridColDef,
+  GridRenderCellParams,
+  GridTreeNodeWithRender,
+} from "@mui/x-data-grid";
 import { formatCurrency } from "../../util";
 import { useTheme } from "@emotion/react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../app/Store";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../../app/Store";
+import { deleteFiatAsset } from "../../features/assets/assetsSlice";
 
 export const FiatAssetsTable = () => {
   const assets = useSelector((state: RootState) => state.assets);
@@ -44,7 +52,13 @@ export const FiatAssetsTable = () => {
     },
   ];
 
-  const TableActions = () => {
+  const TableActions = ({
+    row,
+  }: {
+    row: GridRenderCellParams<any, any, any, GridTreeNodeWithRender>;
+  }) => {
+  
+    const dispatch = useDispatch<AppDispatch>();
     return (
       <Box sx={{ "& button": { m: 0, p: 0, minWidth: "30px" } }}>
         <Button
@@ -54,7 +68,12 @@ export const FiatAssetsTable = () => {
         >
           ✓
         </Button>
-        <Button variant="text" color="error" sx={{ fontSize: 18 }}>
+        <Button
+          variant="text"
+          color="error"
+          sx={{ fontSize: 18 }}
+          onClick={() => dispatch(deleteFiatAsset(row))}
+        >
           X
         </Button>
       </Box>
@@ -99,7 +118,7 @@ export const FiatAssetsTable = () => {
           </Box>
         );
       case "actions":
-        return <TableActions />;
+        return <TableActions row={params.row} />;
       default:
         return value;
     }
