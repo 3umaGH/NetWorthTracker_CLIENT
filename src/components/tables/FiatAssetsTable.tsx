@@ -1,7 +1,6 @@
-import { Box } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import { formatCurrency } from "../../util";
-import { TableActions } from "./TableActions";
 import { useTheme } from "@emotion/react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../app/Store";
@@ -44,6 +43,23 @@ export const FiatAssetsTable = () => {
       headerAlign: "center",
     },
   ];
+
+  const TableActions = () => {
+    return (
+      <Box sx={{ "& button": { m: 0, p: 0, minWidth: "30px" } }}>
+        <Button
+          variant="text"
+          color="primary"
+          sx={{ fontSize: 18, p: 0, m: 0 }}
+        >
+          ✓
+        </Button>
+        <Button variant="text" color="error" sx={{ fontSize: 18 }}>
+          X
+        </Button>
+      </Box>
+    );
+  };
 
   const cellRenderer = (params: GridRenderCellParams) => {
     const { field, value } = params;
