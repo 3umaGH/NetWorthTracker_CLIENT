@@ -206,7 +206,6 @@ export const NetWorthSnapshotTable = () => {
         }}
       >
         <Typography variant="body1">No snapshots yet...</Typography>
-        <Tooltip title="Create new snapshot">
           <Button
             variant="text"
             color="success"
@@ -215,7 +214,6 @@ export const NetWorthSnapshotTable = () => {
           >
             Create Snapshot
           </Button>
-        </Tooltip>
       </Box>
     );
   };
