@@ -111,7 +111,7 @@ export const getStockPrice = (state: AssetsState, ticker: string) => {
 };
 
 export const getLastSnapshot = (state: AssetsState) => {
-  return state.networthSnapshots[state.networthSnapshots.length - 1];
+  return state.networthSnapshots[state.networthSnapshots.length - 1] ?? [];
 };
 export const formatTotalCurrency = (inputNum: number) => {
   const absNum = Math.abs(inputNum);
