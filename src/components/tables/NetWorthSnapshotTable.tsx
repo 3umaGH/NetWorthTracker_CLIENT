@@ -1,15 +1,20 @@
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import { currencySymbol } from "../../constants";
 import { formatBTC, formatCurrency, formatTimeMillis } from "../../util";
-import { TableActions } from "./TableActions";
 import { useTheme } from "@emotion/react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../app/Store";
 import { NetWorthTableActions } from "./NetWorthTableActions";
 
+import { Button, Tooltip } from "@mui/material";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../../app/Store";
+import { addSnapshot } from "../../features/assets/assetsSlice";
+
 export const NetWorthSnapshotTable = () => {
   const assets = useSelector((state: RootState) => state.assets);
+  const dispatch = useDispatch<AppDispatch>();
   const theme = useTheme();
 
   const getColor = (inputNum: number) => {
@@ -189,6 +194,34 @@ export const NetWorthSnapshotTable = () => {
     }
   };
 
+  const NoRowsComponent = () => {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          height:"100%",
+        }}
+      >
+      
+          <Typography variant="body1">No snapshots yet...</Typography>
+          <Tooltip title="Create new snapshot">
+            <Button
+              variant="text"
+              color="success"
+              sx={{ fontSize: 18, p: 0, m: 0 }}
+              onClick={() => dispatch(addSnapshot())}
+            >
+              Create Snapshot
+            </Button>
+          </Tooltip>
+
+      </Box>
+    );
+  };
+
   return (
     <DataGrid
       rows={rows}
@@ -199,6 +232,9 @@ export const NetWorthSnapshotTable = () => {
       hideFooter={true}
       disableRowSelectionOnClick
       density={"compact"}
+      slots={{
+        noRowsOverlay: NoRowsComponent,
+      }}
     />
   );
 };

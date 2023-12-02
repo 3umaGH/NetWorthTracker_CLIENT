@@ -123,9 +123,9 @@ export const assetsSlice = createSlice({
           btcPrice: btcPrice.toFixed(0) || -1,
           eurUSD: state.eurUSDRate,
           totalEUR: state.totals.EUR,
-          changeEUR: state.totals.EUR - getLastSnapshot(state).totalEUR,
+          changeEUR: state.totals.EUR - (getLastSnapshot(state).totalEUR ?? 0),
           totalUSD: state.totals.USD,
-          changeUSD: state.totals.USD - getLastSnapshot(state).totalUSD,
+          changeUSD: state.totals.USD - (getLastSnapshot(state).totalUSD ?? 0),
           totalBTC: state.totals.BTC,
           note: state.networthSnapshots.length + "",
 
