@@ -1,3 +1,8 @@
+// React-related imports
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
+// Material-UI (MUI) related imports
 import { Box, Button, Typography } from "@mui/material";
 import {
   DataGrid,
@@ -5,16 +10,25 @@ import {
   GridRenderCellParams,
   GridTreeNodeWithRender,
 } from "@mui/x-data-grid";
+
+// Utility functions related imports
 import { formatCurrency } from "../../util";
+
+// Emotion-related imports
 import { useTheme } from "@emotion/react";
+
+// App-related imports
 import { RootState } from "../../app/Store";
-import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../app/Store";
+
+// Redux actions related imports
 import { deleteAsset, updateAsset } from "../../features/assets/assetsSlice";
+
+// Component-related imports
 import BasicModal from "../modals/BasicModal";
-import { useState } from "react";
 import { AddAsset } from "../modals/AddAsset";
+
+// Constants related imports
 import { availableCurrencies } from "../../constants";
 
 export const AssetsTable = () => {

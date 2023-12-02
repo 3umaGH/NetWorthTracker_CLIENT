@@ -1,6 +1,13 @@
-import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { Asset, NetworthSnapshot, fiatAsset } from "../../constants";
+// Redux Toolkit related imports
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+
+// Constants related imports
+import { Asset, fiatAsset, NetworthSnapshot } from "../../constants";
+
+// Thunks related imports
 import { fetchCryptoPrices, fetchStockPrices } from "./thunks";
+
+// Utility functions related imports
 import {
   getCryptoPrice,
   getLastSnapshot,
@@ -43,30 +50,7 @@ type StockPrice = {
 };
 
 const initialState: AssetsState = {
-  assets: [
-    {
-      id: 1,
-      note: "Bitcoin Investment",
-      ticker: "BTCUSDT",
-      type: "Crypto",
-      currency: "USD",
-      amount: 1,
-      lastPrice: 1,
-      totalPrice: 0,
-      price: 12,
-    },
-    {
-      id: 3,
-      note: "Bitcoin Investment",
-      ticker: "VWCE:FRA:EUR",
-      type: "Stock",
-      currency: "EUR",
-      amount: 885,
-      lastPrice: 1,
-      totalPrice: 0,
-      price: 12,
-    },
-  ],
+  assets: [],
   fiatAssets: [],
   networthSnapshots: [],
 

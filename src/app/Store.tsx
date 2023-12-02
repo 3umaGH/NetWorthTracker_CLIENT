@@ -1,6 +1,9 @@
+// Redux Toolkit related imports
 import { configureStore } from "@reduxjs/toolkit";
+
+// Reducers related imports
 import userParamsReducer from "../features/userParams/userParamsSlice";
-import assetsReducer from "../features/assets/assetsSlice"
+import assetsReducer from "../features/assets/assetsSlice";
 
 export const store = configureStore({
   reducer: {

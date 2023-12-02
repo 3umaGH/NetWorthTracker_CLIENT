@@ -1,4 +1,7 @@
+// Material-UI (MUI) related imports
 import { Button, Divider, Paper, Typography } from "@mui/material";
+
+// React Router related imports
 import { Link } from "react-router-dom";
 
 export const LoginPage = () => {

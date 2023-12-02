@@ -1,3 +1,8 @@
+// React-related imports
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+
+// Material-UI (MUI) related imports
 import {
   Box,
   Button,
@@ -8,13 +13,16 @@ import {
   FormControl,
 } from "@mui/material";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
-import { useState } from "react";
-
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "../../app/Store";
-import { addAsset } from "../../features/assets/assetsSlice";
-import { Asset } from "../../constants";
 import Autocomplete from "@mui/material/Autocomplete";
+
+// App-related imports
+import { AppDispatch } from "../../app/Store";
+
+// Redux actions related imports
+import { addAsset } from "../../features/assets/assetsSlice";
+
+// Constants related imports
+import { Asset } from "../../constants";
 
 export const AddAsset = ({
   availableCryptoPairs,
@@ -69,7 +77,10 @@ export const AddAsset = ({
     dispatch(
       addAsset({
         id: 0, // Id is assigned automatically
-        note: formData.note === "-" ? `My ${formData.ticker} Investment` : formData.note,
+        note:
+          formData.note === "-"
+            ? `My ${formData.ticker} Investment`
+            : formData.note,
         ticker: formData.ticker,
         type: formData.type,
         currency: formData.currency as "USD" | "EUR",

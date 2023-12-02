@@ -1,3 +1,8 @@
+// React-related imports
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
+// Material-UI (MUI) related imports
 import { Box, Button, Typography } from "@mui/material";
 import {
   DataGrid,
@@ -5,19 +10,28 @@ import {
   GridRenderCellParams,
   GridTreeNodeWithRender,
 } from "@mui/x-data-grid";
+
+// Utility functions related imports
 import { formatCurrency } from "../../util";
+
+// Emotion-related imports
 import { useTheme } from "@emotion/react";
-import { useSelector } from "react-redux";
+
+// App-related imports
 import { RootState } from "../../app/Store";
-import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../app/Store";
+
+// Redux actions related imports
 import {
   deleteFiatAsset,
   updateFiatAsset,
 } from "../../features/assets/assetsSlice";
-import { useState } from "react";
+
+// Component-related imports
 import BasicModal from "../modals/BasicModal";
 import { AddFiatAsset } from "../modals/AddFiatAsset";
+
+// Constants related imports
 import { availableCurrencies } from "../../constants";
 
 export const FiatAssetsTable = () => {
@@ -74,23 +88,23 @@ export const FiatAssetsTable = () => {
   }) => {
     return (
       <Box sx={{ "& button": { m: 0, p: 0, minWidth: "30px" } }}>
-          <Button
-            variant="text"
-            color="success"
-            sx={{ fontSize: 22 }}
-            onClick={() => setAddIsOpen(true)}
-          >
-            +
-          </Button>
+        <Button
+          variant="text"
+          color="success"
+          sx={{ fontSize: 22 }}
+          onClick={() => setAddIsOpen(true)}
+        >
+          +
+        </Button>
 
-          <Button
-            variant="text"
-            color="error"
-            sx={{ fontSize: 18 }}
-            onClick={() => dispatch(deleteFiatAsset(row))}
-          >
-            X
-          </Button>
+        <Button
+          variant="text"
+          color="error"
+          sx={{ fontSize: 18 }}
+          onClick={() => dispatch(deleteFiatAsset(row))}
+        >
+          X
+        </Button>
       </Box>
     );
   };
@@ -166,7 +180,10 @@ export const FiatAssetsTable = () => {
   return (
     <>
       {addIsOpen && (
-        <BasicModal onClose={() => setAddIsOpen(false)} sx={{minWidth:"260px", maxWidth:"500px"}}>
+        <BasicModal
+          onClose={() => setAddIsOpen(false)}
+          sx={{ minWidth: "260px", maxWidth: "500px" }}
+        >
           <AddFiatAsset
             onClose={() => setAddIsOpen(false)}
             availableCurrencies={availableCurrencies}

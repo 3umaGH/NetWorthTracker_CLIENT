@@ -1,13 +1,22 @@
-import { useTheme } from "@emotion/react";
-import {
-  Grid,
-  Box,
-  Typography,
-  Divider,
-  CircularProgress,
-} from "@mui/material";
-import { RootState } from "../app/Store";
+// React-Redux related imports
 import { useSelector } from "react-redux";
+
+// Emotion-related imports
+import { useTheme } from "@emotion/react";
+
+// Material-UI (MUI) related imports
+import {
+  Box,
+  CircularProgress,
+  Divider,
+  Grid,
+  Typography,
+} from "@mui/material";
+
+// App-related imports
+import { RootState } from "../app/Store";
+
+// Utility functions related imports
 import { formatTotalCurrency, getLastSnapshot } from "../util";
 
 export const BalanceFooter = () => {

@@ -1,7 +1,14 @@
+// Emotion-related imports
 import { useTheme } from "@emotion/react";
-import { RootState } from "../../app/Store";
+
+// React-Redux related imports
 import { useSelector } from "react-redux";
+
+// Material-UI (MUI) related imports
 import { PieChart, pieArcLabelClasses } from "@mui/x-charts/PieChart";
+
+// App-related imports
+import { RootState } from "../../app/Store";
 
 export const AssetAllocationChart = () => {
   const assets = useSelector((state: RootState) => state.assets);

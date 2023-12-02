@@ -1,19 +1,29 @@
-import { Box, Typography } from "@mui/material";
+// React-Redux related imports
+import { useDispatch, useSelector } from "react-redux";
+
+// Material-UI (MUI) related imports
+import { Box, Typography, Button, Tooltip } from "@mui/material";
 import {
   DataGrid,
   GridColDef,
   GridRenderCellParams,
   GridTreeNodeWithRender,
 } from "@mui/x-data-grid";
-import { currencySymbol } from "../../constants";
-import { formatBTC, formatCurrency, formatTimeMillis } from "../../util";
-import { useTheme } from "@emotion/react";
-import { useSelector } from "react-redux";
-import { RootState } from "../../app/Store";
 
-import { Button, Tooltip } from "@mui/material";
-import { useDispatch } from "react-redux";
+// Constants related imports
+import { currencySymbol } from "../../constants";
+
+// Utility functions related imports
+import { formatBTC, formatCurrency, formatTimeMillis } from "../../util";
+
+// Emotion-related imports
+import { useTheme } from "@emotion/react";
+
+// App-related imports
+import { RootState } from "../../app/Store";
 import { AppDispatch } from "../../app/Store";
+
+// Redux actions related imports
 import {
   addSnapshot,
   deleteSnapshot,

@@ -1,12 +1,16 @@
+// React-related imports
+import { useSelector } from "react-redux";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+
+// Components
 import { MainPage } from "./pages/MainPage";
 import { LoginPage } from "./pages/LoginPage";
 
+// Material-UI (MUI) related imports
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import { darkTheme, lightTheme } from "./theme/theme";
 import { RootState } from "./app/Store";
-import { useSelector } from "react-redux";
 
 function App() {
   const userParams = useSelector((state: RootState) => state.userParams);

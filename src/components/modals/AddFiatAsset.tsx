@@ -1,3 +1,8 @@
+// React-related imports
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+
+// Material-UI (MUI) related imports
 import {
   Box,
   Button,
@@ -8,11 +13,14 @@ import {
   FormControl,
 } from "@mui/material";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
-import { useState } from "react";
 
-import { useDispatch } from "react-redux";
+// App-related imports
 import { AppDispatch } from "../../app/Store";
+
+// Redux actions related imports
 import { addFiatAsset } from "../../features/assets/assetsSlice";
+
+// Constants related imports
 import { fiatAsset } from "../../constants";
 
 export const AddFiatAsset = ({
@@ -61,7 +69,7 @@ export const AddFiatAsset = ({
     <form onSubmit={(e) => submitHandler(e)}>
       <Box
         sx={{
-          width:"100%",
+          width: "100%",
           display: "flex",
           flexDirection: "column",
           justifyItems: "center",

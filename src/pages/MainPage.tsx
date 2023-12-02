@@ -1,4 +1,11 @@
+// React-related imports
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+
+// Material-UI (MUI) related imports
 import { Container, Grid, Box } from "@mui/material";
+
+// Components
 import { AssetAllocationChart } from "../components/charts/AssetAllocationChart";
 import { NetWorthSnapshotTable } from "../components/tables/NetWorthSnapshotTable";
 import { AssetsTable } from "../components/tables/AssetsTable";
@@ -6,9 +13,10 @@ import { FiatAssetsTable } from "../components/tables/FiatAssetsTable";
 import { CellTitle } from "../components/CellTitle";
 import { BalanceFooter } from "../components/BalanceFooter";
 
-import { useDispatch } from "react-redux";
+// App-related imports
 import { AppDispatch } from "../app/Store";
-import { useEffect } from "react";
+
+// Thunks
 import { fetchCryptoPrices, fetchStockPrices } from "../features/assets/thunks";
 
 export const MainPage = () => {
