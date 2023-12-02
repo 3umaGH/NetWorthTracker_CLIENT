@@ -6,6 +6,7 @@ import { TableActions } from "./TableActions";
 import { useTheme } from "@emotion/react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../app/Store";
+import { NetWorthTableActions } from "./NetWorthTableActions";
 
 export const NetWorthSnapshotTable = () => {
   const assets = useSelector((state: RootState) => state.assets);
@@ -180,7 +181,9 @@ export const NetWorthSnapshotTable = () => {
           </Box>
         );
       case "actions":
-        return <TableActions />;
+        return (
+          <NetWorthTableActions rowID={params.row.id} totalRows={rows.length} />
+        );
       default:
         return value;
     }
