@@ -1,10 +1,11 @@
 export const currencySymbol = "$";
 
-export const currencySymbols = {
-  "USD": "$",
-  "EUR": "€",
-}
+export const availableCurrencies = ["USD", "EUR"]; // TODO: make dynamic
 
+export const currencySymbols = {
+  USD: "$",
+  EUR: "€",
+};
 
 export type Ticker = string;
 
