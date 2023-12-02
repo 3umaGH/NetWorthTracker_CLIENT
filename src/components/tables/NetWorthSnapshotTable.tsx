@@ -5,12 +5,15 @@ import { formatBTC, formatCurrency, formatTimeMillis } from "../../util";
 import { useTheme } from "@emotion/react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../app/Store";
-import { NetWorthTableActions } from "./NetWorthTableActions";
 
 import { Button, Tooltip } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../app/Store";
-import { addSnapshot, updateSnapshot } from "../../features/assets/assetsSlice";
+import {
+  addSnapshot,
+  deleteSnapshot,
+  updateSnapshot,
+} from "../../features/assets/assetsSlice";
 
 export const NetWorthSnapshotTable = () => {
   const assets = useSelector((state: RootState) => state.assets);
@@ -93,6 +96,47 @@ export const NetWorthSnapshotTable = () => {
       headerAlign: "center",
     },
   ];
+
+  const NetWorthTableActions = ({
+    rowID,
+    totalRows,
+  }: {
+    rowID: number;
+    totalRows: number;
+  }) => {
+    const dispatch = useDispatch<AppDispatch>();
+    return (
+      <Box sx={{ "& button": { m: 0, p: 0, minWidth: "30px" } }}>
+        {rowID === totalRows && (
+          <div>
+            {!(totalRows >= 1000) && (
+              <Tooltip title="Create new snapshot">
+                <Button
+                  variant="text"
+                  color="success"
+                  sx={{ fontSize: 18, p: 0, m: 0 }}
+                  onClick={() => dispatch(addSnapshot())}
+                >
+                  🖬
+                </Button>
+              </Tooltip>
+            )}
+
+            <Tooltip title="Delete this snapshot">
+              <Button
+                variant="text"
+                color="error"
+                sx={{ fontSize: 18 }}
+                onClick={() => dispatch(deleteSnapshot(rowID))}
+              >
+                X
+              </Button>
+            </Tooltip>
+          </div>
+        )}
+      </Box>
+    );
+  };
 
   const cellRenderer = (params: GridRenderCellParams) => {
     const { field, value } = params;
@@ -206,14 +250,14 @@ export const NetWorthSnapshotTable = () => {
         }}
       >
         <Typography variant="body1">No snapshots yet...</Typography>
-          <Button
-            variant="text"
-            color="success"
-            sx={{ fontSize: 18, p: 0, m: 0 }}
-            onClick={() => dispatch(addSnapshot())}
-          >
-            Create Snapshot
-          </Button>
+        <Button
+          variant="text"
+          color="success"
+          sx={{ fontSize: 18, p: 0, m: 0 }}
+          onClick={() => dispatch(addSnapshot())}
+        >
+          Create Snapshot
+        </Button>
       </Box>
     );
   };
