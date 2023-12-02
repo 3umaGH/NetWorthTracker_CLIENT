@@ -10,7 +10,7 @@ import { NetWorthTableActions } from "./NetWorthTableActions";
 import { Button, Tooltip } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../app/Store";
-import { addSnapshot } from "../../features/assets/assetsSlice";
+import { addSnapshot, updateSnapshot } from "../../features/assets/assetsSlice";
 
 export const NetWorthSnapshotTable = () => {
   const assets = useSelector((state: RootState) => state.assets);
@@ -202,22 +202,20 @@ export const NetWorthSnapshotTable = () => {
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
-          height:"100%",
+          height: "100%",
         }}
       >
-      
-          <Typography variant="body1">No snapshots yet...</Typography>
-          <Tooltip title="Create new snapshot">
-            <Button
-              variant="text"
-              color="success"
-              sx={{ fontSize: 18, p: 0, m: 0 }}
-              onClick={() => dispatch(addSnapshot())}
-            >
-              Create Snapshot
-            </Button>
-          </Tooltip>
-
+        <Typography variant="body1">No snapshots yet...</Typography>
+        <Tooltip title="Create new snapshot">
+          <Button
+            variant="text"
+            color="success"
+            sx={{ fontSize: 18, p: 0, m: 0 }}
+            onClick={() => dispatch(addSnapshot())}
+          >
+            Create Snapshot
+          </Button>
+        </Tooltip>
       </Box>
     );
   };
@@ -235,6 +233,17 @@ export const NetWorthSnapshotTable = () => {
       slots={{
         noRowsOverlay: NoRowsComponent,
       }}
+      processRowUpdate={(updatedRow, originalRow) => {
+        if (originalRow.note.length > 100) {
+          alert("Maximum 100 symbols!");
+          return originalRow;
+        }
+
+        dispatch(updateSnapshot(updatedRow));
+
+        return updatedRow;
+      }}
+      onProcessRowUpdateError={(e) => console.log(e)}
     />
   );
 };
