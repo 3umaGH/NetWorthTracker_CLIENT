@@ -8,21 +8,18 @@ import { BalanceFooter } from "../components/BalanceFooter";
 
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../app/Store";
-import { toggleThemeMode } from "../features/userParams/userParamsSlice";
 import { useEffect } from "react";
 import { fetchCryptoPrices, fetchStockPrices } from "../features/assets/thunks";
-import { addSnapshot } from "../features/assets/assetsSlice";
 
 export const MainPage = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
-    dispatch(fetchCryptoPrices())
+    dispatch(fetchCryptoPrices());
     setInterval(() => dispatch(fetchCryptoPrices()), 10000);
 
-    dispatch(fetchStockPrices())
+    dispatch(fetchStockPrices());
     setInterval(() => dispatch(fetchStockPrices()), 30000);
-
   }, []);
 
   return (
@@ -31,8 +28,6 @@ export const MainPage = () => {
         <Grid item xs={12} md={3}>
           <Container maxWidth={false} disableGutters sx={{ height: "45vh" }}>
             <CellTitle title="Asset Allocation" />
-
-            <Button onClick={() => dispatch(addSnapshot())}>test</Button>
 
             <Box
               sx={{
