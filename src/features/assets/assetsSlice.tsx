@@ -138,7 +138,7 @@ export const assetsSlice = createSlice({
     },
     deleteSnapshot: (state, action) => {
       state.networthSnapshots = state.networthSnapshots.filter(
-        (snapshot) => snapshot.id !== action.payload
+        (snapshot) => snapshot.id !== action.payload.id
       );
     },
     updateSnapshot: (state, action) => {
@@ -147,7 +147,27 @@ export const assetsSlice = createSlice({
       );
     },
 
-    
+    deleteFiatAsset: (state, action) => {
+      state.fiatAssets = state.fiatAssets.filter(
+        (snapshot) => snapshot.id !== action.payload
+      );
+    },
+    updateFiatAsset: (state, action) => {
+      state.fiatAssets = state.fiatAssets.map(
+        (asset) => asset.id === action.payload.id && { ...action.payload }
+      );
+    },
+
+    deleteAsset: (state, action) => {
+      state.assets = state.assets.filter(
+        (snapshot) => snapshot.id !== action.payload
+      );
+    },
+    updateAsset: (state, action) => {
+      state.assets = state.assets.map(
+        (asset) => asset.id === action.payload.id && { ...action.payload }
+      );
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchCryptoPrices.pending, (state) => {
@@ -229,6 +249,13 @@ export const assetsSlice = createSlice({
   },
 });
 
-export const { addSnapshot, deleteSnapshot, updateSnapshot } =
-  assetsSlice.actions;
+export const {
+  addSnapshot,
+  deleteSnapshot,
+  deleteFiatAsset,
+  deleteAsset,
+  updateSnapshot,
+  updateFiatAsset,
+  updateAsset,
+} = assetsSlice.actions;
 export default assetsSlice.reducer;
