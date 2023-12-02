@@ -1,4 +1,4 @@
-import { Container, Grid, Box, Button } from "@mui/material";
+import { Container, Grid, Box } from "@mui/material";
 import { AssetAllocationChart } from "../components/charts/AssetAllocationChart";
 import { NetWorthSnapshotTable } from "../components/tables/NetWorthSnapshotTable";
 import { AssetsTable } from "../components/tables/AssetsTable";
