@@ -153,24 +153,29 @@ export const assetsSlice = createSlice({
       state.fiatAssets = state.fiatAssets.filter(
         (asset) => asset.id !== action.payload.id
       );
+      updateTotals(state);
     },
 
     updateFiatAsset: (state, action) => {
       state.fiatAssets = state.fiatAssets.map(
         (asset) => asset.id === action.payload.id && { ...action.payload }
       );
+      updateTotals(state);
     },
 
     deleteAsset: (state, action) => {
       state.assets = state.assets.filter(
         (asset) => asset.id !== action.payload.id
       );
+      updateTotals(state);
     },
 
     updateAsset: (state, action) => {
       state.assets = state.assets.map(
         (asset) => asset.id === action.payload.id && { ...action.payload }
       );
+      
+      updateTotals(state);
     },
   },
   extraReducers: (builder) => {
