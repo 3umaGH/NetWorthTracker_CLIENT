@@ -149,6 +149,17 @@ export const assetsSlice = createSlice({
       );
     },
 
+    addFiatAsset: (state, action: PayloadAction<fiatAsset>) => {
+      const id = state.fiatAssets.length > 0 ? state.fiatAssets[state.fiatAssets.length - 1].id + 1 : 0;
+
+      state.fiatAssets = [
+        ...state.fiatAssets,
+        {...action.payload, id: id},
+      ]
+
+      updateTotals(state);
+    },
+
     deleteFiatAsset: (state, action) => {
       state.fiatAssets = state.fiatAssets.filter(
         (asset) => asset.id !== action.payload.id
@@ -261,6 +272,7 @@ export const assetsSlice = createSlice({
 
 export const {
   addSnapshot,
+  addFiatAsset,
   deleteSnapshot,
   deleteFiatAsset,
   deleteAsset,

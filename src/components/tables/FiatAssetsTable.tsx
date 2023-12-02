@@ -1,4 +1,4 @@
-import { Box, Button } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import {
   DataGrid,
   GridColDef,
@@ -16,6 +16,8 @@ import {
   updateFiatAsset,
 } from "../../features/assets/assetsSlice";
 import { useState } from "react";
+import BasicModal from "../modals/BasicModal";
+import { AddFiatAsset } from "../modals/AddFiatAsset";
 
 export const FiatAssetsTable = () => {
   const assets = useSelector((state: RootState) => state.assets);
@@ -73,14 +75,25 @@ export const FiatAssetsTable = () => {
   }) => {
     return (
       <Box sx={{ "& button": { m: 0, p: 0, minWidth: "30px" } }}>
-        <Button
-          variant="text"
-          color="error"
-          sx={{ fontSize: 18 }}
-          onClick={() => dispatch(deleteFiatAsset(row))}
-        >
-          X
-        </Button>
+        <>
+          <Button
+            variant="text"
+            color="success"
+            sx={{ fontSize: 22 }}
+            onClick={() => setAddIsOpen(true)}
+          >
+            +
+          </Button>
+
+          <Button
+            variant="text"
+            color="error"
+            sx={{ fontSize: 18 }}
+            onClick={() => dispatch(deleteFiatAsset(row))}
+          >
+            X
+          </Button>
+        </>
       </Box>
     );
   };
@@ -129,28 +142,65 @@ export const FiatAssetsTable = () => {
     }
   };
 
+  const NoRowsComponent = () => {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100%",
+        }}
+      >
+        <Typography variant="body1">No assets here yet...</Typography>
+        <Button
+          variant="text"
+          color="success"
+          sx={{ fontSize: 18, p: 0, m: 0 }}
+          onClick={() => setAddIsOpen(true)}
+        >
+          Add Asset
+        </Button>
+      </Box>
+    );
+  };
+
   return (
-    <DataGrid
-      rows={rows}
-      columns={columns.map((column) => ({
-        ...column,
-        renderCell: cellRenderer,
-      }))}
-      hideFooter={true}
-      disableRowSelectionOnClick
-      density={"compact"}
-      processRowUpdate={(updatedRow, originalRow) => {
-        if (updatedRow.note.length > 100) {
-          alert("Maximum 100 symbols!");
-          return originalRow;
-        }
+    <>
+      {addIsOpen && (
+        <BasicModal onClose={() => setAddIsOpen(false)} sx={{minWidth:"260px", maxWidth:"500px"}}>
+          <AddFiatAsset
+            onClose={() => setAddIsOpen(false)}
+            availableCurrencies={availableCurrencies}
+          />
+        </BasicModal>
+      )}
+      <DataGrid
+        rows={rows}
+        columns={columns.map((column) => ({
+          ...column,
+          renderCell: cellRenderer,
+        }))}
+        hideFooter={true}
+        disableRowSelectionOnClick
+        density={"compact"}
+        slots={{
+          noRowsOverlay: NoRowsComponent,
+        }}
+        processRowUpdate={(updatedRow, originalRow) => {
+          if (updatedRow.note.length > 100) {
+            alert("Maximum 100 symbols!");
+            return originalRow;
+          }
 
-        if (updatedRow.amount >= 1000000000) return originalRow;
+          if (updatedRow.amount >= 1000000000) return originalRow;
 
-        dispatch(updateFiatAsset(updatedRow));
-        return updatedRow;
-      }}
-      onProcessRowUpdateError={(e) => console.log(e)}
-    />
+          dispatch(updateFiatAsset(updatedRow));
+          return updatedRow;
+        }}
+        onProcessRowUpdateError={(e) => console.log(e)}
+      />
+    </>
   );
 };
