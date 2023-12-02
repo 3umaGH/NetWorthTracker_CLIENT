@@ -14,8 +14,8 @@ export const BalanceFooter = () => {
   const assets = useSelector((state: RootState) => state.assets);
   const theme = useTheme();
 
-  const USDChange = assets.totals.USD - getLastSnapshot(assets).totalUSD;
-  const EURChange = assets.totals.EUR - getLastSnapshot(assets).totalEUR;
+  const USDChange = assets.totals.USD - (getLastSnapshot(assets).totalUSD ?? 0);
+  const EURChange = assets.totals.EUR - (getLastSnapshot(assets).totalEUR ?? 0);
 
   return (
     <Box textAlign={"center"}>
