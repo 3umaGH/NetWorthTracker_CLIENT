@@ -127,7 +127,7 @@ export const assetsSlice = createSlice({
           totalUSD: state.totals.USD,
           changeUSD: state.totals.USD - (getLastSnapshot(state).totalUSD ?? 0),
           totalBTC: state.totals.BTC,
-          note: state.networthSnapshots.length + "",
+          note: "",
 
           lastAssetPrices: state.assets.map((asset) => ({
             ticker: asset.ticker,
@@ -142,12 +142,12 @@ export const assetsSlice = createSlice({
       );
     },
     updateSnapshot: (state, action) => {
-      console.log(state.networthSnapshots);
       state.networthSnapshots = state.networthSnapshots.map(
         (snapshot) => snapshot.id === action.payload.id && { ...action.payload }
       );
-      console.log(state.networthSnapshots);
     },
+
+    
   },
   extraReducers: (builder) => {
     builder.addCase(fetchCryptoPrices.pending, (state) => {
