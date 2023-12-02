@@ -1,5 +1,5 @@
 import { Box, Typography } from "@mui/material";
-import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
+import { DataGrid, GridColDef, GridRenderCellParams, GridTreeNodeWithRender } from "@mui/x-data-grid";
 import { currencySymbol } from "../../constants";
 import { formatBTC, formatCurrency, formatTimeMillis } from "../../util";
 import { useTheme } from "@emotion/react";
@@ -98,16 +98,16 @@ export const NetWorthSnapshotTable = () => {
   ];
 
   const NetWorthTableActions = ({
-    rowID,
+    row,
     totalRows,
   }: {
-    rowID: number;
+    row: GridRenderCellParams<any, any, any, GridTreeNodeWithRender>;
     totalRows: number;
   }) => {
     const dispatch = useDispatch<AppDispatch>();
     return (
       <Box sx={{ "& button": { m: 0, p: 0, minWidth: "30px" } }}>
-        {rowID === totalRows && (
+        {row.id === totalRows && (
           <div>
             {!(totalRows >= 1000) && (
               <Tooltip title="Create new snapshot">
@@ -127,7 +127,7 @@ export const NetWorthSnapshotTable = () => {
                 variant="text"
                 color="error"
                 sx={{ fontSize: 18 }}
-                onClick={() => dispatch(deleteSnapshot(rowID))}
+                onClick={() => dispatch(deleteSnapshot(row))}
               >
                 X
               </Button>
@@ -231,7 +231,7 @@ export const NetWorthSnapshotTable = () => {
         );
       case "actions":
         return (
-          <NetWorthTableActions rowID={params.row.id} totalRows={rows.length} />
+          <NetWorthTableActions row={params.row} totalRows={rows.length} />
         );
       default:
         return value;
