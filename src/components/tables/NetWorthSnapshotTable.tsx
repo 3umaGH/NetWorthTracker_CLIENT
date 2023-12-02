@@ -1,5 +1,10 @@
 import { Box, Typography } from "@mui/material";
-import { DataGrid, GridColDef, GridRenderCellParams, GridTreeNodeWithRender } from "@mui/x-data-grid";
+import {
+  DataGrid,
+  GridColDef,
+  GridRenderCellParams,
+  GridTreeNodeWithRender,
+} from "@mui/x-data-grid";
 import { currencySymbol } from "../../constants";
 import { formatBTC, formatCurrency, formatTimeMillis } from "../../util";
 import { useTheme } from "@emotion/react";
@@ -276,13 +281,12 @@ export const NetWorthSnapshotTable = () => {
         noRowsOverlay: NoRowsComponent,
       }}
       processRowUpdate={(updatedRow, originalRow) => {
-        if (originalRow.note.length > 100) {
+        if (updatedRow.note.length > 100) {
           alert("Maximum 100 symbols!");
           return originalRow;
         }
 
         dispatch(updateSnapshot(updatedRow));
-
         return updatedRow;
       }}
       onProcessRowUpdateError={(e) => console.log(e)}

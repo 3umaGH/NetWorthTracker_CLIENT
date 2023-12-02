@@ -26,7 +26,7 @@ export const FiatAssetsTable = () => {
 
   const rows = assets.fiatAssets;
 
-  const availableCurrencies = ["USD", "EUR"];
+  const availableCurrencies = ["USD", "EUR"]; // TODO: make dynamic
 
   const columns: GridColDef[] = [
     {
@@ -73,13 +73,6 @@ export const FiatAssetsTable = () => {
   }) => {
     return (
       <Box sx={{ "& button": { m: 0, p: 0, minWidth: "30px" } }}>
-        <Button
-          variant="text"
-          color="primary"
-          sx={{ fontSize: 18, p: 0, m: 0 }}
-        >
-          ✓
-        </Button>
         <Button
           variant="text"
           color="error"
@@ -147,13 +140,14 @@ export const FiatAssetsTable = () => {
       disableRowSelectionOnClick
       density={"compact"}
       processRowUpdate={(updatedRow, originalRow) => {
-        if (originalRow.note.length > 100) {
+        if (updatedRow.note.length > 100) {
           alert("Maximum 100 symbols!");
           return originalRow;
         }
 
-        dispatch(updateFiatAsset(updatedRow));
+        if (updatedRow.amount >= 1000000000) return originalRow;
 
+        dispatch(updateFiatAsset(updatedRow));
         return updatedRow;
       }}
       onProcessRowUpdateError={(e) => console.log(e)}
