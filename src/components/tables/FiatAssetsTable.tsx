@@ -11,13 +11,22 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../app/Store";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../app/Store";
-import { deleteFiatAsset } from "../../features/assets/assetsSlice";
+import {
+  deleteFiatAsset,
+  updateFiatAsset,
+} from "../../features/assets/assetsSlice";
+import { useState } from "react";
 
 export const FiatAssetsTable = () => {
   const assets = useSelector((state: RootState) => state.assets);
+  const dispatch = useDispatch<AppDispatch>();
   const theme = useTheme();
 
+  const [addIsOpen, setAddIsOpen] = useState(false);
+
   const rows = assets.fiatAssets;
+
+  const availableCurrencies = ["USD", "EUR"];
 
   const columns: GridColDef[] = [
     {
@@ -29,6 +38,8 @@ export const FiatAssetsTable = () => {
     {
       field: "amount",
       headerName: "Amount",
+      type: "number",
+      editable: true,
       flex: 0.2,
 
       align: "center",
@@ -37,6 +48,9 @@ export const FiatAssetsTable = () => {
     {
       field: "currency",
       headerName: "Currency",
+      editable: true,
+      type: "singleSelect",
+      valueOptions: availableCurrencies,
       flex: 0.2,
 
       align: "center",
@@ -57,8 +71,6 @@ export const FiatAssetsTable = () => {
   }: {
     row: GridRenderCellParams<any, any, any, GridTreeNodeWithRender>;
   }) => {
-  
-    const dispatch = useDispatch<AppDispatch>();
     return (
       <Box sx={{ "& button": { m: 0, p: 0, minWidth: "30px" } }}>
         <Button
@@ -134,6 +146,17 @@ export const FiatAssetsTable = () => {
       hideFooter={true}
       disableRowSelectionOnClick
       density={"compact"}
+      processRowUpdate={(updatedRow, originalRow) => {
+        if (originalRow.note.length > 100) {
+          alert("Maximum 100 symbols!");
+          return originalRow;
+        }
+
+        dispatch(updateFiatAsset(updatedRow));
+
+        return updatedRow;
+      }}
+      onProcessRowUpdateError={(e) => console.log(e)}
     />
   );
 };
