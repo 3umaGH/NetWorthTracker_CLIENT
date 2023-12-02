@@ -49,7 +49,7 @@ const initialState: AssetsState = {
       note: "Bitcoin Investment",
       ticker: "BTCUSDT",
       type: "Crypto",
-      currency:"USD",
+      currency: "USD",
       amount: 1,
       lastPrice: 1,
       totalPrice: 0,
@@ -60,7 +60,7 @@ const initialState: AssetsState = {
       note: "Bitcoin Investment",
       ticker: "VWCE:FRA:EUR",
       type: "Stock",
-      currency:"EUR",
+      currency: "EUR",
       amount: 885,
       lastPrice: 1,
       totalPrice: 0,
@@ -135,6 +135,11 @@ export const assetsSlice = createSlice({
           })),
         } as NetworthSnapshot,
       ];
+    },
+    deleteSnapshot: (state, action) => {
+      state.networthSnapshots = state.networthSnapshots.filter(
+        (snapshot) => snapshot.id !== action.payload
+      );
     },
   },
   extraReducers: (builder) => {
@@ -217,5 +222,5 @@ export const assetsSlice = createSlice({
   },
 });
 
-export const { addSnapshot } = assetsSlice.actions;
+export const { addSnapshot, deleteSnapshot } = assetsSlice.actions;
 export default assetsSlice.reducer;
