@@ -27,7 +27,8 @@ export const fetchUserData = async () => {
   try {
     const docs = await getDoc(doc(FirebaseDB, "userData", `${id}`));
 
-    if (!docs.exists()) console.log("Data does not exist.");
+    if (!docs.exists() || !id) return;
+
     return docs.data() as AssetsState;
   } catch (err) {
     console.error(err);
