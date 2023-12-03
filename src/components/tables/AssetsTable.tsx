@@ -240,7 +240,7 @@ export const AssetsTable = () => {
             }}
           >
             {`${formatCurrency(value, params.row.currency)} (${formatCurrency(
-              params.row.change ?? 0 * params.row.amount,
+              (params.row.change ?? 0) * params.row.amount,
               params.row.currency,
               0
             )})`}
