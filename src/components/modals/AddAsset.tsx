@@ -151,7 +151,7 @@ export const AddAsset = ({
             variant="standard"
             onChange={(e) => handleChange(e)}
             onKeyDown={(evt) =>
-              ["e", "E", "+", "-"].includes(evt.key) && evt.preventDefault()
+              ["e", "E", "+"].includes(evt.key) && evt.preventDefault()
             } // Disable e, + - chars
             sx={{ width: "60%" }}
           />
