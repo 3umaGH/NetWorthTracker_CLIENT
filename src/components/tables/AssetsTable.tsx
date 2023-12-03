@@ -33,6 +33,7 @@ import { availableCurrencies } from "../../constants";
 
 export const AssetsTable = () => {
   const assets = useSelector((state: RootState) => state.assets);
+  const userParams = useSelector((state: RootState) => state.userParams);
   const dispatch = useDispatch<AppDispatch>();
   const theme = useTheme();
 
@@ -179,6 +180,14 @@ export const AssetsTable = () => {
             sx={{
               color: theme.palette.textColor.main,
               fontWeight: "200",
+              ...(userParams.discreetMode
+                ? {
+                    filter: "blur(4px)",
+                    "&:hover": {
+                      filter: "blur(0px)",
+                    },
+                  }
+                : {}),
             }}
           >
             {`${value.toFixed(params.row.type === "Crypto" ? 4 : 0)} ${
@@ -193,6 +202,14 @@ export const AssetsTable = () => {
             sx={{
               color: getColor(params.row.change),
               fontWeight: "500",
+              ...(userParams.discreetMode
+                ? {
+                    filter: "blur(4px)",
+                    "&:hover": {
+                      filter: "blur(0px)",
+                    },
+                  }
+                : {}),
             }}
           >
             {`${formatCurrency(value, params.row.currency)} (${formatCurrency(
@@ -208,6 +225,14 @@ export const AssetsTable = () => {
             sx={{
               color: getColor(params.row.change * value),
               fontWeight: "500",
+              ...(userParams.discreetMode
+                ? {
+                    filter: "blur(4px)",
+                    "&:hover": {
+                      filter: "blur(0px)",
+                    },
+                  }
+                : {}),
             }}
           >
             {`${formatCurrency(value, params.row.currency)} (${formatCurrency(

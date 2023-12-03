@@ -32,6 +32,7 @@ import {
 
 export const NetWorthSnapshotTable = () => {
   const assets = useSelector((state: RootState) => state.assets);
+  const userParams = useSelector((state: RootState) => state.userParams);
   const dispatch = useDispatch<AppDispatch>();
   const theme = useTheme();
 
@@ -174,6 +175,14 @@ export const NetWorthSnapshotTable = () => {
             sx={{
               color: theme.palette.cryptoColor.main,
               fontWeight: "500",
+              ...(userParams.discreetMode
+                ? {
+                    filter: "blur(4px)",
+                    "&:hover": {
+                      filter: "blur(0px)",
+                    },
+                  }
+                : {}),
             }}
           >
             {currencySymbol}
@@ -186,6 +195,14 @@ export const NetWorthSnapshotTable = () => {
             sx={{
               color: theme.palette.conversionColor.main,
               fontWeight: "500",
+              ...(userParams.discreetMode
+                ? {
+                    filter: "blur(4px)",
+                    "&:hover": {
+                      filter: "blur(0px)",
+                    },
+                  }
+                : {}),
             }}
           >
             {currencySymbol}
@@ -198,6 +215,14 @@ export const NetWorthSnapshotTable = () => {
             sx={{
               color: getColor(params.row.changeEUR),
               fontWeight: "500",
+              ...(userParams.discreetMode
+                ? {
+                    filter: "blur(4px)",
+                    "&:hover": {
+                      filter: "blur(0px)",
+                    },
+                  }
+                : {}),
             }}
           >
             {`${formatCurrency(value, "EUR")} (${formatCurrency(
@@ -213,6 +238,14 @@ export const NetWorthSnapshotTable = () => {
             sx={{
               color: getColor(params.row.changeUSD),
               fontWeight: "500",
+              ...(userParams.discreetMode
+                ? {
+                    filter: "blur(4px)",
+                    "&:hover": {
+                      filter: "blur(0px)",
+                    },
+                  }
+                : {}),
             }}
           >
             {`${formatCurrency(value, "USD")} (${formatCurrency(
@@ -228,6 +261,14 @@ export const NetWorthSnapshotTable = () => {
             sx={{
               color: theme.palette.cryptoColor.main,
               fontWeight: "500",
+              ...(userParams.discreetMode
+                ? {
+                    filter: "blur(4px)",
+                    "&:hover": {
+                      filter: "blur(0px)",
+                    },
+                  }
+                : {}),
             }}
           >
             {formatBTC(value)}

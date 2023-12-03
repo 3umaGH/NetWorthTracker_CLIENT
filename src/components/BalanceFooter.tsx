@@ -21,6 +21,7 @@ import { formatTotalCurrency, getLastSnapshot } from "../util";
 
 export const BalanceFooter = () => {
   const assets = useSelector((state: RootState) => state.assets);
+  const userParams = useSelector((state: RootState) => state.userParams);
   const theme = useTheme();
 
   const USDChange = assets.totals.USD - (getLastSnapshot(assets).totalUSD ?? 0);
@@ -45,7 +46,18 @@ export const BalanceFooter = () => {
             item
             xs={12}
             md={3}
-            sx={{ color: theme.palette.conversionColor.main, mb: 1 }}
+            sx={{
+              color: theme.palette.conversionColor.main,
+              mb: 1,
+              ...(userParams.discreetMode
+                ? {
+                    filter: "blur(8px)",
+                    "&:hover": {
+                      filter: "blur(0px)",
+                    },
+                  }
+                : {}),
+            }}
           >
             <span>1€ = {assets.eurUSDRate}</span>
           </Grid>
@@ -59,6 +71,14 @@ export const BalanceFooter = () => {
                   ? theme.palette.positiveColor.main
                   : theme.palette.negativeColor.main,
               mb: 1,
+              ...(userParams.discreetMode
+                ? {
+                    filter: "blur(8px)",
+                    "&:hover": {
+                      filter: "blur(0px)",
+                    },
+                  }
+                : {}),
             }}
           >
             <span>
@@ -76,6 +96,14 @@ export const BalanceFooter = () => {
                   ? theme.palette.positiveColor.main
                   : theme.palette.negativeColor.main,
               mb: 1,
+              ...(userParams.discreetMode
+                ? {
+                    filter: "blur(8px)",
+                    "&:hover": {
+                      filter: "blur(0px)",
+                    },
+                  }
+                : {}),
             }}
           >
             <span>

@@ -36,6 +36,7 @@ import { availableCurrencies } from "../../constants";
 
 export const FiatAssetsTable = () => {
   const assets = useSelector((state: RootState) => state.assets);
+  const userParams = useSelector((state: RootState) => state.userParams);
   const dispatch = useDispatch<AppDispatch>();
   const theme = useTheme();
 
@@ -130,6 +131,14 @@ export const FiatAssetsTable = () => {
             sx={{
               color: theme.palette.fiatColor.main,
               fontWeight: "500",
+              ...(userParams.discreetMode
+                ? {
+                    filter: "blur(4px)",
+                    "&:hover": {
+                      filter: "blur(0px)",
+                    },
+                  }
+                : {}),
             }}
           >
             {formatCurrency(value, params.row.currency)}
