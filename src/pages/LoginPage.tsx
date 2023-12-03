@@ -26,7 +26,6 @@ export const LoginPage = () => {
 
   useEffect(() => {
     FirebaseAuth.currentUser ? navigate("/main") : null;
-    console.log("cur", FirebaseAuth.currentUser);
   }, [isUserUpdated]);
 
   return (
