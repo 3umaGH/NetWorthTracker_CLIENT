@@ -41,8 +41,8 @@ export const AddAsset = ({
     note: "-",
     currency: availableCurrencies[0],
     amount: "0",
-    type: "Crypto",
-    ticker: "BTCUSDT",
+    type: "",
+    ticker: "",
   });
 
   const handleChange = (
@@ -81,8 +81,8 @@ export const AddAsset = ({
           formData.note === "-"
             ? `My ${formData.ticker} Investment`
             : formData.note,
-        ticker: formData.ticker,
-        type: formData.type,
+        ticker: formData.ticker ?? viewingCrypto ? availableCryptoPairs[0] : availableStocksPairs[0],
+        type: formData.type ?? viewingCrypto ? "Crypto" : "Stock",
         currency: formData.currency as "USD" | "EUR",
         amount: parseFloat(formData.amount),
         lastPrice: 0,
@@ -119,7 +119,7 @@ export const AddAsset = ({
         <div>
           <TextField
             required
-            InputProps={{ inputProps: { min: 0, max: 1000000000 } }}
+            InputProps={{ inputProps: { min: 0.0000001, max: 1000000000, step: 0.000000001 } }}
             name="amount"
             label="Amount"
             type="number"

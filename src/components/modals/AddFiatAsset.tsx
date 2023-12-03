@@ -106,7 +106,7 @@ export const AddFiatAsset = ({
             <Select
               required
               name="currency"
-              value={availableCurrencies[0]}
+              value={formData.currency}
               label="Currency"
               onChange={(e) => handleChange(e)}
             >
