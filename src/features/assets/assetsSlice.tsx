@@ -15,6 +15,8 @@ import {
   updateTotals,
 } from "../../util";
 
+import { saveUserData } from "../../firebase/firebase";
+
 export type AssetsState = {
   assets: Asset[];
   fiatAssets: fiatAsset[];
@@ -76,6 +78,14 @@ export const assetsSlice = createSlice({
   name: "assets",
   initialState,
   reducers: {
+    updateUserData: (state, action: PayloadAction<AssetsState>) => {
+      state.assets = action.payload.assets;
+      state.eurUSDRate = action.payload.eurUSDRate;
+      state.fiatAssets = action.payload.fiatAssets;
+      state.networthSnapshots = action.payload.networthSnapshots;
+
+      updateTotals(state);
+    },
     addSnapshot: (state) => {
       const btcPrice = (state.cryptoPrices.find(
         (val) => val.symbol === "BTCUSDT"
@@ -101,12 +111,14 @@ export const assetsSlice = createSlice({
           })),
         } as NetworthSnapshot,
       ];
+      saveUserData(state);
     },
 
     deleteSnapshot: (state, action) => {
       state.networthSnapshots = state.networthSnapshots.filter(
         (snapshot) => snapshot.id !== action.payload.id
       );
+      saveUserData(state);
     },
 
     updateSnapshot: (state, action) => {
@@ -115,6 +127,7 @@ export const assetsSlice = createSlice({
           ? { ...snapshot, ...action.payload }
           : snapshot
       );
+      saveUserData(state);
     },
 
     addFiatAsset: (state, action: PayloadAction<fiatAsset>) => {
@@ -126,6 +139,7 @@ export const assetsSlice = createSlice({
       state.fiatAssets = [...state.fiatAssets, { ...action.payload, id: id }];
 
       updateTotals(state);
+      saveUserData(state);
     },
 
     deleteFiatAsset: (state, action) => {
@@ -133,6 +147,7 @@ export const assetsSlice = createSlice({
         (asset) => asset.id !== action.payload.id
       );
       updateTotals(state);
+      saveUserData(state);
     },
 
     updateFiatAsset: (state, action) => {
@@ -141,6 +156,7 @@ export const assetsSlice = createSlice({
       );
 
       updateTotals(state);
+      saveUserData(state);
     },
 
     addAsset: (state, action: PayloadAction<Asset>) => {
@@ -164,6 +180,7 @@ export const assetsSlice = createSlice({
       ];
 
       updateTotals(state);
+      saveUserData(state);
     },
 
     deleteAsset: (state, action) => {
@@ -171,6 +188,7 @@ export const assetsSlice = createSlice({
         (asset) => asset.id !== action.payload.id
       );
       updateTotals(state);
+      saveUserData(state);
     },
 
     updateAsset: (state, action) => {
@@ -185,6 +203,7 @@ export const assetsSlice = createSlice({
       );
 
       updateTotals(state);
+      saveUserData(state);
     },
   },
   extraReducers: (builder) => {
@@ -268,6 +287,7 @@ export const assetsSlice = createSlice({
 });
 
 export const {
+  updateUserData,
   addSnapshot,
   addFiatAsset,
   addAsset,

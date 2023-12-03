@@ -18,6 +18,8 @@ import { AppDispatch } from "../app/Store";
 
 // Thunks
 import { fetchCryptoPrices, fetchStockPrices } from "../features/assets/thunks";
+import { updateUserData } from "../features/assets/assetsSlice";
+import { fetchUserData } from "../firebase/firebase";
 
 export const MainPage = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -28,6 +30,14 @@ export const MainPage = () => {
 
     dispatch(fetchStockPrices());
     setInterval(() => dispatch(fetchStockPrices()), 30000);
+
+    const loadUserData = async () => {
+      const data = await fetchUserData();
+
+      if (data) dispatch(updateUserData(data));
+    };
+
+    loadUserData();
   }, []);
 
   return (
