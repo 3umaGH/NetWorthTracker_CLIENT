@@ -18,7 +18,7 @@ export const fetchCryptoPrices = createAsyncThunk(
 export const fetchStockPrices = createAsyncThunk(
   "assets/fetchStockPrices",
   async () => {
-    return axios.get("http://localhost:3000").then((response) => response.data);
+    return axios.get("https://stockpriceparserapi-production.up.railway.app/").then((response) => response.data);
   }
 );
 
