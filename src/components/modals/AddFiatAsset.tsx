@@ -22,6 +22,7 @@ import { addFiatAsset } from "../../features/assets/assetsSlice";
 
 // Constants related imports
 import { fiatAsset } from "../../constants";
+import { saveUserData } from "../../features/assets/thunks";
 
 export const AddFiatAsset = ({
   availableCurrencies,
@@ -61,6 +62,8 @@ export const AddFiatAsset = ({
         note: formData.note,
       } as fiatAsset)
     );
+
+    dispatch(saveUserData());
 
     onClose();
   };

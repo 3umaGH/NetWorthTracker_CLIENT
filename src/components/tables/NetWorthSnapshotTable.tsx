@@ -29,6 +29,7 @@ import {
   deleteSnapshot,
   updateSnapshot,
 } from "../../features/assets/assetsSlice";
+import { saveUserData } from "../../features/assets/thunks";
 
 export const NetWorthSnapshotTable = () => {
   const assets = useSelector((state: RootState) => state.assets);
@@ -143,7 +144,10 @@ export const NetWorthSnapshotTable = () => {
                 variant="text"
                 color="error"
                 sx={{ fontSize: 18 }}
-                onClick={() => dispatch(deleteSnapshot(row))}
+                onClick={() => {
+                  dispatch(deleteSnapshot(row));
+                  dispatch(saveUserData());
+                }}
               >
                 X
               </Button>
@@ -310,7 +314,10 @@ export const NetWorthSnapshotTable = () => {
           variant="text"
           color="success"
           sx={{ fontSize: 18, p: 0, m: 0 }}
-          onClick={() => dispatch(addSnapshot())}
+          onClick={() => {
+            dispatch(addSnapshot());
+            dispatch(saveUserData());
+          }}
         >
           Create Snapshot
         </Button>
@@ -338,6 +345,8 @@ export const NetWorthSnapshotTable = () => {
         }
 
         dispatch(updateSnapshot(updatedRow));
+        dispatch(saveUserData());
+
         return updatedRow;
       }}
       onProcessRowUpdateError={(e) => console.log(e)}

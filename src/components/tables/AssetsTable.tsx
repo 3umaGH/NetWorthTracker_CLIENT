@@ -30,6 +30,7 @@ import { AddAsset } from "../modals/AddAsset";
 
 // Constants related imports
 import { availableCurrencies } from "../../constants";
+import { saveUserData } from "../../features/assets/thunks";
 
 export const AssetsTable = () => {
   const assets = useSelector((state: RootState) => state.assets);
@@ -126,7 +127,10 @@ export const AssetsTable = () => {
           variant="text"
           color="error"
           sx={{ fontSize: 18 }}
-          onClick={() => dispatch(deleteAsset(row))}
+          onClick={() => {
+            dispatch(deleteAsset(row));
+            dispatch(saveUserData());
+          }}
         >
           X
         </Button>
@@ -314,6 +318,8 @@ export const AssetsTable = () => {
             return originalRow;
 
           dispatch(updateAsset(updatedRow));
+          dispatch(saveUserData());
+
           return updatedRow;
         }}
         onProcessRowUpdateError={(e) => console.log(e)}

@@ -33,6 +33,7 @@ import { AddFiatAsset } from "../modals/AddFiatAsset";
 
 // Constants related imports
 import { availableCurrencies } from "../../constants";
+import { saveUserData } from "../../features/assets/thunks";
 
 export const FiatAssetsTable = () => {
   const assets = useSelector((state: RootState) => state.assets);
@@ -102,7 +103,10 @@ export const FiatAssetsTable = () => {
           variant="text"
           color="error"
           sx={{ fontSize: 18 }}
-          onClick={() => dispatch(deleteFiatAsset(row))}
+          onClick={() => {
+            dispatch(deleteFiatAsset(row));
+            dispatch(saveUserData());
+          }}
         >
           X
         </Button>
@@ -220,6 +224,7 @@ export const FiatAssetsTable = () => {
           if (updatedRow.amount >= 1000000000) return originalRow;
 
           dispatch(updateFiatAsset(updatedRow));
+          dispatch(saveUserData());
           return updatedRow;
         }}
         onProcessRowUpdateError={(e) => console.log(e)}

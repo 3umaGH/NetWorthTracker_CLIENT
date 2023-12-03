@@ -17,10 +17,13 @@ import { BalanceFooter } from "../components/BalanceFooter";
 import { AppDispatch } from "../app/Store";
 
 // Thunks
-import { fetchCryptoPrices, fetchStockPrices } from "../features/assets/thunks";
-import { updateUserData } from "../features/assets/assetsSlice";
-import { fetchUserData } from "../firebase/firebase";
+import {
+  fetchCryptoPrices,
+  fetchStockPrices,
+  fetchUserData,
+} from "../features/assets/thunks";
 import { ButtonToolbar } from "../components/ButtonToolbar";
+import { FirebaseAuth } from "../firebase/firebase";
 
 export const MainPage = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -32,13 +35,8 @@ export const MainPage = () => {
     dispatch(fetchStockPrices());
     setInterval(() => dispatch(fetchStockPrices()), 30000);
 
-    const loadUserData = async () => {
-      const data = await fetchUserData();
-
-      if (data) dispatch(updateUserData(data));
-    };
-
-    loadUserData();
+    if(FirebaseAuth.currentUser)
+      dispatch(fetchUserData());
   }, []);
 
   return (
@@ -47,7 +45,7 @@ export const MainPage = () => {
         <Grid item xs={12} md={3}>
           <Container maxWidth={false} disableGutters sx={{ height: "45vh" }}>
             <CellTitle title="Asset Allocation" />
-            <ButtonToolbar/>
+            <ButtonToolbar />
 
             <Box
               sx={{
