@@ -129,13 +129,13 @@ export const lightTheme = createTheme({
     }),
     cryptoColor: theme.palette.augmentColor({
       color: {
-        main: "#ffd740", // Amber A400
+        main: "#cf8104", // Amber A400
       },
       name: "cryptoColor",
     }),
     conversionColor: theme.palette.augmentColor({
       color: {
-        main: "#42a5f5", // Blue 700
+        main: "#0068ad", // Blue 700
       },
       name: "conversionColor",
     }),
