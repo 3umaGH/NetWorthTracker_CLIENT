@@ -76,14 +76,6 @@ export const assetsSlice = createSlice({
   name: "assets",
   initialState,
   reducers: {
-    updateUserData: (state, action: PayloadAction<AssetsState>) => {
-      state.assets = action.payload.assets;
-      state.eurUSDRate = action.payload.eurUSDRate;
-      state.fiatAssets = action.payload.fiatAssets;
-      state.networthSnapshots = action.payload.networthSnapshots;
-
-      updateTotals(state);
-    },
     addSnapshot: (state) => {
       const btcPrice = (state.cryptoPrices.find(
         (val) => val.symbol === "BTCUSDT"
@@ -284,7 +276,6 @@ export const assetsSlice = createSlice({
 });
 
 export const {
-  updateUserData,
   addSnapshot,
   addFiatAsset,
   addAsset,
