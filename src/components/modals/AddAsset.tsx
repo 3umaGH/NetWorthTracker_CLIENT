@@ -23,6 +23,7 @@ import { addAsset } from "../../features/assets/assetsSlice";
 
 // Constants related imports
 import { Asset } from "../../constants";
+import { saveUserData } from "../../features/assets/thunks";
 
 export const AddAsset = ({
   availableCryptoPairs,
@@ -81,8 +82,13 @@ export const AddAsset = ({
           formData.note === "-"
             ? `My ${formData.ticker} Investment`
             : formData.note,
-        ticker: formData.ticker ?? viewingCrypto ? availableCryptoPairs[0] : availableStocksPairs[0],
-        type: formData.type ?? viewingCrypto ? "Crypto" : "Stock",
+        ticker: formData.ticker,
+        type:
+          formData.type === ""
+            ? viewingCrypto
+              ? "Crypto"
+              : "Stock"
+            : formData.type,
         currency: formData.currency as "USD" | "EUR",
         amount: parseFloat(formData.amount),
         lastPrice: 0,
@@ -90,6 +96,8 @@ export const AddAsset = ({
         price: 0,
       } as Asset)
     );
+
+    dispatch(saveUserData());
 
     onClose();
   };
@@ -119,7 +127,13 @@ export const AddAsset = ({
         <div>
           <TextField
             required
-            InputProps={{ inputProps: { min: 0.0000001, max: 1000000000, step: 0.000000001 } }}
+            InputProps={{
+              inputProps: {
+                min: 0.0000001,
+                max: 1000000000,
+                step: 0.000000001,
+              },
+            }}
             name="amount"
             label="Amount"
             type="number"
