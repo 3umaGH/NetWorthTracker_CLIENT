@@ -1,10 +1,34 @@
 // Material-UI (MUI) related imports
 import { Button, Divider, Paper, Typography } from "@mui/material";
 
-// React Router related imports
-import { Link } from "react-router-dom";
+import { FirebaseAuth, GoogleProvider } from "../firebase/firebase";
+import { signInWithPopup } from "firebase/auth";
+
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export const LoginPage = () => {
+  const [isUserUpdated, setUserUpdated] = useState(false);
+  const navigate = useNavigate();
+
+  const signInWithGoogle = async () => {
+    try {
+      await signInWithPopup(FirebaseAuth, GoogleProvider);
+      setUserUpdated(!isUserUpdated);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  FirebaseAuth.onAuthStateChanged(() => {
+    setUserUpdated(!isUserUpdated);
+  });
+
+  useEffect(() => {
+    FirebaseAuth.currentUser ? navigate("/main") : null;
+    console.log("cur", FirebaseAuth.currentUser);
+  }, [isUserUpdated]);
+
   return (
     <div
       style={{
@@ -16,7 +40,7 @@ export const LoginPage = () => {
       }}
     >
       <img
-        src="https://image-placeholder.com/images/image-placeholder.png"
+        src="https://www.goomlandscapes.co.nz/wp-content/uploads/2018/08/logo-placeholder.png"
         style={{ width: "100%", maxWidth: "600px" }}
       />
 
@@ -41,7 +65,7 @@ export const LoginPage = () => {
           </span>
         </Typography>
 
-        <Button component={Link} to={"/main"} variant="contained">
+        <Button onClick={() => signInWithGoogle()} variant="contained">
           Sign in with Google
         </Button>
 
