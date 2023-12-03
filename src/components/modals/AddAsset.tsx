@@ -75,20 +75,31 @@ export const AddAsset = ({
       return;
     }
 
+    const objNote =
+      formData.note === "-"
+        ? `My ${formData.ticker} Investment`
+        : formData.note;
+
+    const objTicker =
+      formData.ticker === ""
+        ? viewingCrypto
+          ? availableCryptoPairs[0]
+          : availableStocksPairs[0]
+        : formData.ticker;
+
+    const objType =
+      formData.type === ""
+        ? viewingCrypto
+          ? "Crypto"
+          : "Stock"
+        : formData.type;
+
     dispatch(
       addAsset({
         id: 0, // Id is assigned automatically
-        note:
-          formData.note === "-"
-            ? `My ${formData.ticker} Investment`
-            : formData.note,
-        ticker: formData.ticker,
-        type:
-          formData.type === ""
-            ? viewingCrypto
-              ? "Crypto"
-              : "Stock"
-            : formData.type,
+        note: objNote,
+        ticker: objTicker,
+        type: objType,
         currency: formData.currency as "USD" | "EUR",
         amount: parseFloat(formData.amount),
         lastPrice: 0,
