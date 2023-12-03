@@ -20,6 +20,7 @@ import { AppDispatch } from "../app/Store";
 import { fetchCryptoPrices, fetchStockPrices } from "../features/assets/thunks";
 import { updateUserData } from "../features/assets/assetsSlice";
 import { fetchUserData } from "../firebase/firebase";
+import { ButtonToolbar } from "../components/ButtonToolbar";
 
 export const MainPage = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -46,13 +47,14 @@ export const MainPage = () => {
         <Grid item xs={12} md={3}>
           <Container maxWidth={false} disableGutters sx={{ height: "45vh" }}>
             <CellTitle title="Asset Allocation" />
+            <ButtonToolbar/>
 
             <Box
               sx={{
-                width: "100%",
-                height: "100%",
+                width: "90%",
+                height: "90%",
                 m: "auto",
-                ml: 6,
+                ml: 10,
               }}
             >
               <AssetAllocationChart />

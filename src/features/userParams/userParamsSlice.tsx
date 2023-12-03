@@ -23,5 +23,5 @@ export const userParamsSlice = createSlice({
   },
 });
 
-export const { toggleThemeMode } = userParamsSlice.actions;
+export const { toggleThemeMode, toggleDiscreetMode } = userParamsSlice.actions;
 export default userParamsSlice.reducer;
