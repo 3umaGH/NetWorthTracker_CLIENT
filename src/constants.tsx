@@ -2,6 +2,8 @@ export const currencySymbol = "$";
 
 export const availableCurrencies = ["USD", "EUR"]; // TODO: make dynamic
 
+export const pregeneratedKey = "564bhBF324S653SDF" // Not secure TODO: make secure
+
 export const currencySymbols = {
   USD: "$",
   EUR: "€",
