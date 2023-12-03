@@ -110,8 +110,10 @@ export const assetsSlice = createSlice({
     },
 
     updateSnapshot: (state, action) => {
-      state.networthSnapshots = state.networthSnapshots.map(
-        (snapshot) => snapshot.id === action.payload.id && { ...action.payload }
+      state.networthSnapshots = state.networthSnapshots.map((snapshot) =>
+        snapshot.id === action.payload.id
+          ? { ...snapshot, ...action.payload }
+          : snapshot
       );
     },
 
