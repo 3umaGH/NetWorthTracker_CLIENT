@@ -35,24 +35,20 @@ export const MainPage = () => {
     dispatch(fetchStockPrices());
     setInterval(() => dispatch(fetchStockPrices()), 30000);
 
-    if(FirebaseAuth.currentUser)
-      dispatch(fetchUserData());
+    if (FirebaseAuth.currentUser) dispatch(fetchUserData());
   }, []);
 
   return (
     <Box>
       <Grid container rowSpacing={6} columnSpacing={0.25}>
         <Grid item xs={12} md={3}>
-          <Container maxWidth={false} disableGutters sx={{ height: "45vh" }}>
+          <Container maxWidth={false} sx={{ height: "45vh" }}>
             <CellTitle title="Asset Allocation" />
             <ButtonToolbar />
 
             <Box
               sx={{
-                width: "90%",
                 height: "90%",
-                m: "auto",
-                ml: 10,
               }}
             >
               <AssetAllocationChart />

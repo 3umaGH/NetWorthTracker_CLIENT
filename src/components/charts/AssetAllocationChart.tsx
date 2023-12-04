@@ -16,7 +16,12 @@ export const AssetAllocationChart = () => {
 
   return (
     <PieChart
-      slotProps={{ legend: { hidden: true } }}
+      slotProps={{
+        legend: {
+          hidden: true,
+        },
+      }}
+      margin={{ left: 100, right: 100 }}
       colors={[
         theme.palette.cryptoColor.main,
         theme.palette.positiveColor.main,
@@ -24,7 +29,9 @@ export const AssetAllocationChart = () => {
       ]}
       series={[
         {
-          innerRadius: 68,
+          innerRadius: 40,
+          outerRadius: 150,
+          cornerRadius: 10,
           data: [
             {
               id: 0,
