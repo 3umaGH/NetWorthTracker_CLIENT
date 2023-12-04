@@ -1,13 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { fetchUserConfig } from "./thunks";
 
-type UserParams = {
+export type UserParams = {
   isLightTheme: boolean;
   discreetMode: boolean;
 };
 
 const initialState: UserParams = {
   isLightTheme: false,
-  discreetMode: true,
+  discreetMode: false,
 };
 
 export const userParamsSlice = createSlice({
@@ -20,6 +21,13 @@ export const userParamsSlice = createSlice({
     toggleDiscreetMode: (state) => {
       state.discreetMode = !state.discreetMode;
     },
+  },
+
+  extraReducers: (builder) => {
+    builder.addCase(fetchUserConfig.fulfilled, (state, action) => {
+      state.discreetMode = action.payload.discreetMode;
+      state.isLightTheme = action.payload.isLightTheme;
+    });
   },
 });
 

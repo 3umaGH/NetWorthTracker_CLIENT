@@ -24,6 +24,7 @@ import {
 } from "../features/assets/thunks";
 import { ButtonToolbar } from "../components/ButtonToolbar";
 import { FirebaseAuth } from "../firebase/firebase";
+import { fetchUserConfig } from "../features/userParams/thunks";
 
 export const MainPage = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -35,7 +36,11 @@ export const MainPage = () => {
     dispatch(fetchStockPrices());
     setInterval(() => dispatch(fetchStockPrices()), 30000);
 
-    if (FirebaseAuth.currentUser) dispatch(fetchUserData());
+    if (FirebaseAuth.currentUser) {
+      dispatch(fetchUserConfig());
+      dispatch(fetchUserData());
+      
+    }
   }, []);
 
   return (
