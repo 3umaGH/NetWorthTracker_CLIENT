@@ -127,3 +127,29 @@ export const formatTotalCurrency = (inputNum: number) => {
     return inputNum.toFixed().toString();
   }
 };
+
+export const matchAssetPrices = (
+  state: AssetsState,
+  type: "Crypto" | "Stock" | "All"
+) => {
+  state.assets = state.assets.map((asset) => {
+    const price =
+      asset.type === "Crypto"
+        ? getCryptoPrice(state, asset.ticker)
+        : getStockPrice(state, asset.ticker);
+
+    if (type === "All" ? true : asset.type == type) {
+      return {
+        ...asset,
+        lastPrice:
+          getLastSnapshot(state).lastAssetPrices?.find(
+            (val) => val.ticker === asset.ticker
+          )?.lastPrice || 0,
+        price: price,
+        change: price - asset.lastPrice,
+        totalPrice: price * asset.amount,
+      };
+    } else return asset;
+  });
+  updateTotals(state);
+};

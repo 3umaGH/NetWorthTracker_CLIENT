@@ -12,6 +12,7 @@ import {
   getCryptoPrice,
   getLastSnapshot,
   getStockPrice,
+  matchAssetPrices,
   updateTotals,
 } from "../../util";
 
@@ -163,7 +164,7 @@ export const assetsSlice = createSlice({
         },
       ];
 
-      updateTotals(state);
+      matchAssetPrices(state, "All");
     },
 
     deleteAsset: (state, action) => {
@@ -205,24 +206,7 @@ export const assetsSlice = createSlice({
         state.fetching = false;
         state.error = "";
 
-        state.assets = state.assets.map((asset) => {
-          const price = getCryptoPrice(state, asset.ticker);
-
-          if (asset.type === "Crypto") {
-            return {
-              ...asset,
-              lastPrice:
-                getLastSnapshot(state).lastAssetPrices?.find(
-                  (val) => val.ticker === asset.ticker
-                )?.lastPrice || 0,
-              price: price,
-              change: price - asset.lastPrice,
-              totalPrice: price * asset.amount,
-            };
-          } else return asset;
-        });
-
-        updateTotals(state);
+        matchAssetPrices(state, "Crypto");
       }
     );
     builder.addCase(fetchCryptoPrices.rejected, (state, action) => {
@@ -240,23 +224,7 @@ export const assetsSlice = createSlice({
         state.fetching = false;
         state.error = "";
 
-        state.assets = state.assets.map((asset) => {
-          const price = getStockPrice(state, asset.ticker);
-
-          if (asset.type === "Stock") {
-            return {
-              ...asset,
-              lastPrice:
-                getLastSnapshot(state).lastAssetPrices?.find(
-                  (val) => val.ticker === asset.ticker
-                )?.lastPrice || 0,
-              price: price,
-              change: price - asset.lastPrice,
-              totalPrice: price * asset.amount,
-            };
-          } else return asset;
-        });
-        updateTotals(state);
+        matchAssetPrices(state, "Stock");
       }
     );
     builder.addCase(fetchStockPrices.rejected, (state, action) => {
