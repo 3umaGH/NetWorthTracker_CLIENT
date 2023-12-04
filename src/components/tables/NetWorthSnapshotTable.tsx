@@ -132,7 +132,10 @@ export const NetWorthSnapshotTable = () => {
                   variant="text"
                   color="success"
                   sx={{ fontSize: 18, p: 0, m: 0 }}
-                  onClick={() => dispatch(addSnapshot())}
+                  onClick={() => {
+                    dispatch(addSnapshot());
+                    dispatch(saveUserData());
+                  }}
                 >
                   🖬
                 </Button>
