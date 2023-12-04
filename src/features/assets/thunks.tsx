@@ -18,7 +18,9 @@ export const fetchCryptoPrices = createAsyncThunk(
 export const fetchStockPrices = createAsyncThunk(
   "assets/fetchStockPrices",
   async () => {
-    return axios.get("https://stockpriceparserapi-production.up.railway.app/").then((response) => response.data);
+    return axios
+      .get("https://stockpriceparserapi-production.up.railway.app/")
+      .then((response) => response.data);
   }
 );
 
@@ -39,9 +41,16 @@ export const saveUserData = createAsyncThunk(
       };
 
       try {
-        setDoc(doc(FirebaseDB, "userData", `${id}`), {
-          encString: CryptoJS.AES.encrypt(JSON.stringify(obj), key).toString(),
-        }).then(() => {
+        setDoc(
+          doc(FirebaseDB, "userData", `${id}`),
+          {
+            encString: CryptoJS.AES.encrypt(
+              JSON.stringify(obj),
+              key
+            ).toString(),
+          },
+          { merge: true }
+        ).then(() => {
           console.log(`${id} Successfully saved...`);
           resolve();
         });
@@ -53,31 +62,28 @@ export const saveUserData = createAsyncThunk(
   }
 );
 
-export const fetchUserData = createAsyncThunk(
-  "assets/fetchUserData",
-  async () => {
-    return new Promise<AssetsState>(async (resolve, reject) => {
-      const id = FirebaseAuth.currentUser?.uid;
-      const key = FirebaseAuth.currentUser?.uid + pregeneratedKey;
+export const fetchUserData = createAsyncThunk("assets/fetchUserData", () => {
+  return new Promise<AssetsState>(async (resolve, reject) => {
+    const id = FirebaseAuth.currentUser?.uid;
+    const key = FirebaseAuth.currentUser?.uid + pregeneratedKey;
 
-      try {
-        const docs = await getDoc(doc(FirebaseDB, "userData", `${id}`));
+    try {
+      const docs = await getDoc(doc(FirebaseDB, "userData", `${id}`));
 
-        if (!docs.exists() || !id) {
-          reject();
-          return;
-        }
-
-        const bytes = CryptoJS.AES.decrypt(docs.data().encString, key);
-        const decryptedData = JSON.parse(
-          bytes.toString(CryptoJS.enc.Utf8)
-        ) as AssetsState;
-
-        resolve(decryptedData);
-      } catch (err) {
-        console.error(err);
+      if (!docs.exists() || !id) {
         reject();
+        return;
       }
-    });
-  }
-);
+
+      const bytes = CryptoJS.AES.decrypt(docs.data().encString, key);
+      const decryptedData = JSON.parse(
+        bytes.toString(CryptoJS.enc.Utf8)
+      ) as AssetsState;
+
+      resolve(decryptedData);
+    } catch (err) {
+      console.error(err);
+      reject();
+    }
+  });
+});
