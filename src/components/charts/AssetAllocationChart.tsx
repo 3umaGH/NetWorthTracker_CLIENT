@@ -30,7 +30,7 @@ export const AssetAllocationChart = () => {
       series={[
         {
           innerRadius: 40,
-          outerRadius: 150,
+          outerRadius: 135,
           cornerRadius: 10,
           data: [
             {
