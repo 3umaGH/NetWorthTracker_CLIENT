@@ -6,6 +6,7 @@ import { signInWithPopup } from "firebase/auth";
 
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { responsiveFontSizes } from "@mui/material/styles";
 
 export const LoginPage = () => {
   const [isUserUpdated, setUserUpdated] = useState(false);
@@ -38,7 +39,10 @@ export const LoginPage = () => {
         height: "100vh",
       }}
     >
-      <Typography variant="h1" sx={{ fontWeight: 400 }}>
+      <Typography
+        variant="h1"
+        sx={{ fontWeight: 400, fontSize: { xs: 56, md: 130 } }}
+      >
         {import.meta.env.VITE_APP_PROJECT_NAME}
       </Typography>
 
