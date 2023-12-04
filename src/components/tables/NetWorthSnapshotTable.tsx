@@ -1,3 +1,5 @@
+import { useState, useEffect } from "react";
+
 // React-Redux related imports
 import { useDispatch, useSelector } from "react-redux";
 
@@ -6,6 +8,7 @@ import { Box, Button, Tooltip, useMediaQuery } from "@mui/material";
 import {
   DataGrid,
   GridColDef,
+  GridColumnVisibilityModel,
   GridRenderCellParams,
   GridTreeNodeWithRender,
 } from "@mui/x-data-grid";
@@ -42,12 +45,19 @@ export const NetWorthSnapshotTable = () => {
   const rows = assets.networthSnapshots;
   const mobileVersion = useMediaQuery(theme.breakpoints.down("md"));
 
+  const [columnVisibilityModel, setColumnVisibilityModel] =
+  useState<GridColumnVisibilityModel>();
+
   const HIDE_COLUMNS_MOBILE = {
     btcPrice: false,
     eurUSD: false,
     totalBTC: false,
     note: false,
   };
+
+  useEffect(() => {
+    setColumnVisibilityModel(mobileVersion ? HIDE_COLUMNS_MOBILE : {});
+  }, [mobileVersion]);
 
   const getColor = (inputNum: number) => {
     if (inputNum === null || inputNum === undefined) return "black";
@@ -246,10 +256,13 @@ export const NetWorthSnapshotTable = () => {
   return (
     <DataGrid
       rows={rows}
-      columnVisibilityModel={mobileVersion ? HIDE_COLUMNS_MOBILE : {}}
+      columnVisibilityModel={columnVisibilityModel}
       hideFooter={true}
       disableRowSelectionOnClick
       density={"compact"}
+      onColumnVisibilityModelChange={(newModel) =>
+        setColumnVisibilityModel(newModel)
+      }
       columns={columns.map((column) => ({
         ...column,
         renderCell: cellRenderer,
@@ -267,7 +280,7 @@ export const NetWorthSnapshotTable = () => {
         ),
         toolbar: mobileVersion ? DataGridToolBar : null,
       }}
-      
+
       processRowUpdate={(updatedRow, originalRow) => {
         if (updatedRow.note.length > 100) {
           alert("Maximum 100 symbols!");

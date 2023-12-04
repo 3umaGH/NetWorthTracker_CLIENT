@@ -1,5 +1,5 @@
 // React-related imports
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 // Material-UI (MUI) related imports
@@ -7,6 +7,7 @@ import { Box, Button, useMediaQuery } from "@mui/material";
 import {
   DataGrid,
   GridColDef,
+  GridColumnVisibilityModel,
   GridRenderCellParams,
   GridTreeNodeWithRender,
 } from "@mui/x-data-grid";
@@ -41,6 +42,8 @@ export const AssetsTable = () => {
   const theme = useTheme();
 
   const [addIsOpen, setAddIsOpen] = useState(false);
+  const [columnVisibilityModel, setColumnVisibilityModel] =
+    useState<GridColumnVisibilityModel>();
   const mobileVersion = useMediaQuery(theme.breakpoints.down("md"));
 
   const rows = assets.assets;
@@ -50,6 +53,10 @@ export const AssetsTable = () => {
     type: false,
     amount: false,
   };
+
+  useEffect(() => {
+    setColumnVisibilityModel(mobileVersion ? HIDE_COLUMNS_MOBILE : {});
+  }, [mobileVersion]);
 
   const getColor = (inputNum: number) => {
     if (inputNum === null || inputNum === undefined) return "black";
@@ -227,10 +234,13 @@ export const AssetsTable = () => {
       )}
       <DataGrid
         rows={rows}
-        columnVisibilityModel={mobileVersion ? HIDE_COLUMNS_MOBILE : {}}
+        columnVisibilityModel={columnVisibilityModel}
         hideFooter={true}
         disableRowSelectionOnClick
         density={"compact"}
+        onColumnVisibilityModelChange={(newModel) =>
+          setColumnVisibilityModel(newModel)
+        }
         columns={columns.map((column) => ({
           ...column,
           renderCell: cellRenderer,
@@ -275,6 +285,7 @@ const columns: GridColDef[] = [
   {
     field: "ticker",
     headerName: "Ticker",
+
     flex: 0.125,
 
     align: "center",

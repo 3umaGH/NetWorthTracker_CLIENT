@@ -1,5 +1,5 @@
 // React-related imports
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 // Material-UI (MUI) related imports
@@ -7,6 +7,7 @@ import { Box, Button, useMediaQuery } from "@mui/material";
 import {
   DataGrid,
   GridColDef,
+  GridColumnVisibilityModel,
   GridRenderCellParams,
   GridTreeNodeWithRender,
 } from "@mui/x-data-grid";
@@ -44,6 +45,8 @@ export const FiatAssetsTable = () => {
   const theme = useTheme();
 
   const [addIsOpen, setAddIsOpen] = useState(false);
+  const [columnVisibilityModel, setColumnVisibilityModel] =
+  useState<GridColumnVisibilityModel>();
   const mobileVersion = useMediaQuery(theme.breakpoints.down("md"));
 
   const rows = assets.fiatAssets;
@@ -51,6 +54,10 @@ export const FiatAssetsTable = () => {
   const HIDE_COLUMNS_MOBILE = {
     /*None, it fits well*/
   };
+
+  useEffect(() => {
+    setColumnVisibilityModel(mobileVersion ? HIDE_COLUMNS_MOBILE : {});
+  }, [mobileVersion]);
 
   const TableActions = ({
     row,
@@ -150,10 +157,13 @@ export const FiatAssetsTable = () => {
       )}
       <DataGrid
         rows={rows}
-        columnVisibilityModel={mobileVersion ? HIDE_COLUMNS_MOBILE : {}}
+        columnVisibilityModel={columnVisibilityModel}
         hideFooter={true}
         disableRowSelectionOnClick
         density={"compact"}
+        onColumnVisibilityModelChange={(newModel) =>
+          setColumnVisibilityModel(newModel)
+        }
         columns={columns.map((column) => ({
           ...column,
           renderCell: cellRenderer,
