@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 // Material-UI (MUI) related imports
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, Typography, useMediaQuery } from "@mui/material";
 import {
   DataGrid,
   GridColDef,
@@ -34,6 +34,7 @@ import { AddFiatAsset } from "../modals/AddFiatAsset";
 // Constants related imports
 import { availableCurrencies } from "../../constants";
 import { saveUserData } from "../../features/assets/thunks";
+import { DataGridToolBar } from "./components/DataGridToolBar";
 
 export const FiatAssetsTable = () => {
   const assets = useSelector((state: RootState) => state.assets);
@@ -42,46 +43,13 @@ export const FiatAssetsTable = () => {
   const theme = useTheme();
 
   const [addIsOpen, setAddIsOpen] = useState(false);
+  const mobileVersion = useMediaQuery(theme.breakpoints.down("md"));
 
   const rows = assets.fiatAssets;
 
-  const columns: GridColDef[] = [
-    {
-      field: "note",
-      headerName: "Note",
-      editable: true,
-      flex: 0.35,
-    },
-    {
-      field: "amount",
-      headerName: "Amount",
-      type: "number",
-      editable: true,
-      flex: 0.2,
-
-      align: "center",
-      headerAlign: "center",
-    },
-    {
-      field: "currency",
-      headerName: "Currency",
-      editable: true,
-      type: "singleSelect",
-      valueOptions: availableCurrencies,
-      flex: 0.2,
-
-      align: "center",
-      headerAlign: "center",
-    },
-    {
-      field: "actions",
-      headerName: "Actions",
-      flex: 0.2,
-
-      align: "center",
-      headerAlign: "center",
-    },
-  ];
+  const HIDE_COLUMNS_MOBILE = {
+    /*None, it fits well*/
+  };
 
   const TableActions = ({
     row,
@@ -205,15 +173,19 @@ export const FiatAssetsTable = () => {
       )}
       <DataGrid
         rows={rows}
+        columnVisibilityModel={mobileVersion ? HIDE_COLUMNS_MOBILE : {}}
+        hideFooter={true}
+        disableRowSelectionOnClick
+        density={"compact"}
+        
         columns={columns.map((column) => ({
           ...column,
           renderCell: cellRenderer,
         }))}
-        hideFooter={true}
-        disableRowSelectionOnClick
-        density={"compact"}
+
         slots={{
           noRowsOverlay: NoRowsComponent,
+          toolbar: mobileVersion ? DataGridToolBar : null,
         }}
         processRowUpdate={(updatedRow, originalRow) => {
           if (updatedRow.note.length > 100) {
@@ -227,8 +199,47 @@ export const FiatAssetsTable = () => {
           dispatch(saveUserData());
           return updatedRow;
         }}
+
         onProcessRowUpdateError={(e) => console.log(e)}
       />
     </>
   );
 };
+
+const columns: GridColDef[] = [
+  {
+    field: "note",
+    headerName: "Note",
+    editable: true,
+    flex: 0.35,
+  },
+  {
+    field: "amount",
+    headerName: "Amount",
+    type: "number",
+    editable: true,
+    flex: 0.2,
+
+    align: "center",
+    headerAlign: "center",
+  },
+  {
+    field: "currency",
+    headerName: "Currency",
+    editable: true,
+    type: "singleSelect",
+    valueOptions: availableCurrencies,
+    flex: 0.2,
+
+    align: "center",
+    headerAlign: "center",
+  },
+  {
+    field: "actions",
+    headerName: "Actions",
+    flex: 0.2,
+
+    align: "center",
+    headerAlign: "center",
+  },
+];

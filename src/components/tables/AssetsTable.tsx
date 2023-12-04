@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 // Material-UI (MUI) related imports
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, Typography, useMediaQuery } from "@mui/material";
 import {
   DataGrid,
   GridColDef,
@@ -31,6 +31,7 @@ import { AddAsset } from "../modals/AddAsset";
 // Constants related imports
 import { availableCurrencies } from "../../constants";
 import { saveUserData } from "../../features/assets/thunks";
+import { DataGridToolBar } from "./components/DataGridToolBar";
 
 export const AssetsTable = () => {
   const assets = useSelector((state: RootState) => state.assets);
@@ -39,6 +40,15 @@ export const AssetsTable = () => {
   const theme = useTheme();
 
   const [addIsOpen, setAddIsOpen] = useState(false);
+  const mobileVersion = useMediaQuery(theme.breakpoints.down("md"));
+
+  const rows = assets.assets;
+
+  const HIDE_COLUMNS_MOBILE = {
+    note: false,
+    type: false,
+    amount: false,
+  };
 
   const getColor = (inputNum: number) => {
     if (inputNum === null || inputNum === undefined) return "black";
@@ -46,67 +56,6 @@ export const AssetsTable = () => {
     if (inputNum > 0) return theme.palette.positiveColor.main;
     else if (inputNum < 0) return theme.palette.negativeColor.main;
   };
-
-  const rows = assets.assets;
-
-  const columns: GridColDef[] = [
-    {
-      field: "note",
-      headerName: "Note",
-      editable: true,
-      flex: 0.375,
-    },
-    {
-      field: "ticker",
-      headerName: "Ticker",
-      flex: 0.125,
-
-      align: "center",
-      headerAlign: "center",
-    },
-    {
-      field: "type",
-      headerName: "Type",
-      flex: 0.125,
-
-      align: "center",
-      headerAlign: "center",
-    },
-    {
-      field: "amount",
-      headerName: "Amount",
-      type: "number",
-      editable: true,
-      flex: 0.125,
-
-      align: "center",
-      headerAlign: "center",
-    },
-    {
-      field: "price",
-      headerName: "Last Price",
-      flex: 0.125,
-
-      align: "center",
-      headerAlign: "center",
-    },
-    {
-      field: "totalPrice",
-      headerName: "Total Price",
-      flex: 0.125,
-
-      align: "center",
-      headerAlign: "center",
-    },
-    {
-      field: "actions",
-      headerName: "Actions",
-      flex: 0.07,
-
-      align: "center",
-      headerAlign: "center",
-    },
-  ];
 
   const TableActions = ({
     row,
@@ -277,6 +226,13 @@ export const AssetsTable = () => {
     );
   };
 
+  const availableStocksPairs = assets.stockPrices.map(
+    (ticker) => ticker.ticker
+  );
+  const availableCryptoPairs = Object.values(assets.cryptoPrices)
+    .filter((pair) => pair.symbol.endsWith("USDT"))
+    .map((pair) => pair.symbol);
+
   return (
     <>
       {addIsOpen && (
@@ -285,12 +241,8 @@ export const AssetsTable = () => {
           sx={{ minWidth: "260px", maxWidth: "500px" }}
         >
           <AddAsset
-            availableCryptoPairs={Object.values(assets.cryptoPrices)
-              .filter((pair) => pair.symbol.endsWith("USDT"))
-              .map((pair) => pair.symbol)}
-            availableStocksPairs={assets.stockPrices.map(
-              (ticker) => ticker.ticker
-            )}
+            availableCryptoPairs={availableCryptoPairs}
+            availableStocksPairs={availableStocksPairs}
             availableCurrencies={availableCurrencies}
             onClose={() => setAddIsOpen(false)}
           />
@@ -298,16 +250,21 @@ export const AssetsTable = () => {
       )}
       <DataGrid
         rows={rows}
+        columnVisibilityModel={mobileVersion ? HIDE_COLUMNS_MOBILE : {}}
+        hideFooter={true}
+        disableRowSelectionOnClick
+        density={"compact"}
+
         columns={columns.map((column) => ({
           ...column,
           renderCell: cellRenderer,
         }))}
-        hideFooter={true}
-        disableRowSelectionOnClick
-        density={"compact"}
+
         slots={{
           noRowsOverlay: NoRowsComponent,
+          toolbar: mobileVersion ? DataGridToolBar : null,
         }}
+        
         processRowUpdate={(updatedRow, originalRow) => {
           if (updatedRow.note.length > 100) {
             alert("Maximum 100 symbols!");
@@ -322,8 +279,68 @@ export const AssetsTable = () => {
 
           return updatedRow;
         }}
+
         onProcessRowUpdateError={(e) => console.log(e)}
       />
     </>
   );
 };
+
+const columns: GridColDef[] = [
+  {
+    field: "note",
+    headerName: "Note",
+    editable: true,
+    flex: 0.375,
+  },
+  {
+    field: "ticker",
+    headerName: "Ticker",
+    flex: 0.125,
+
+    align: "center",
+    headerAlign: "center",
+  },
+  {
+    field: "type",
+    headerName: "Type",
+    flex: 0.125,
+
+    align: "center",
+    headerAlign: "center",
+  },
+  {
+    field: "amount",
+    headerName: "Amount",
+    type: "number",
+    editable: true,
+    flex: 0.125,
+
+    align: "center",
+    headerAlign: "center",
+  },
+  {
+    field: "price",
+    headerName: "Last Price",
+    flex: 0.125,
+
+    align: "center",
+    headerAlign: "center",
+  },
+  {
+    field: "totalPrice",
+    headerName: "Total Price",
+    flex: 0.125,
+
+    align: "center",
+    headerAlign: "center",
+  },
+  {
+    field: "actions",
+    headerName: "Actions",
+    flex: 0.07,
+
+    align: "center",
+    headerAlign: "center",
+  },
+];

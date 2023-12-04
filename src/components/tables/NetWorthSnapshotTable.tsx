@@ -2,7 +2,7 @@
 import { useDispatch, useSelector } from "react-redux";
 
 // Material-UI (MUI) related imports
-import { Box, Typography, Button, Tooltip } from "@mui/material";
+import { Box, Typography, Button, Tooltip, useMediaQuery } from "@mui/material";
 import {
   DataGrid,
   GridColDef,
@@ -30,6 +30,7 @@ import {
   updateSnapshot,
 } from "../../features/assets/assetsSlice";
 import { saveUserData } from "../../features/assets/thunks";
+import { DataGridToolBar } from "./components/DataGridToolBar";
 
 export const NetWorthSnapshotTable = () => {
   const assets = useSelector((state: RootState) => state.assets);
@@ -37,82 +38,22 @@ export const NetWorthSnapshotTable = () => {
   const dispatch = useDispatch<AppDispatch>();
   const theme = useTheme();
 
+  const rows = assets.networthSnapshots;
+  const mobileVersion = useMediaQuery(theme.breakpoints.down("md"));
+
+  const HIDE_COLUMNS_MOBILE = {
+    btcPrice: false,
+    eurUSD: false,
+    totalBTC: false,
+    note: false,
+  };
+
   const getColor = (inputNum: number) => {
     if (inputNum === null || inputNum === undefined) return "black";
 
     if (inputNum > 0) return theme.palette.positiveColor.main;
     else if (inputNum < 0) return theme.palette.negativeColor.main;
   };
-
-  const rows = assets.networthSnapshots;
-
-  const columns: GridColDef[] = [
-    {
-      field: "dateTime",
-      headerName: "Date & Time",
-      flex: 0.125,
-
-      align: "center",
-      headerAlign: "center",
-    },
-    {
-      field: "btcPrice",
-      headerName: "BTC Price",
-      flex: 0.125,
-
-      align: "center",
-      headerAlign: "center",
-    },
-    {
-      field: "eurUSD",
-      headerName: "EUR/USD",
-      flex: 0.125,
-
-      align: "center",
-      headerAlign: "center",
-    },
-    {
-      field: "totalEUR",
-      headerName: "Total EUR",
-      flex: 0.125,
-
-      align: "center",
-      headerAlign: "center",
-    },
-    {
-      field: "totalUSD",
-      headerName: "Total USD",
-      flex: 0.125,
-
-      align: "center",
-      headerAlign: "center",
-    },
-    {
-      field: "totalBTC",
-      headerName: "Total BTC",
-      flex: 0.125,
-
-      align: "center",
-      headerAlign: "center",
-    },
-    {
-      field: "note",
-      headerName: "Note",
-      editable: true,
-      flex: 0.25,
-
-      align: "center",
-      headerAlign: "center",
-    },
-    {
-      field: "actions",
-      headerName: "Actions",
-      flex: 0.07,
-
-      align: "center",
-      headerAlign: "center",
-    },
-  ];
 
   const NetWorthTableActions = ({
     row,
@@ -331,16 +272,21 @@ export const NetWorthSnapshotTable = () => {
   return (
     <DataGrid
       rows={rows}
+      columnVisibilityModel={mobileVersion ? HIDE_COLUMNS_MOBILE : {}}
+      hideFooter={true}
+      disableRowSelectionOnClick
+      density={"compact"}
+
       columns={columns.map((column) => ({
         ...column,
         renderCell: cellRenderer,
       }))}
-      hideFooter={true}
-      disableRowSelectionOnClick
-      density={"compact"}
+
       slots={{
         noRowsOverlay: NoRowsComponent,
+        toolbar: mobileVersion ? DataGridToolBar : null,
       }}
+
       processRowUpdate={(updatedRow, originalRow) => {
         if (updatedRow.note.length > 100) {
           alert("Maximum 100 symbols!");
@@ -356,3 +302,71 @@ export const NetWorthSnapshotTable = () => {
     />
   );
 };
+
+const columns: GridColDef[] = [
+  {
+    field: "dateTime",
+    headerName: "Date & Time",
+    flex: 0.125,
+
+    align: "center",
+    headerAlign: "center",
+  },
+  {
+    field: "btcPrice",
+    headerName: "BTC Price",
+    flex: 0.125,
+
+    align: "center",
+    headerAlign: "center",
+  },
+  {
+    field: "eurUSD",
+    headerName: "EUR/USD",
+    flex: 0.125,
+
+    align: "center",
+    headerAlign: "center",
+  },
+  {
+    field: "totalEUR",
+    headerName: "Total EUR",
+    flex: 0.125,
+
+    align: "center",
+    headerAlign: "center",
+  },
+  {
+    field: "totalUSD",
+    headerName: "Total USD",
+    flex: 0.125,
+
+    align: "center",
+    headerAlign: "center",
+  },
+  {
+    field: "totalBTC",
+    headerName: "Total BTC",
+    flex: 0.125,
+
+    align: "center",
+    headerAlign: "center",
+  },
+  {
+    field: "note",
+    headerName: "Note",
+    editable: true,
+    flex: 0.25,
+
+    align: "center",
+    headerAlign: "center",
+  },
+  {
+    field: "actions",
+    headerName: "Actions",
+    flex: 0.07,
+
+    align: "center",
+    headerAlign: "center",
+  },
+];
