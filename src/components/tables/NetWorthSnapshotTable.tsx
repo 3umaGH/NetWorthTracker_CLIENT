@@ -303,6 +303,7 @@ const columns: GridColDef[] = [
     field: "dateTime",
     headerName: "Date & Time",
     flex: 0.125,
+    minWidth:150,
 
     align: "center",
     headerAlign: "center",
@@ -311,6 +312,7 @@ const columns: GridColDef[] = [
     field: "btcPrice",
     headerName: "BTC Price",
     flex: 0.125,
+    minWidth:150,
 
     align: "center",
     headerAlign: "center",
@@ -319,6 +321,7 @@ const columns: GridColDef[] = [
     field: "eurUSD",
     headerName: "EUR/USD",
     flex: 0.125,
+    minWidth:150,
 
     align: "center",
     headerAlign: "center",
@@ -326,7 +329,8 @@ const columns: GridColDef[] = [
   {
     field: "totalEUR",
     headerName: "Total EUR",
-    flex: 0.125,
+    flex: 0.225,
+    minWidth:180,
 
     align: "center",
     headerAlign: "center",
@@ -334,7 +338,8 @@ const columns: GridColDef[] = [
   {
     field: "totalUSD",
     headerName: "Total USD",
-    flex: 0.125,
+    flex: 0.225,
+    minWidth:180,
 
     align: "center",
     headerAlign: "center",
@@ -343,6 +348,7 @@ const columns: GridColDef[] = [
     field: "totalBTC",
     headerName: "Total BTC",
     flex: 0.125,
+    minWidth:150,
 
     align: "center",
     headerAlign: "center",
@@ -352,6 +358,7 @@ const columns: GridColDef[] = [
     headerName: "Note",
     editable: true,
     flex: 0.25,
+    minWidth:150,
 
     align: "center",
     headerAlign: "center",

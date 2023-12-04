@@ -283,13 +283,15 @@ const columns: GridColDef[] = [
     field: "note",
     headerName: "Note",
     editable: true,
-    flex: 0.375,
+    flex: 0.15,
+    minWidth:150,
   },
   {
     field: "ticker",
     headerName: "Ticker",
 
     flex: 0.125,
+    minWidth:100,
 
     align: "center",
     headerAlign: "center",
@@ -298,6 +300,7 @@ const columns: GridColDef[] = [
     field: "type",
     headerName: "Type",
     flex: 0.125,
+    minWidth:100,
 
     align: "center",
     headerAlign: "center",
@@ -308,6 +311,7 @@ const columns: GridColDef[] = [
     type: "number",
     editable: true,
     flex: 0.125,
+    minWidth:150,
 
     align: "center",
     headerAlign: "center",
@@ -316,6 +320,7 @@ const columns: GridColDef[] = [
     field: "price",
     headerName: "Last Price",
     flex: 0.125,
+    minWidth:150,
 
     align: "center",
     headerAlign: "center",
@@ -324,6 +329,7 @@ const columns: GridColDef[] = [
     field: "totalPrice",
     headerName: "Total Price",
     flex: 0.125,
+    minWidth:150,
 
     align: "center",
     headerAlign: "center",

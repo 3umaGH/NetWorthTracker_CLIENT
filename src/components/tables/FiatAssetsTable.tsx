@@ -205,6 +205,7 @@ const columns: GridColDef[] = [
     headerName: "Note",
     editable: true,
     flex: 0.35,
+    minWidth:150,
   },
   {
     field: "amount",
@@ -212,6 +213,7 @@ const columns: GridColDef[] = [
     type: "number",
     editable: true,
     flex: 0.2,
+    minWidth:150,
 
     align: "center",
     headerAlign: "center",
@@ -223,6 +225,7 @@ const columns: GridColDef[] = [
     type: "singleSelect",
     valueOptions: availableCurrencies,
     flex: 0.2,
+    minWidth:130,
 
     align: "center",
     headerAlign: "center",
