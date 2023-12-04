@@ -1,9 +1,9 @@
 // React-related imports
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 // Material-UI (MUI) related imports
-import { Container, Grid, Box } from "@mui/material";
+import { Container, Grid, Box, CircularProgress } from "@mui/material";
 
 // Components
 import { AssetAllocationChart } from "../components/charts/AssetAllocationChart";
@@ -14,7 +14,7 @@ import { CellTitle } from "../components/CellTitle";
 import { BalanceFooter } from "../components/BalanceFooter";
 
 // App-related imports
-import { AppDispatch } from "../app/Store";
+import { AppDispatch, RootState } from "../app/Store";
 
 // Thunks
 import {
@@ -27,6 +27,7 @@ import { FirebaseAuth } from "../firebase/firebase";
 import { fetchUserConfig } from "../features/userParams/thunks";
 
 export const MainPage = () => {
+  const assets = useSelector((state: RootState) => state.assets);
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
@@ -39,54 +40,66 @@ export const MainPage = () => {
     if (FirebaseAuth.currentUser) {
       dispatch(fetchUserConfig());
       dispatch(fetchUserData());
-      
     }
   }, []);
 
   return (
     <Box>
-      <Grid container rowSpacing={6} columnSpacing={0.25}>
-        <Grid item xs={12} md={3}>
-          <Container maxWidth={false} sx={{ height: "45vh" }}>
-            <CellTitle title="Asset Allocation" />
-            <ButtonToolbar />
-
-            <Box
-              sx={{
-                height: "90%",
-              }}
-            >
-              <AssetAllocationChart />
-            </Box>
-          </Container>
-        </Grid>
-        <Grid item xs={12} md={9}>
-          <Container maxWidth={false} disableGutters sx={{ height: "45vh" }}>
-            <CellTitle title="Snapshots" />
-            <NetWorthSnapshotTable />
-          </Container>
-        </Grid>
-
-        <Grid item xs={12} md={9}>
-          <Container maxWidth={false} disableGutters sx={{ height: "38vh" }}>
-            <CellTitle title="Assets" />
-            <AssetsTable />
-          </Container>
-        </Grid>
-        <Grid item xs={12} md={3}>
-          <Container maxWidth={false} disableGutters sx={{ height: "38vh" }}>
-            <CellTitle title="Fiat Assets" />
-            <FiatAssetsTable />
-          </Container>
-        </Grid>
-        <Grid
-          item
-          xs={12}
-          sx={{ maxHeight: { xs: "20vh", md: "5vh" }, mb: { xs: 4, md: 0 } }}
+      {assets.loadingAssets ? (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100vh",
+          }}
         >
-          <BalanceFooter />
+          <CircularProgress size={100} color="primary" />
+        </Box>
+      ) : (
+        <Grid container rowSpacing={6} columnSpacing={0.25}>
+          <Grid item xs={12} md={3}>
+            <Container maxWidth={false} sx={{ height: "45vh" }}>
+              <CellTitle title="Asset Allocation" />
+              <ButtonToolbar />
+
+              <Box
+                sx={{
+                  height: "90%",
+                }}
+              >
+                <AssetAllocationChart />
+              </Box>
+            </Container>
+          </Grid>
+          <Grid item xs={12} md={9}>
+            <Container maxWidth={false} disableGutters sx={{ height: "45vh" }}>
+              <CellTitle title="Snapshots" />
+              <NetWorthSnapshotTable />
+            </Container>
+          </Grid>
+
+          <Grid item xs={12} md={9}>
+            <Container maxWidth={false} disableGutters sx={{ height: "38vh" }}>
+              <CellTitle title="Assets" />
+              <AssetsTable />
+            </Container>
+          </Grid>
+          <Grid item xs={12} md={3}>
+            <Container maxWidth={false} disableGutters sx={{ height: "38vh" }}>
+              <CellTitle title="Fiat Assets" />
+              <FiatAssetsTable />
+            </Container>
+          </Grid>
+          <Grid
+            item
+            xs={12}
+            sx={{ maxHeight: { xs: "20vh", md: "5vh" }, mb: { xs: 4, md: 0 } }}
+          >
+            <BalanceFooter />
+          </Grid>
         </Grid>
-      </Grid>
+      )}
     </Box>
   );
 };

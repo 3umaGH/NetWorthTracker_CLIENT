@@ -24,7 +24,9 @@ export type AssetsState = {
   cryptoPrices: CryptoPrice[];
   stockPrices: StockPrice[];
 
-  fetching: boolean;
+  fetchingPrices: boolean;
+  loadingAssets: boolean;
+
   error: string;
 
   totals: {
@@ -58,7 +60,8 @@ const initialState: AssetsState = {
   cryptoPrices: [],
   stockPrices: [],
 
-  fetching: false,
+  fetchingPrices: false,
+  loadingAssets: false,
   error: "",
 
   totals: {
@@ -190,7 +193,7 @@ export const assetsSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(fetchCryptoPrices.pending, (state) => {
-      state.fetching = true;
+      state.fetchingPrices = true;
     });
     builder.addCase(
       fetchCryptoPrices.fulfilled,
@@ -203,34 +206,45 @@ export const assetsSlice = createSlice({
           };
         });
 
-        state.fetching = false;
+        state.fetchingPrices = false;
         state.error = "";
 
         matchAssetPrices(state, "Crypto");
       }
     );
     builder.addCase(fetchCryptoPrices.rejected, (state, action) => {
-      state.fetching = false;
+      state.fetchingPrices = false;
       state.error = action.error.message || "Something went wrong";
     });
 
     builder.addCase(fetchStockPrices.pending, (state) => {
-      state.fetching = true;
+      state.fetchingPrices = true;
     });
     builder.addCase(
       fetchStockPrices.fulfilled,
       (state, action: PayloadAction<StockPrice[]>) => {
         state.stockPrices = action.payload;
-        state.fetching = false;
+        state.fetchingPrices = false;
         state.error = "";
 
         matchAssetPrices(state, "Stock");
       }
     );
     builder.addCase(fetchStockPrices.rejected, (state, action) => {
-      state.fetching = false;
+      state.fetchingPrices = false;
       state.error = action.error.message || "Something went wrong";
     });
+
+
+    builder.addCase(fetchUserData.pending, (state) => {
+      state.loadingAssets = true;
+    });
+
+    //TODO: Add error handling
+    builder.addCase(fetchUserData.rejected, (state) => {
+      state.loadingAssets = false;
+    });
+
 
     builder.addCase(fetchUserData.fulfilled, (state, action) => {
       state.assets = action.payload.assets;
@@ -238,8 +252,13 @@ export const assetsSlice = createSlice({
       state.fiatAssets = action.payload.fiatAssets;
       state.networthSnapshots = action.payload.networthSnapshots;
 
+      state.loadingAssets = false;
+      
+
       updateTotals(state);
     });
+
+
   },
 });
 
