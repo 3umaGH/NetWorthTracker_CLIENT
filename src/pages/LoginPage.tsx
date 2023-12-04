@@ -6,7 +6,6 @@ import { signInWithPopup } from "firebase/auth";
 
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { responsiveFontSizes } from "@mui/material/styles";
 
 export const LoginPage = () => {
   const [isUserUpdated, setUserUpdated] = useState(false);
