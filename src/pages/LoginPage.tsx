@@ -38,10 +38,9 @@ export const LoginPage = () => {
         height: "100vh",
       }}
     >
-      <img
-        src="https://www.goomlandscapes.co.nz/wp-content/uploads/2018/08/logo-placeholder.png"
-        style={{ width: "100%", maxWidth: "600px" }}
-      />
+      <Typography variant="h1" sx={{ fontWeight: 400 }}>
+        {import.meta.env.VITE_APP_PROJECT_NAME}
+      </Typography>
 
       <Paper
         sx={{
@@ -56,6 +55,7 @@ export const LoginPage = () => {
           mt: 4,
           mx: 2,
         }}
+        elevation={8}
       >
         <Typography variant="h6" sx={{ mb: 2 }}>
           Login to{" "}
@@ -71,9 +71,8 @@ export const LoginPage = () => {
         <Divider sx={{ width: "60%", my: 2 }} />
 
         <Typography align="center" variant="caption" color="textColor.main">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit.
-          VoluptatibusLorem ipsum dolor sit amet consectetur adipisicing elit.
-          Voluptatibus
+          Manage your net worth with real-time updates on stocks and crypto.
+          Gain insights into your wealth like never before.
         </Typography>
       </Paper>
     </div>
