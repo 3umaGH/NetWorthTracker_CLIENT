@@ -55,6 +55,7 @@ export const NetWorthSnapshotTable = () => {
     btcPrice: false,
     eurUSD: false,
     totalBTC: false,
+    totalUSD: false,
     note: false,
   };
 
