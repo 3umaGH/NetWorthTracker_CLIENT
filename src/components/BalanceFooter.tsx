@@ -31,7 +31,7 @@ export const BalanceFooter = () => {
     <Box textAlign={"center"}>
       <Typography variant="h2" color={"black"} fontSize={28} fontWeight={700}>
         <Grid container>
-          {assets.fetching && (
+          {assets.fetchingPrices && (
             <CircularProgress
               size={24}
               sx={{
