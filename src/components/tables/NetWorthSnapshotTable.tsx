@@ -36,6 +36,9 @@ import { saveUserData } from "../../features/assets/thunks";
 import { DataGridToolBar } from "./components/DataGridToolBar";
 import { NoRowsComponent } from "./components/NoRowsComponent";
 
+import PostAddIcon from "@mui/icons-material/PostAdd";
+import ClearIcon from "@mui/icons-material/Clear";
+
 export const NetWorthSnapshotTable = () => {
   const assets = useSelector((state: RootState) => state.assets);
   const userParams = useSelector((state: RootState) => state.userParams);
@@ -46,7 +49,7 @@ export const NetWorthSnapshotTable = () => {
   const mobileVersion = useMediaQuery(theme.breakpoints.down("md"));
 
   const [columnVisibilityModel, setColumnVisibilityModel] =
-  useState<GridColumnVisibilityModel>();
+    useState<GridColumnVisibilityModel>();
 
   const HIDE_COLUMNS_MOBILE = {
     btcPrice: false,
@@ -83,28 +86,26 @@ export const NetWorthSnapshotTable = () => {
                 <Button
                   variant="text"
                   color="success"
-                  sx={{ fontSize: 18, p: 0, m: 0 }}
                   onClick={() => {
                     dispatch(addSnapshot());
                     dispatch(saveUserData());
                   }}
                 >
-                  🖬
+                  <PostAddIcon />
                 </Button>
               </Tooltip>
             )}
 
-            <Tooltip title="Delete this snapshot">
+            <Tooltip title="Delete snapshot">
               <Button
                 variant="text"
                 color="error"
-                sx={{ fontSize: 18 }}
                 onClick={() => {
                   dispatch(deleteSnapshot(row));
                   dispatch(saveUserData());
                 }}
               >
-                X
+                <ClearIcon />
               </Button>
             </Tooltip>
           </div>
@@ -280,7 +281,6 @@ export const NetWorthSnapshotTable = () => {
         ),
         toolbar: mobileVersion ? DataGridToolBar : null,
       }}
-
       processRowUpdate={(updatedRow, originalRow) => {
         if (updatedRow.note.length > 100) {
           alert("Maximum 100 symbols!");

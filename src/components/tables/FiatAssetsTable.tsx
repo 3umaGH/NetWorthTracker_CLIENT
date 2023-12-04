@@ -38,6 +38,9 @@ import { saveUserData } from "../../features/assets/thunks";
 import { DataGridToolBar } from "./components/DataGridToolBar";
 import { NoRowsComponent } from "./components/NoRowsComponent";
 
+import AddIcon from "@mui/icons-material/Add";
+import ClearIcon from "@mui/icons-material/Clear";
+
 export const FiatAssetsTable = () => {
   const assets = useSelector((state: RootState) => state.assets);
   const userParams = useSelector((state: RootState) => state.userParams);
@@ -46,7 +49,7 @@ export const FiatAssetsTable = () => {
 
   const [addIsOpen, setAddIsOpen] = useState(false);
   const [columnVisibilityModel, setColumnVisibilityModel] =
-  useState<GridColumnVisibilityModel>();
+    useState<GridColumnVisibilityModel>();
   const mobileVersion = useMediaQuery(theme.breakpoints.down("md"));
 
   const rows = assets.fiatAssets;
@@ -72,7 +75,7 @@ export const FiatAssetsTable = () => {
           sx={{ fontSize: 22 }}
           onClick={() => setAddIsOpen(true)}
         >
-          +
+          <AddIcon />
         </Button>
 
         <Button
@@ -84,7 +87,7 @@ export const FiatAssetsTable = () => {
             dispatch(saveUserData());
           }}
         >
-          X
+          <ClearIcon />
         </Button>
       </Box>
     );

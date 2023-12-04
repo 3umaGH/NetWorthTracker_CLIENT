@@ -35,6 +35,9 @@ import { saveUserData } from "../../features/assets/thunks";
 import { DataGridToolBar } from "./components/DataGridToolBar";
 import { NoRowsComponent } from "./components/NoRowsComponent";
 
+import AddIcon from "@mui/icons-material/Add";
+import ClearIcon from "@mui/icons-material/Clear";
+
 export const AssetsTable = () => {
   const assets = useSelector((state: RootState) => state.assets);
   const userParams = useSelector((state: RootState) => state.userParams);
@@ -78,7 +81,7 @@ export const AssetsTable = () => {
           sx={{ fontSize: 22 }}
           onClick={() => setAddIsOpen(true)}
         >
-          +
+          <AddIcon />
         </Button>
         <Button
           variant="text"
@@ -89,7 +92,7 @@ export const AssetsTable = () => {
             dispatch(saveUserData());
           }}
         >
-          X
+          <ClearIcon />
         </Button>
       </Box>
     );
