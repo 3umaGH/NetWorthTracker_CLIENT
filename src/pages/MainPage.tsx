@@ -31,9 +31,18 @@ export const MainPage = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
-    const cryptoIntervalId = setInterval(() => dispatch(fetchCryptoPrices()), 10000);
-    const stockIntervalId = setInterval(() => dispatch(fetchStockPrices()), 30000);
-  
+    dispatch(fetchCryptoPrices());
+    dispatch(fetchStockPrices());
+
+    const cryptoIntervalId = setInterval(
+      () => dispatch(fetchCryptoPrices()),
+      10000
+    );
+    const stockIntervalId = setInterval(
+      () => dispatch(fetchStockPrices()),
+      30000
+    );
+
     if (FirebaseAuth.currentUser) {
       dispatch(fetchUserConfig());
       dispatch(fetchUserData());
@@ -43,7 +52,6 @@ export const MainPage = () => {
       clearInterval(cryptoIntervalId);
       clearInterval(stockIntervalId);
     };
-  
   }, []);
 
   return (
