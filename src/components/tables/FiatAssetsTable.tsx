@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 // Material-UI (MUI) related imports
-import { Box, Button, Typography, useMediaQuery } from "@mui/material";
+import { Box, Button, useMediaQuery } from "@mui/material";
 import {
   DataGrid,
   GridColDef,
@@ -35,6 +35,7 @@ import { AddFiatAsset } from "../modals/AddFiatAsset";
 import { availableCurrencies } from "../../constants";
 import { saveUserData } from "../../features/assets/thunks";
 import { DataGridToolBar } from "./components/DataGridToolBar";
+import { NoRowsComponent } from "./components/NoRowsComponent";
 
 export const FiatAssetsTable = () => {
   const assets = useSelector((state: RootState) => state.assets);
@@ -134,30 +135,6 @@ export const FiatAssetsTable = () => {
     }
   };
 
-  const NoRowsComponent = () => {
-    return (
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100%",
-        }}
-      >
-        <Typography variant="body1">No assets here yet...</Typography>
-        <Button
-          variant="text"
-          color="success"
-          sx={{ fontSize: 18, p: 0, m: 0 }}
-          onClick={() => setAddIsOpen(true)}
-        >
-          Add Asset
-        </Button>
-      </Box>
-    );
-  };
-
   return (
     <>
       {addIsOpen && (
@@ -177,14 +154,18 @@ export const FiatAssetsTable = () => {
         hideFooter={true}
         disableRowSelectionOnClick
         density={"compact"}
-        
         columns={columns.map((column) => ({
           ...column,
           renderCell: cellRenderer,
         }))}
-
         slots={{
-          noRowsOverlay: NoRowsComponent,
+          noRowsOverlay: () => (
+            <NoRowsComponent
+              text="No assets here yet..."
+              buttonText="Add Asset"
+              buttonOnClick={() => setAddIsOpen(true)}
+            />
+          ),
           toolbar: mobileVersion ? DataGridToolBar : null,
         }}
         processRowUpdate={(updatedRow, originalRow) => {
@@ -199,7 +180,6 @@ export const FiatAssetsTable = () => {
           dispatch(saveUserData());
           return updatedRow;
         }}
-
         onProcessRowUpdateError={(e) => console.log(e)}
       />
     </>

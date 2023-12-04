@@ -2,7 +2,7 @@
 import { useDispatch, useSelector } from "react-redux";
 
 // Material-UI (MUI) related imports
-import { Box, Typography, Button, Tooltip, useMediaQuery } from "@mui/material";
+import { Box, Button, Tooltip, useMediaQuery } from "@mui/material";
 import {
   DataGrid,
   GridColDef,
@@ -31,6 +31,7 @@ import {
 } from "../../features/assets/assetsSlice";
 import { saveUserData } from "../../features/assets/thunks";
 import { DataGridToolBar } from "./components/DataGridToolBar";
+import { NoRowsComponent } from "./components/NoRowsComponent";
 
 export const NetWorthSnapshotTable = () => {
   const assets = useSelector((state: RootState) => state.assets);
@@ -242,33 +243,6 @@ export const NetWorthSnapshotTable = () => {
     }
   };
 
-  const NoRowsComponent = () => {
-    return (
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100%",
-        }}
-      >
-        <Typography variant="body1">No snapshots yet...</Typography>
-        <Button
-          variant="text"
-          color="success"
-          sx={{ fontSize: 18, p: 0, m: 0 }}
-          onClick={() => {
-            dispatch(addSnapshot());
-            dispatch(saveUserData());
-          }}
-        >
-          Create Snapshot
-        </Button>
-      </Box>
-    );
-  };
-
   return (
     <DataGrid
       rows={rows}
@@ -276,17 +250,24 @@ export const NetWorthSnapshotTable = () => {
       hideFooter={true}
       disableRowSelectionOnClick
       density={"compact"}
-
       columns={columns.map((column) => ({
         ...column,
         renderCell: cellRenderer,
       }))}
-
       slots={{
-        noRowsOverlay: NoRowsComponent,
+        noRowsOverlay: () => (
+          <NoRowsComponent
+            text="No snapshots here yet..."
+            buttonText="Create Snapshot"
+            buttonOnClick={() => {
+              dispatch(addSnapshot());
+              dispatch(saveUserData());
+            }}
+          />
+        ),
         toolbar: mobileVersion ? DataGridToolBar : null,
       }}
-
+      
       processRowUpdate={(updatedRow, originalRow) => {
         if (updatedRow.note.length > 100) {
           alert("Maximum 100 symbols!");

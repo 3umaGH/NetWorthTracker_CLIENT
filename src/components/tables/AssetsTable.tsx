@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 // Material-UI (MUI) related imports
-import { Box, Button, Typography, useMediaQuery } from "@mui/material";
+import { Box, Button, useMediaQuery } from "@mui/material";
 import {
   DataGrid,
   GridColDef,
@@ -32,6 +32,7 @@ import { AddAsset } from "../modals/AddAsset";
 import { availableCurrencies } from "../../constants";
 import { saveUserData } from "../../features/assets/thunks";
 import { DataGridToolBar } from "./components/DataGridToolBar";
+import { NoRowsComponent } from "./components/NoRowsComponent";
 
 export const AssetsTable = () => {
   const assets = useSelector((state: RootState) => state.assets);
@@ -202,30 +203,6 @@ export const AssetsTable = () => {
     }
   };
 
-  const NoRowsComponent = () => {
-    return (
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100%",
-        }}
-      >
-        <Typography variant="body1">No assets here yet...</Typography>
-        <Button
-          variant="text"
-          color="success"
-          sx={{ fontSize: 18, p: 0, m: 0 }}
-          onClick={() => setAddIsOpen(true)}
-        >
-          Add Asset
-        </Button>
-      </Box>
-    );
-  };
-
   const availableStocksPairs = assets.stockPrices.map(
     (ticker) => ticker.ticker
   );
@@ -254,17 +231,20 @@ export const AssetsTable = () => {
         hideFooter={true}
         disableRowSelectionOnClick
         density={"compact"}
-
         columns={columns.map((column) => ({
           ...column,
           renderCell: cellRenderer,
         }))}
-
         slots={{
-          noRowsOverlay: NoRowsComponent,
+          noRowsOverlay: () => (
+            <NoRowsComponent
+              text="No assets here yet..."
+              buttonText="Add Asset"
+              buttonOnClick={() => setAddIsOpen(true)}
+            />
+          ),
           toolbar: mobileVersion ? DataGridToolBar : null,
         }}
-        
         processRowUpdate={(updatedRow, originalRow) => {
           if (updatedRow.note.length > 100) {
             alert("Maximum 100 symbols!");
@@ -279,7 +259,6 @@ export const AssetsTable = () => {
 
           return updatedRow;
         }}
-
         onProcessRowUpdateError={(e) => console.log(e)}
       />
     </>
