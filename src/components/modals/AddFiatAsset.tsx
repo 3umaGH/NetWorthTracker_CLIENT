@@ -18,7 +18,7 @@ import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { addFiatAsset } from "../../features/assets/assetsSlice";
 
 // Constants related imports
-import { fiatAsset } from "../../constants";
+import { FiatAsset } from "../../constants";
 import { saveUserData } from "../../features/assets/thunks";
 import { AppDispatch, RootState } from "../../app/Store";
 
@@ -61,7 +61,7 @@ export const AddFiatAsset = ({
         currency: formData.currency,
         amount: parseFloat(formData.amount),
         note: formData.note,
-      } as fiatAsset)
+      } as FiatAsset)
     );
 
     dispatch(saveUserData());
