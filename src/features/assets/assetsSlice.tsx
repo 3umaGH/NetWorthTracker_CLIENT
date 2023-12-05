@@ -23,6 +23,7 @@ export type AssetsState = {
 
   cryptoPrices: CryptoPrice[];
   stockPrices: StockPrice[];
+  currencyRates: CurrencyRate[];
 
   fetchingPrices: boolean;
   loadingAssets: boolean;
@@ -47,8 +48,15 @@ type CryptoPrice = {
   price: number;
 };
 
+type CurrencyRate = {
+  ticker: string;
+  price: number;
+}
+
 type StockPrice = {
   ticker: string;
+  type: string;
+  currency: string;
   price: number;
 };
 
@@ -59,6 +67,7 @@ const initialState: AssetsState = {
 
   cryptoPrices: [],
   stockPrices: [],
+  currencyRates: [],
 
   fetchingPrices: false,
   loadingAssets: false,
@@ -199,7 +208,6 @@ export const assetsSlice = createSlice({
       fetchCryptoPrices.fulfilled,
       (state, action: PayloadAction<CryptoPrice[]>) => {
         state.cryptoPrices = action.payload.map((pair) => {
-          // Binance api returns number as a string for some reason, so parsing the price to a number.
           return {
             ...pair,
             price: parseFloat(String(pair.price)),
@@ -223,7 +231,23 @@ export const assetsSlice = createSlice({
     builder.addCase(
       fetchStockPrices.fulfilled,
       (state, action: PayloadAction<StockPrice[]>) => {
-        state.stockPrices = action.payload;
+        state.stockPrices = action.payload.filter((ticker) => ticker.type == "stock");
+
+        state.currencyRates = action.payload
+        .filter((ticker) => ticker.type === "currency")
+        .map((ticker) => ({
+          ...ticker,
+          ticker: ticker.ticker.replace("USD", "") // remove USD part from the currency pair
+        }));
+
+        state.currencyRates = [
+          ...state.currencyRates,
+          {
+            ticker: "USD",
+            price: 1.00,
+          }
+        ];
+        
         state.fetchingPrices = false;
         state.error = "";
 

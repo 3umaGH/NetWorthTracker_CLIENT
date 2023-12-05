@@ -30,7 +30,6 @@ import BasicModal from "../modals/BasicModal";
 import { AddAsset } from "../modals/AddAsset";
 
 // Constants related imports
-import { availableCurrencies } from "../../constants";
 import { saveUserData } from "../../features/assets/thunks";
 import { DataGridToolBar } from "./components/DataGridToolBar";
 import { NoRowsComponent } from "./components/NoRowsComponent";
@@ -213,13 +212,6 @@ export const AssetsTable = () => {
     }
   };
 
-  const availableStocksPairs = assets.stockPrices.map(
-    (ticker) => ticker.ticker
-  );
-  const availableCryptoPairs = Object.values(assets.cryptoPrices)
-    .filter((pair) => pair.symbol.endsWith("USDT"))
-    .map((pair) => pair.symbol);
-
   return (
     <>
       {addIsOpen && (
@@ -228,9 +220,6 @@ export const AssetsTable = () => {
           sx={{ minWidth: "260px", maxWidth: "500px" }}
         >
           <AddAsset
-            availableCryptoPairs={availableCryptoPairs}
-            availableStocksPairs={availableStocksPairs}
-            availableCurrencies={availableCurrencies}
             onClose={() => setAddIsOpen(false)}
           />
         </BasicModal>

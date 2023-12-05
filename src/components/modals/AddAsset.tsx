@@ -1,6 +1,6 @@
 // React-related imports
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 // Material-UI (MUI) related imports
 import {
@@ -16,7 +16,7 @@ import Select, { SelectChangeEvent } from "@mui/material/Select";
 import Autocomplete from "@mui/material/Autocomplete";
 
 // App-related imports
-import { AppDispatch } from "../../app/Store";
+import { AppDispatch, RootState } from "../../app/Store";
 
 // Redux actions related imports
 import { addAsset } from "../../features/assets/assetsSlice";
@@ -24,26 +24,25 @@ import { addAsset } from "../../features/assets/assetsSlice";
 // Constants related imports
 import { Asset } from "../../constants";
 import { saveUserData } from "../../features/assets/thunks";
+import { getStockCurrency } from "../../util";
 
-export const AddAsset = ({
-  availableCryptoPairs,
-  availableStocksPairs,
-  availableCurrencies,
-  onClose,
-}: {
-  availableCryptoPairs: String[];
-  availableStocksPairs: String[];
-  availableCurrencies: String[];
-  onClose: () => void;
-}) => {
+export const AddAsset = ({ onClose }: { onClose: () => void }) => {
+  const assets = useSelector((state: RootState) => state.assets);
   const dispatch = useDispatch<AppDispatch>();
   const [viewingCrypto, setViewingCrypto] = useState(true);
+
+  const stockTickers = assets.stockPrices.map((stock) => stock.ticker);
+  const cryptoTickers = assets.cryptoPrices
+    .filter((crypto) => crypto.symbol.endsWith("USDT"))
+    .map((crypto) => crypto.symbol);
+  const currencyTickers = assets.currencyRates.map((cur) => cur.ticker);
+
   const [formData, setFormData] = useState({
     note: "-",
-    currency: availableCurrencies[0],
+    currency: "USD",
     amount: "0",
-    type: "",
-    ticker: "",
+    type: "Crypto",
+    ticker: "BTCUSDT",
   });
 
   const handleChange = (
@@ -60,9 +59,15 @@ export const AddAsset = ({
   };
 
   const handleAutocompleteChange = (newValue: String | null) => {
+    const selectedValue =
+      newValue ?? (viewingCrypto ? cryptoTickers[0] : stockTickers[0]);
+
     setFormData((prevFields) => ({
       ...prevFields,
-      ticker: (newValue ?? null) as string,
+      ticker: selectedValue as string,
+      currency: viewingCrypto
+        ? "USD" // Supporting only USD for crypto atm.
+        : getStockCurrency(assets, selectedValue as string),
       type: viewingCrypto ? "Crypto" : "Stock",
     }));
   };
@@ -83,8 +88,8 @@ export const AddAsset = ({
     const objTicker =
       formData.ticker === ""
         ? viewingCrypto
-          ? availableCryptoPairs[0]
-          : availableStocksPairs[0]
+          ? cryptoTickers[0]
+          : stockTickers[0]
         : formData.ticker;
 
     const objType =
@@ -100,7 +105,7 @@ export const AddAsset = ({
         note: objNote,
         ticker: objTicker,
         type: objType,
-        currency: formData.currency as "USD" | "EUR",
+        currency: formData.currency,
         amount: parseFloat(formData.amount),
         lastPrice: 0,
         totalPrice: 0,
@@ -159,12 +164,13 @@ export const AddAsset = ({
             <InputLabel>Currency</InputLabel>
             <Select
               required
+              disabled
               name="currency"
               value={formData.currency}
               label="Currency"
               onChange={(e) => handleChange(e)}
             >
-              {availableCurrencies.map((currency) => (
+              {currencyTickers.map((currency) => (
                 <MenuItem key={currency as string} value={currency as string}>
                   {currency}
                 </MenuItem>
@@ -178,12 +184,10 @@ export const AddAsset = ({
             id="amount"
             disablePortal
             onChange={(_e, newValue) => handleAutocompleteChange(newValue)}
-            value={
-              formData.type === "Crypto"
-                ? formData.ticker ?? availableCryptoPairs[0]
-                : availableCryptoPairs[0]
+            value={formData.ticker 
+
             }
-            options={availableCryptoPairs}
+            options={cryptoTickers}
             renderInput={(params) => (
               <TextField {...params} label="Crypto ticker" />
             )}
@@ -193,12 +197,10 @@ export const AddAsset = ({
             id="amount"
             disablePortal
             onChange={(_e, newValue) => handleAutocompleteChange(newValue)}
-            value={
-              formData.type === "Stock"
-                ? formData.ticker ?? availableStocksPairs[0]
-                : availableStocksPairs[0]
+            value={formData.ticker 
+
             }
-            options={availableStocksPairs}
+            options={stockTickers}
             renderInput={(params) => (
               <TextField {...params} label="Stock ticker" />
             )}
@@ -208,7 +210,12 @@ export const AddAsset = ({
         <Button
           variant="outlined"
           color={viewingCrypto ? "stockColor" : "cryptoColor"}
-          onClick={() => setViewingCrypto(!viewingCrypto)}
+          onClick={() => {
+            setFormData({...formData, ticker: !viewingCrypto ? cryptoTickers[0] : stockTickers[0]});
+            setViewingCrypto(!viewingCrypto)
+
+            console.log(formData)
+          }}
         >
           View {viewingCrypto ? "Stock pairs" : "Crypto pairs"}
         </Button>

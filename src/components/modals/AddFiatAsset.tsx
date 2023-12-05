@@ -1,6 +1,6 @@
 // React-related imports
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 // Material-UI (MUI) related imports
 import {
@@ -14,27 +14,28 @@ import {
 } from "@mui/material";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 
-// App-related imports
-import { AppDispatch } from "../../app/Store";
-
 // Redux actions related imports
 import { addFiatAsset } from "../../features/assets/assetsSlice";
 
 // Constants related imports
 import { fiatAsset } from "../../constants";
 import { saveUserData } from "../../features/assets/thunks";
+import { AppDispatch, RootState } from "../../app/Store";
 
 export const AddFiatAsset = ({
-  availableCurrencies,
   onClose,
 }: {
-  availableCurrencies: String[];
   onClose: () => void;
 }) => {
+  const assets = useSelector((state: RootState) => state.assets);
   const dispatch = useDispatch<AppDispatch>();
+
+  const currencyTickers = assets.currencyRates.map((curr) => curr.ticker);
+
+
   const [formData, setFormData] = useState({
     note: "-",
-    currency: availableCurrencies[0],
+    currency: currencyTickers.find((cur) => cur === "USD"),
     amount: "0",
   });
 
@@ -113,8 +114,8 @@ export const AddFiatAsset = ({
               label="Currency"
               onChange={(e) => handleChange(e)}
             >
-              {availableCurrencies.map((currency) => (
-                <MenuItem key={currency as string} value={currency as string}>
+              {currencyTickers.map((currency) => (
+                <MenuItem key={currency} value={currency}>
                   {currency}
                 </MenuItem>
               ))}

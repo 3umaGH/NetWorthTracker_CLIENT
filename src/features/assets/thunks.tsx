@@ -38,6 +38,7 @@ export const saveUserData = createAsyncThunk(
         ...state.assets,
         cryptoPrices: [],
         stockPrices: [],
+        currencyRates: [],
       };
 
       try {

@@ -154,7 +154,6 @@ export const FiatAssetsTable = () => {
         >
           <AddFiatAsset
             onClose={() => setAddIsOpen(false)}
-            availableCurrencies={availableCurrencies}
           />
         </BasicModal>
       )}

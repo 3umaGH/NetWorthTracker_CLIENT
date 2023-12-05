@@ -27,7 +27,7 @@ export const formatTimeMillis = (inputNum: number) => {
 
 export const updateTotals = (state: AssetsState) => {
   state.eurUSDRate =
-    state.stockPrices.find((val) => val.ticker === "EURUSD")?.price || -1;
+    state.currencyRates.find((val) => val.ticker === "EUR")?.price || -1;
 
   const totalUSD =
     state.assets.reduce(
@@ -95,7 +95,7 @@ export const convertCurrency = (
   if (currency === "USD") return value;
 
   const rate =
-    state.stockPrices.find((val) => val.ticker === `${currency}USD`)?.price ||
+    state.currencyRates.find((val) => val.ticker === currency)?.price ||
     -1;
 
   if (rate === -1) return value;
@@ -109,6 +109,12 @@ export const getCryptoPrice = (state: AssetsState, ticker: string) => {
 
 export const getStockPrice = (state: AssetsState, ticker: string) => {
   return state.stockPrices.find((val) => val.ticker === ticker)?.price || -1;
+};
+
+export const getStockCurrency = (state: AssetsState, ticker: string) => {
+  return (
+    state.stockPrices.find((val) => val.ticker === ticker)?.currency || "USD"
+  );
 };
 
 export const getLastSnapshot = (state: AssetsState) => {
