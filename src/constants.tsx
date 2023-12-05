@@ -1,13 +1,6 @@
 export const currencySymbol = "$";
 
-export const availableCurrencies = ["USD", "EUR"]; // TODO: make dynamic
-
 export const pregeneratedKey = "564bhBF324S653SDF" // Not secure TODO: make secure
-
-export const currencySymbols = {
-  USD: "$",
-  EUR: "€",
-};
 
 export type Ticker = string;
 
@@ -16,18 +9,18 @@ export type Asset = {
   note: string;
   ticker: Ticker;
   type: "Crypto" | "Stock";
-  currency: keyof typeof currencySymbols;
+  currency: string;
   amount: number;
   lastPrice: number;
   totalPrice: number;
   price: number;
 };
 
-export type fiatAsset = {
+export type FiatAsset = {
   id: number;
   note: string;
   amount: number;
-  currency: keyof typeof currencySymbols;
+  currency: string;
 };
 
 export type NetworthSnapshot = {

@@ -33,7 +33,6 @@ import BasicModal from "../modals/BasicModal";
 import { AddFiatAsset } from "../modals/AddFiatAsset";
 
 // Constants related imports
-import { availableCurrencies } from "../../constants";
 import { saveUserData } from "../../features/assets/thunks";
 import { DataGridToolBar } from "./components/DataGridToolBar";
 import { NoRowsComponent } from "./components/NoRowsComponent";
@@ -53,6 +52,7 @@ export const FiatAssetsTable = () => {
   const mobileVersion = useMediaQuery(theme.breakpoints.down("md"));
 
   const rows = assets.fiatAssets;
+  const currencyTickers = assets.currencyRates.map((curr) => curr.ticker);
 
   const HIDE_COLUMNS_MOBILE = {
     /*None, it fits well*/
@@ -145,6 +145,47 @@ export const FiatAssetsTable = () => {
     }
   };
 
+  const columns: GridColDef[] = [
+    {
+      field: "note",
+      headerName: "Note",
+      editable: true,
+      flex: 0.35,
+      minWidth: 150,
+    },
+    {
+      field: "amount",
+      headerName: "Amount",
+      type: "number",
+      editable: true,
+      flex: 0.2,
+      minWidth: 150,
+
+      align: "center",
+      headerAlign: "center",
+    },
+    {
+      field: "currency",
+      headerName: "Currency",
+      editable: true,
+      type: "singleSelect",
+      valueOptions: currencyTickers,
+      flex: 0.2,
+      minWidth: 130,
+
+      align: "center",
+      headerAlign: "center",
+    },
+    {
+      field: "actions",
+      headerName: "Actions",
+      flex: 0.2,
+
+      align: "center",
+      headerAlign: "center",
+    },
+  ];
+
   return (
     <>
       {addIsOpen && (
@@ -152,9 +193,7 @@ export const FiatAssetsTable = () => {
           onClose={() => setAddIsOpen(false)}
           sx={{ minWidth: "260px", maxWidth: "500px" }}
         >
-          <AddFiatAsset
-            onClose={() => setAddIsOpen(false)}
-          />
+          <AddFiatAsset onClose={() => setAddIsOpen(false)} />
         </BasicModal>
       )}
       <DataGrid
@@ -197,44 +236,3 @@ export const FiatAssetsTable = () => {
     </>
   );
 };
-
-const columns: GridColDef[] = [
-  {
-    field: "note",
-    headerName: "Note",
-    editable: true,
-    flex: 0.35,
-    minWidth:150,
-  },
-  {
-    field: "amount",
-    headerName: "Amount",
-    type: "number",
-    editable: true,
-    flex: 0.2,
-    minWidth:150,
-
-    align: "center",
-    headerAlign: "center",
-  },
-  {
-    field: "currency",
-    headerName: "Currency",
-    editable: true,
-    type: "singleSelect",
-    valueOptions: availableCurrencies,
-    flex: 0.2,
-    minWidth:130,
-
-    align: "center",
-    headerAlign: "center",
-  },
-  {
-    field: "actions",
-    headerName: "Actions",
-    flex: 0.2,
-
-    align: "center",
-    headerAlign: "center",
-  },
-];
