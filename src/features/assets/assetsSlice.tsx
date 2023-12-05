@@ -2,7 +2,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 // Constants related imports
-import { Asset, fiatAsset, NetworthSnapshot } from "../../constants";
+import { Asset, FiatAsset, NetworthSnapshot } from "../../constants";
 
 // Thunks related imports
 import { fetchCryptoPrices, fetchStockPrices, fetchUserData } from "./thunks";
@@ -18,7 +18,7 @@ import {
 
 export type AssetsState = {
   assets: Asset[];
-  fiatAssets: fiatAsset[];
+  fiatAssets: FiatAsset[];
   networthSnapshots: NetworthSnapshot[];
 
   cryptoPrices: CryptoPrice[];
@@ -130,7 +130,7 @@ export const assetsSlice = createSlice({
       );
     },
 
-    addFiatAsset: (state, action: PayloadAction<fiatAsset>) => {
+    addFiatAsset: (state, action: PayloadAction<FiatAsset>) => {
       const id =
         state.fiatAssets.length > 0
           ? state.fiatAssets[state.fiatAssets.length - 1].id + 1
