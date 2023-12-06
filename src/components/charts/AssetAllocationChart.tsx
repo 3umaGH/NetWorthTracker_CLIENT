@@ -2,10 +2,13 @@ import { useTheme } from "@emotion/react";
 import { useSelector } from "react-redux";
 import { PieChart, pieArcLabelClasses } from "@mui/x-charts/PieChart";
 import { RootState } from "../../app/Store";
+import { formatCurrency } from "../../util";
 
 export const AssetAllocationChart = () => {
   const assets = useSelector((state: RootState) => state.assets);
   const theme = useTheme();
+
+  const formatter = (data: any) => formatCurrency(data.data, "USD", 0);
 
   return (
     <PieChart
@@ -42,6 +45,7 @@ export const AssetAllocationChart = () => {
               label: "Stocks",
             },
           ],
+          valueFormatter: formatter,
           highlightScope: { faded: "global", highlighted: "item" },
           faded: {
             innerRadius: 30,
