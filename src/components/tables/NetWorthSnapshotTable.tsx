@@ -65,9 +65,9 @@ export const NetWorthSnapshotTable = () => {
   }, [mobileVersion]);
 
   const getColor = (inputNum: number) => {
-    if (inputNum === null || inputNum === undefined) return "black";
+    if (inputNum === null || inputNum === undefined) return theme.palette.textColor.main;
 
-    if (inputNum > 0) return theme.palette.positiveColor.main;
+    if (inputNum >= 0) return theme.palette.positiveColor.main;
     else if (inputNum < 0) return theme.palette.negativeColor.main;
   };
 
