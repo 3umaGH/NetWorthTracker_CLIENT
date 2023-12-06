@@ -127,6 +127,7 @@ export const NetWorthSnapshotTable = () => {
             sx={{
               color: theme.palette.textColor.main,
               fontWeight: "300",
+              cursor: params.isEditable ? "pointer" :"default",
             }}
           >
             {formatTimeMillis(value)}
@@ -138,6 +139,7 @@ export const NetWorthSnapshotTable = () => {
             sx={{
               color: theme.palette.cryptoColor.main,
               fontWeight: "500",
+              cursor: params.isEditable ? "pointer" :"default",
               ...(userParams.discreetMode
                 ? {
                     filter: "blur(4px)",
@@ -158,6 +160,7 @@ export const NetWorthSnapshotTable = () => {
             sx={{
               color: theme.palette.conversionColor.main,
               fontWeight: "500",
+              cursor: params.isEditable ? "pointer" :"default",
               ...(userParams.discreetMode
                 ? {
                     filter: "blur(4px)",
@@ -180,6 +183,7 @@ export const NetWorthSnapshotTable = () => {
             sx={{
               color: getColor(params.row.changeSecondary),
               fontWeight: "500",
+              cursor: params.isEditable ? "pointer" :"default",
               ...(userParams.discreetMode
                 ? {
                     filter: "blur(4px)",
@@ -206,6 +210,7 @@ export const NetWorthSnapshotTable = () => {
             sx={{
               color: getColor(params.row.changeUSD),
               fontWeight: "500",
+              cursor: params.isEditable ? "pointer" :"default",
               ...(userParams.discreetMode
                 ? {
                     filter: "blur(4px)",
@@ -229,6 +234,7 @@ export const NetWorthSnapshotTable = () => {
             sx={{
               color: theme.palette.cryptoColor.main,
               fontWeight: "500",
+              cursor: params.isEditable ? "pointer" :"default",
               ...(userParams.discreetMode
                 ? {
                     filter: "blur(4px)",
@@ -248,6 +254,7 @@ export const NetWorthSnapshotTable = () => {
             sx={{
               color: theme.palette.textColor.main,
               fontWeight: "200",
+              cursor: params.isEditable ? "pointer" :"default",
             }}
           >
             {value}

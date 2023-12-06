@@ -105,6 +105,7 @@ export const FiatAssetsTable = () => {
             sx={{
               color: theme.palette.textColor.main,
               fontWeight: "200",
+              cursor: params.isEditable ? "pointer" :"default"
             }}
           >
             {value}
@@ -116,6 +117,7 @@ export const FiatAssetsTable = () => {
             sx={{
               color: theme.palette.fiatColor.main,
               fontWeight: "500",
+              cursor: params.isEditable ? "pointer" :"default",
               ...(userParams.discreetMode
                 ? {
                     filter: "blur(4px)",
@@ -135,11 +137,13 @@ export const FiatAssetsTable = () => {
             sx={{
               color: theme.palette.textColor.main,
               fontWeight: "500",
+              cursor: params.isEditable ? "pointer" :"default",
             }}
           >
             {value}
           </Box>
         );
+       
       case "actions":
         return <TableActions row={params.row} />;
       default:

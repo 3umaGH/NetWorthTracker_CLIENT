@@ -108,6 +108,7 @@ export const AssetsTable = () => {
             sx={{
               color: theme.palette.textColor.main,
               fontWeight: "200",
+              cursor: params.isEditable ? "pointer" :"default",
             }}
           >
             {value}
@@ -119,6 +120,7 @@ export const AssetsTable = () => {
             sx={{
               color: theme.palette.textColor.main,
               fontWeight: "700",
+              cursor: params.isEditable ? "pointer" :"default",
             }}
           >
             {value}
@@ -133,6 +135,7 @@ export const AssetsTable = () => {
                   ? theme.palette.cryptoColor.main
                   : theme.palette.stockColor.main,
               fontWeight: "600",
+              cursor: params.isEditable ? "pointer" :"default",
             }}
           >
             {value}
@@ -144,6 +147,7 @@ export const AssetsTable = () => {
             sx={{
               color: theme.palette.textColor.main,
               fontWeight: "200",
+              cursor: params.isEditable ? "pointer" :"default",
               ...(userParams.discreetMode
                 ? {
                     filter: "blur(4px)",
@@ -166,6 +170,7 @@ export const AssetsTable = () => {
             sx={{
               color: getColor(params.row.change),
               fontWeight: "500",
+              cursor: params.isEditable ? "pointer" :"default",
               ...(userParams.discreetMode
                 ? {
                     filter: "blur(4px)",
@@ -189,6 +194,7 @@ export const AssetsTable = () => {
             sx={{
               color: getColor(params.row.change * value),
               fontWeight: "500",
+              cursor: params.isEditable ? "pointer" :"default",
               ...(userParams.discreetMode
                 ? {
                     filter: "blur(4px)",
