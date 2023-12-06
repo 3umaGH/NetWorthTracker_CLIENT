@@ -22,7 +22,7 @@ export const AddFiatAsset = ({ onClose }: { onClose: () => void }) => {
   const currencyTickers = prices.currencyRates.map((curr) => curr.ticker);
 
   const [formData, setFormData] = useState({
-    note: "-",
+    note: "",
     currency: currencyTickers.find((cur) => cur === "USD"),
     amount: "0",
   });
