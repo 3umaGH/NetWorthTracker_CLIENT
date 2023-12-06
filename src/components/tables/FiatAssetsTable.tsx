@@ -17,7 +17,7 @@ import {
   updateFiatAsset,
 } from "../../features/assets/assetsSlice";
 import BasicModal from "../modals/BasicModal";
-import { AddFiatAsset } from "../modals/AddFiatAsset";
+import { AddFiatAsset } from "../modals/views/AddFiatAsset";
 import {
   saveUserData,
   updateNumbers,

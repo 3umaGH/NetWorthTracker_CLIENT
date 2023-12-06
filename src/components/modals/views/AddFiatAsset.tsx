@@ -10,10 +10,10 @@ import {
   FormControl,
 } from "@mui/material";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
-import { addFiatAsset } from "../../features/assets/assetsSlice";
-import { FiatAsset } from "../../constants";
-import { saveUserData } from "../../features/assets/thunks";
-import { AppDispatch, RootState } from "../../app/Store";
+import { addFiatAsset } from "../../../features/assets/assetsSlice";
+import { FiatAsset } from "../../../constants";
+import { saveUserData } from "../../../features/assets/thunks";
+import { AppDispatch, RootState } from "../../../app/Store";
 
 export const AddFiatAsset = ({ onClose }: { onClose: () => void }) => {
   const prices = useSelector((state: RootState) => state.prices);

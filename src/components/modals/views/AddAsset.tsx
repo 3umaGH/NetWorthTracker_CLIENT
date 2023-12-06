@@ -11,9 +11,9 @@ import {
 } from "@mui/material";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import Autocomplete from "@mui/material/Autocomplete";
-import { AppDispatch, RootState } from "../../app/Store";
-import { addNewAsset, saveUserData } from "../../features/assets/thunks";
-import { getStockCurrency } from "../../util";
+import { AppDispatch, RootState } from "../../../app/Store";
+import { addNewAsset, saveUserData } from "../../../features/assets/thunks";
+import { getStockCurrency } from "../../../util";
 
 export const AddAsset = ({ onClose }: { onClose: () => void }) => {
   const prices = useSelector((state: RootState) => state.prices);

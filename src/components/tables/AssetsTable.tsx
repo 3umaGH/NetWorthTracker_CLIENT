@@ -14,7 +14,7 @@ import { RootState } from "../../app/Store";
 import { AppDispatch } from "../../app/Store";
 import { deleteAsset, updateAsset } from "../../features/assets/assetsSlice";
 import BasicModal from "../modals/BasicModal";
-import { AddAsset } from "../modals/AddAsset";
+import { AddAsset } from "../modals/views/AddAsset";
 import {
   saveUserData,
   updateNumbers,
@@ -35,7 +35,6 @@ export const AssetsTable = () => {
   const [columnVisibilityModel, setColumnVisibilityModel] =
     useState<GridColumnVisibilityModel>();
   const mobileVersion = useMediaQuery(theme.breakpoints.down("md"));
-
   const rows = assets.assets;
 
   const HIDE_COLUMNS_MOBILE = {
