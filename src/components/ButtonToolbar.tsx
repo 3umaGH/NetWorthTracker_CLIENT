@@ -29,7 +29,7 @@ export const ButtonToolbar = ({
   return (
     <Box
       sx={{
-        position:"relative",
+        position: "relative",
         display: "flex",
         flexDirection: "row",
         justifyContent: "center",
@@ -37,12 +37,11 @@ export const ButtonToolbar = ({
         gap: 2,
 
         border: "2px ridge",
-        borderRadius:"10px",
-        borderColor: theme.palette.textColor.light,
+        borderRadius: "10px",
+        borderColor: theme.palette.textColor.light + "4D",
       }}
     >
-    
-    <Box>
+      <Box>
         <Tooltip
           title={`Switch to ${userParams.isLightTheme ? "dark" : "light"} mode`}
         >
@@ -85,9 +84,9 @@ export const ButtonToolbar = ({
             <AttachMoneyIcon fontSize="medium" />
           </Button>
         </Tooltip>
-        </Box>
-     
-      <Box sx={{position:"absolute", right:"0px"}}>
+      </Box>
+
+      <Box sx={{ position: "absolute", right: "0px" }}>
         <Tooltip title="Logout">
           <Button
             color="textColor"
