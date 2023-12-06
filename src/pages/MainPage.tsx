@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { Container, Grid, Box, CircularProgress } from "@mui/material";
+import { Container, Grid, Box, CircularProgress, Modal } from "@mui/material";
 
 import { AssetAllocationChart } from "../components/charts/AssetAllocationChart";
 import { NetWorthSnapshotTable } from "../components/tables/NetWorthSnapshotTable";
@@ -21,12 +21,15 @@ import { ButtonToolbar } from "../components/ButtonToolbar";
 import { FirebaseAuth } from "../firebase/firebase";
 import { fetchUserConfig } from "../features/userParams/thunks";
 import { fetchCryptoPrices, fetchStockPrices } from "../features/prices/thunks";
+import BasicModal from "../components/modals/BasicModal";
+import { CurrencySelector } from "../components/modals/views/CurrencySelector";
 
 export const MainPage = () => {
   const assets = useSelector((state: RootState) => state.assets);
   const prices = useSelector((state: RootState) => state.prices);
   const dispatch = useDispatch<AppDispatch>();
   const [isLoading, setLoading] = useState(true);
+  const [isCurrencySelectorOpen, setCurrencySelector] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -68,6 +71,17 @@ export const MainPage = () => {
 
   return (
     <Box>
+      {isCurrencySelectorOpen && (
+        <BasicModal
+          onClose={() => setCurrencySelector(!isCurrencySelectorOpen)}
+          sx={{ minWidth: "260px", maxWidth: "350px" }}
+        >
+          <CurrencySelector
+            onClose={() => setCurrencySelector(!isCurrencySelectorOpen)}
+          />
+        </BasicModal>
+      )}
+
       {isLoading ? (
         <Box
           sx={{
@@ -84,7 +98,7 @@ export const MainPage = () => {
           <Grid item xs={12} md={3}>
             <Container maxWidth={false} sx={{ height: "45vh" }}>
               <CellTitle title="Asset Allocation" />
-              <ButtonToolbar />
+              <ButtonToolbar handleCurrencySelectorOpen={() => setCurrencySelector(true)} />
 
               <Box
                 sx={{
