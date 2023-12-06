@@ -38,6 +38,10 @@ export const currencySymbolBackPosition = [
   "INR",
   "RUB",
   "THB",
+  "NOK",
+  "DKK",
+  "EUR",
+  "SEK",
 ];
 
 export type Ticker = string;
