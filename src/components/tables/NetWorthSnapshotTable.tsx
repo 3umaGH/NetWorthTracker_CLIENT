@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Box, Button, Tooltip, useMediaQuery } from "@mui/material";
+import { Box, Button, Tooltip, useMediaQuery, Typography } from "@mui/material";
 import {
   DataGrid,
   GridColDef,
@@ -257,7 +257,7 @@ export const NetWorthSnapshotTable = () => {
               cursor: params.isEditable ? "pointer" :"default",
             }}
           >
-            {value}
+            {value === "" ? <Typography variant="body2" sx={{color: theme.palette.textColor.main}}>Set Note</Typography> : value}
           </Box>
         );
       case "actions":

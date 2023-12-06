@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Box, Button, useMediaQuery } from "@mui/material";
+import { Box, Button, useMediaQuery, Typography } from "@mui/material";
 import {
   DataGrid,
   GridColDef,
@@ -108,10 +108,19 @@ export const AssetsTable = () => {
             sx={{
               color: theme.palette.textColor.main,
               fontWeight: "200",
-              cursor: params.isEditable ? "pointer" :"default",
+              cursor: params.isEditable ? "pointer" : "default",
             }}
           >
-            {value}
+            {value === "" || value === "-" ? (
+              <Typography
+                variant="body2"
+                sx={{ color: theme.palette.textColor.main }}
+              >
+                Set Note
+              </Typography>
+            ) : (
+              value
+            )}
           </Box>
         );
       case "ticker":
@@ -120,7 +129,7 @@ export const AssetsTable = () => {
             sx={{
               color: theme.palette.textColor.main,
               fontWeight: "700",
-              cursor: params.isEditable ? "pointer" :"default",
+              cursor: params.isEditable ? "pointer" : "default",
             }}
           >
             {value}
@@ -135,7 +144,7 @@ export const AssetsTable = () => {
                   ? theme.palette.cryptoColor.main
                   : theme.palette.stockColor.main,
               fontWeight: "600",
-              cursor: params.isEditable ? "pointer" :"default",
+              cursor: params.isEditable ? "pointer" : "default",
             }}
           >
             {value}
@@ -147,7 +156,7 @@ export const AssetsTable = () => {
             sx={{
               color: theme.palette.textColor.main,
               fontWeight: "200",
-              cursor: params.isEditable ? "pointer" :"default",
+              cursor: params.isEditable ? "pointer" : "default",
               ...(userParams.discreetMode
                 ? {
                     filter: "blur(4px)",
@@ -170,7 +179,7 @@ export const AssetsTable = () => {
             sx={{
               color: getColor(params.row.change),
               fontWeight: "500",
-              cursor: params.isEditable ? "pointer" :"default",
+              cursor: params.isEditable ? "pointer" : "default",
               ...(userParams.discreetMode
                 ? {
                     filter: "blur(4px)",
@@ -194,7 +203,7 @@ export const AssetsTable = () => {
             sx={{
               color: getColor(params.row.change * value),
               fontWeight: "500",
-              cursor: params.isEditable ? "pointer" :"default",
+              cursor: params.isEditable ? "pointer" : "default",
               ...(userParams.discreetMode
                 ? {
                     filter: "blur(4px)",

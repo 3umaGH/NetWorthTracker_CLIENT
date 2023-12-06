@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Box, Button, useMediaQuery } from "@mui/material";
+import { Box, Button, useMediaQuery, Typography } from "@mui/material";
 import {
   DataGrid,
   GridColDef,
@@ -105,10 +105,19 @@ export const FiatAssetsTable = () => {
             sx={{
               color: theme.palette.textColor.main,
               fontWeight: "200",
-              cursor: params.isEditable ? "pointer" :"default"
+              cursor: params.isEditable ? "pointer" : "default",
             }}
           >
-            {value}
+            {value === "" || value === "-" ? (
+              <Typography
+                variant="body2"
+                sx={{ color: theme.palette.textColor.main }}
+              >
+                Set Note
+              </Typography>
+            ) : (
+              value
+            )}
           </Box>
         );
       case "amount":
@@ -117,7 +126,7 @@ export const FiatAssetsTable = () => {
             sx={{
               color: theme.palette.fiatColor.main,
               fontWeight: "500",
-              cursor: params.isEditable ? "pointer" :"default",
+              cursor: params.isEditable ? "pointer" : "default",
               ...(userParams.discreetMode
                 ? {
                     filter: "blur(4px)",
@@ -137,13 +146,13 @@ export const FiatAssetsTable = () => {
             sx={{
               color: theme.palette.textColor.main,
               fontWeight: "500",
-              cursor: params.isEditable ? "pointer" :"default",
+              cursor: params.isEditable ? "pointer" : "default",
             }}
           >
             {value}
           </Box>
         );
-       
+
       case "actions":
         return <TableActions row={params.row} />;
       default:
