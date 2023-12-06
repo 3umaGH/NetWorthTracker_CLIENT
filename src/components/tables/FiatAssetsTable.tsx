@@ -7,6 +7,7 @@ import {
   GridColumnVisibilityModel,
   GridRenderCellParams,
   GridTreeNodeWithRender,
+  useGridApiRef,
 } from "@mui/x-data-grid";
 import { formatCurrency } from "../../util";
 import { useTheme } from "@emotion/react";
@@ -31,12 +32,9 @@ import ClearIcon from "@mui/icons-material/Clear";
 export const FiatAssetsTable = () => {
   const assets = useSelector((state: RootState) => state.assets);
   const prices = useSelector((state: RootState) => state.prices);
-
   const userParams = useSelector((state: RootState) => state.userParams);
-
   const dispatch = useDispatch<AppDispatch>();
   const theme = useTheme();
-
   const [addIsOpen, setAddIsOpen] = useState(false);
   const [columnVisibilityModel, setColumnVisibilityModel] =
     useState<GridColumnVisibilityModel>();
@@ -44,10 +42,23 @@ export const FiatAssetsTable = () => {
 
   const rows = assets.fiatAssets;
   const currencyTickers = prices.currencyRates.map((curr) => curr.ticker);
+  const tableRef = useGridApiRef();
 
   const HIDE_COLUMNS_MOBILE = {
     /*None, it fits well*/
   };
+
+  const handleScrollToLastItem = () => {
+    if (tableRef.current)
+      tableRef.current.scrollToIndexes({
+        rowIndex: rows.length - 1,
+        colIndex: 0,
+      });
+  };
+
+  useEffect(() => {
+    setTimeout(() => handleScrollToLastItem(), 100);
+  }, [rows.length]);
 
   useEffect(() => {
     setColumnVisibilityModel(mobileVersion ? HIDE_COLUMNS_MOBILE : {});
@@ -188,6 +199,7 @@ export const FiatAssetsTable = () => {
         </BasicModal>
       )}
       <DataGrid
+        apiRef={tableRef}
         rows={rows}
         columnVisibilityModel={columnVisibilityModel}
         hideFooter={true}

@@ -7,6 +7,7 @@ import {
   GridColumnVisibilityModel,
   GridRenderCellParams,
   GridTreeNodeWithRender,
+  useGridApiRef,
 } from "@mui/x-data-grid";
 import { formatCurrency } from "../../util";
 import { useTheme } from "@emotion/react";
@@ -36,6 +37,19 @@ export const AssetsTable = () => {
     useState<GridColumnVisibilityModel>();
   const mobileVersion = useMediaQuery(theme.breakpoints.down("md"));
   const rows = assets.assets;
+  const tableRef = useGridApiRef();
+
+  const handleScrollToLastItem = () => {
+    if (tableRef.current)
+      tableRef.current.scrollToIndexes({
+        rowIndex: rows.length - 1,
+        colIndex: 0,
+      });
+  };
+
+  useEffect(() => {
+    setTimeout(() => handleScrollToLastItem(), 100);
+  }, [rows.length]);
 
   const HIDE_COLUMNS_MOBILE = {
     note: false,
@@ -211,6 +225,7 @@ export const AssetsTable = () => {
       )}
 
       <DataGrid
+        apiRef={tableRef}
         rows={rows}
         columnVisibilityModel={columnVisibilityModel}
         hideFooter={true}

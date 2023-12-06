@@ -7,6 +7,7 @@ import {
   GridColumnVisibilityModel,
   GridRenderCellParams,
   GridTreeNodeWithRender,
+  useGridApiRef,
 } from "@mui/x-data-grid";
 import {
   formatBTC,
@@ -33,13 +34,11 @@ export const NetWorthSnapshotTable = () => {
   const userParams = useSelector((state: RootState) => state.userParams);
   const dispatch = useDispatch<AppDispatch>();
   const theme = useTheme();
-
   const rows = assets.networthSnapshots;
-
   const mobileVersion = useMediaQuery(theme.breakpoints.down("md"));
-
   const [columnVisibilityModel, setColumnVisibilityModel] =
     useState<GridColumnVisibilityModel>();
+  const tableRef = useGridApiRef();
 
   const HIDE_COLUMNS_MOBILE = {
     btcPrice: false,
@@ -48,6 +47,18 @@ export const NetWorthSnapshotTable = () => {
     totalUSD: false,
     note: false,
   };
+
+  const handleScrollToLastItem = () => {
+    if (tableRef.current)
+      tableRef.current.scrollToIndexes({
+        rowIndex: rows.length - 1,
+        colIndex: 0,
+      });
+  };
+
+  useEffect(() => {
+    setTimeout(() => handleScrollToLastItem(), 100);
+  }, [rows.length]);
 
   useEffect(() => {
     setColumnVisibilityModel(mobileVersion ? HIDE_COLUMNS_MOBILE : {});
@@ -328,6 +339,7 @@ export const NetWorthSnapshotTable = () => {
 
   return (
     <DataGrid
+      apiRef={tableRef}
       rows={rows}
       columnVisibilityModel={columnVisibilityModel}
       hideFooter={true}
