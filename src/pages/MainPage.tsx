@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { Container, Grid, Box, CircularProgress, Modal } from "@mui/material";
+import { Container, Grid, Box, CircularProgress } from "@mui/material";
 
 import { AssetAllocationChart } from "../components/charts/AssetAllocationChart";
 import { NetWorthSnapshotTable } from "../components/tables/NetWorthSnapshotTable";
@@ -98,7 +98,9 @@ export const MainPage = () => {
           <Grid item xs={12} md={3}>
             <Container maxWidth={false} sx={{ height: "45vh" }}>
               <CellTitle title="Asset Allocation" />
-              <ButtonToolbar handleCurrencySelectorOpen={() => setCurrencySelector(true)} />
+              <ButtonToolbar
+                handleCurrencySelectorOpen={() => setCurrencySelector(true)}
+              />
 
               <Box
                 sx={{
