@@ -1,11 +1,8 @@
-// React-related imports
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-// Material-UI (MUI) related imports
 import { Container, Grid, Box, CircularProgress } from "@mui/material";
 
-// Components
 import { AssetAllocationChart } from "../components/charts/AssetAllocationChart";
 import { NetWorthSnapshotTable } from "../components/tables/NetWorthSnapshotTable";
 import { AssetsTable } from "../components/tables/AssetsTable";
@@ -13,40 +10,44 @@ import { FiatAssetsTable } from "../components/tables/FiatAssetsTable";
 import { CellTitle } from "../components/CellTitle";
 import { BalanceFooter } from "../components/BalanceFooter";
 
-// App-related imports
 import { AppDispatch, RootState } from "../app/Store";
 
-// Thunks
 import {
-  fetchCryptoPrices,
-  fetchStockPrices,
   fetchUserData,
+  updateNumbers,
+  updateTotals,
 } from "../features/assets/thunks";
 import { ButtonToolbar } from "../components/ButtonToolbar";
 import { FirebaseAuth } from "../firebase/firebase";
 import { fetchUserConfig } from "../features/userParams/thunks";
+import { fetchCryptoPrices, fetchStockPrices } from "../features/prices/thunks";
 
 export const MainPage = () => {
   const assets = useSelector((state: RootState) => state.assets);
+  const prices = useSelector((state: RootState) => state.prices);
   const dispatch = useDispatch<AppDispatch>();
+  const [isLoading, setLoading] = useState(true);
 
   useEffect(() => {
-    dispatch(fetchCryptoPrices());
-    dispatch(fetchStockPrices());
+    const fetchData = async () => {
+      if (FirebaseAuth.currentUser) {
+        await dispatch(fetchUserData());
+        await dispatch(fetchUserConfig());
+        await dispatch(fetchCryptoPrices());
+        await dispatch(fetchStockPrices());
 
-    const cryptoIntervalId = setInterval(
-      () => dispatch(fetchCryptoPrices()),
-      10000
-    );
-    const stockIntervalId = setInterval(
-      () => dispatch(fetchStockPrices()),
-      30000
-    );
+        setLoading(false);
+      }
+    };
 
-    if (FirebaseAuth.currentUser) {
-      dispatch(fetchUserConfig());
-      dispatch(fetchUserData());
-    }
+    fetchData();
+
+    const cryptoIntervalId = setInterval(() => {
+      dispatch(fetchCryptoPrices());
+    }, 10000);
+    const stockIntervalId = setInterval(() => {
+      dispatch(fetchStockPrices());
+    }, 30000);
 
     return () => {
       clearInterval(cryptoIntervalId);
@@ -54,9 +55,20 @@ export const MainPage = () => {
     };
   }, []);
 
+  useEffect(() => {
+    dispatch(updateNumbers()).then(() => dispatch(updateTotals()));
+  }, [
+    assets.secondaryISO_4217,
+    assets.assets.length,
+    assets.fiatAssets.length,
+    prices.cryptoPrices,
+    prices.currencyRates,
+    prices.stockPrices,
+  ]);
+
   return (
     <Box>
-      {assets.loadingAssets ? (
+      {isLoading ? (
         <Box
           sx={{
             display: "flex",

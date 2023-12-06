@@ -1,4 +1,6 @@
+import { currencySymbolBackPosition, currencySymbols } from "./constants";
 import { AssetsState } from "./features/assets/assetsSlice";
+import { PricesState } from "./features/prices/pricesSlice";
 
 export const formatCurrency = (
   inputNum: number,
@@ -25,137 +27,84 @@ export const formatTimeMillis = (inputNum: number) => {
   }/${fullDate.getDate()}`;
 };
 
-export const updateTotals = (state: AssetsState) => {
-  state.eurUSDRate =
-    state.currencyRates.find((val) => val.ticker === "EUR")?.price || -1;
-
-  const totalUSD =
-    state.assets.reduce(
-      (sum, obj) =>
-        sum + (convertCurrency(state, obj.currency, obj.totalPrice) as number),
-      0
-    ) +
-    state.fiatAssets.reduce(
-      (sum, obj) =>
-        sum + (convertCurrency(state, obj.currency, obj.amount) as number),
-      0
-    );
-
-  state.totals = {
-    // USD
-    USD: totalUSD,
-
-    // EUR
-    EUR: totalUSD / state.eurUSDRate,
-
-    // BTC
-    BTC: state.assets.reduce(
-      (sum, obj) =>
-        obj.ticker.startsWith("BTC") // Need a better way to determine if asset is in fact BTC.
-          ? sum + (obj.amount as number)
-          : (sum = sum),
-      0
-    ),
-
-    // Crypto
-    crypto: state.assets.reduce(
-      (sum, obj) =>
-        obj.type === "Crypto"
-          ? sum +
-            (convertCurrency(state, obj.currency, obj.totalPrice) as number)
-          : (sum = sum),
-      0
-    ),
-
-    // Fiat
-    fiat: state.fiatAssets.reduce(
-      (sum, obj) =>
-        sum + (convertCurrency(state, obj.currency, obj.amount) as number),
-      0
-    ),
-
-    // Stocks
-    stocks: state.assets.reduce(
-      (sum, obj) =>
-        obj.type === "Stock"
-          ? sum +
-            (convertCurrency(state, obj.currency, obj.totalPrice) as number)
-          : (sum = sum),
-      0
-    ),
-  };
-};
-
 export const convertCurrency = (
-  // TODO: Check if its possible to support more currencies
-  state: AssetsState,
+  type: "to" | "from" = "to",
+  state: PricesState,
   currency: string,
   value: number
 ) => {
   if (currency === "USD") return value;
 
   const rate =
-    state.currencyRates.find((val) => val.ticker === currency)?.price ||
-    -1;
+    state.currencyRates.find((val) => val.ticker === currency)?.price || -1;
 
   if (rate === -1) return value;
 
-  return value * rate;
+  const val = type === "to" ? value * rate : value / rate;
+
+  return val;
 };
 
-export const getCryptoPrice = (state: AssetsState, ticker: string) => {
+export const getCryptoPrice = (state: PricesState, ticker: string) => {
   return state.cryptoPrices.find((val) => val.symbol === ticker)?.price || -1;
 };
 
-export const getStockPrice = (state: AssetsState, ticker: string) => {
+export const getStockPrice = (state: PricesState, ticker: string) => {
   return state.stockPrices.find((val) => val.ticker === ticker)?.price || -1;
 };
 
-export const getStockCurrency = (state: AssetsState, ticker: string) => {
+export const getCurrencyRate = (state: PricesState, currency: string) => {
+  return (
+    state.currencyRates.find((val) => val.ticker === currency)?.price || -1
+  );
+};
+
+export const getStockCurrency = (state: PricesState, ticker: string) => {
   return (
     state.stockPrices.find((val) => val.ticker === ticker)?.currency || "USD"
   );
 };
 
+export const getCurrencySymbol = (currencyCode: string) => {
+  const upperCaseCurrencyCode = currencyCode.toUpperCase();
+
+  if (currencySymbols.hasOwnProperty(upperCaseCurrencyCode))
+    return currencySymbols[
+      upperCaseCurrencyCode as keyof typeof currencySymbols
+    ];
+  else return "";
+};
+
+export const formatTotalCurrency = (
+  inputNum: number,
+  currency: keyof typeof currencySymbols,
+  maxDecimals: number = 3,
+) => {
+  const absNum = Math.abs(inputNum);
+
+  let suffix = "";
+  let number;
+
+  if (absNum >= 1000000) {
+    number = (inputNum >= 0 ? absNum / 1000000 : -absNum / 1000000).toFixed(3);
+    suffix = "M";
+  } else if (absNum >= 1000) {
+    number = (inputNum >= 0 ? absNum / 1000 : -absNum / 1000).toFixed(2);
+    suffix = "K";
+  } else {
+    number = inputNum.toFixed(maxDecimals).toString();
+  }
+
+
+  return currencySymbolBackPosition.includes(currency)
+    ? `${number}${suffix} ${currencySymbols[currency]}`
+    : `${currencySymbols[currency]}${number}${suffix}`;
+};
+
 export const getLastSnapshot = (state: AssetsState) => {
   return state.networthSnapshots[state.networthSnapshots.length - 1] ?? [];
 };
-export const formatTotalCurrency = (inputNum: number) => {
-  const absNum = Math.abs(inputNum);
 
-  if (absNum >= 1000000) {
-    return (
-      (inputNum >= 0 ? absNum / 1000000 : -absNum / 1000000).toFixed(3) + "M"
-    );
-  } else if (absNum >= 1000) {
-    return (inputNum >= 0 ? absNum / 1000 : -absNum / 1000).toFixed(2) + "K";
-  } else {
-    return inputNum.toFixed().toString();
-  }
-};
-
-export const matchAssetPrices = (
-  state: AssetsState,
-  type: "Crypto" | "Stock" | "All"
-) => {
-  state.assets = state.assets.map((asset) => {
-    const price =
-      asset.type === "Crypto"
-        ? getCryptoPrice(state, asset.ticker)
-        : getStockPrice(state, asset.ticker);
-
-    if (type === "All" ? true : asset.type == type) {
-      return {
-        ...asset,
-        lastPrice:
-          getLastSnapshot(state).lastAssetPrices?.find(
-            (val) => val.ticker === asset.ticker
-          )?.lastPrice || 0,
-        price: price,
-        change: price - asset.lastPrice,
-        totalPrice: price * asset.amount,
-      };
-    } else return asset;
-  });
-  updateTotals(state);
+export const calculateNextID = (array: any[]) => {
+  return array.length > 0 ? array[array.length - 1].id + 1 : 0;
 };

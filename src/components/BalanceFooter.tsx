@@ -1,10 +1,5 @@
-// React-Redux related imports
 import { useSelector } from "react-redux";
-
-// Emotion-related imports
 import { useTheme } from "@emotion/react";
-
-// Material-UI (MUI) related imports
 import {
   Box,
   CircularProgress,
@@ -12,26 +7,29 @@ import {
   Grid,
   Typography,
 } from "@mui/material";
-
-// App-related imports
 import { RootState } from "../app/Store";
-
-// Utility functions related imports
-import { formatTotalCurrency, getLastSnapshot } from "../util";
+import { formatTotalCurrency, getCurrencyRate, getLastSnapshot } from "../util";
+import { currencySymbols } from "../constants";
 
 export const BalanceFooter = () => {
   const assets = useSelector((state: RootState) => state.assets);
+  const prices = useSelector((state: RootState) => state.prices);
   const userParams = useSelector((state: RootState) => state.userParams);
   const theme = useTheme();
 
-  const USDChange = assets.totals.USD - (getLastSnapshot(assets).totalUSD ?? 0);
-  const EURChange = assets.totals.EUR - (getLastSnapshot(assets).totalEUR ?? 0);
+  const lastSnapshot = getLastSnapshot(assets);
+  const USDChange = assets.totals.USD - (lastSnapshot.totalUSD ?? 0);
+
+  const secondaryChange =
+    assets.secondaryISO_4217 === lastSnapshot.secondaryISO_4217
+      ? assets.totals.secondaryCurrency - (lastSnapshot.totalSecondary ?? 0)
+      : -1;
 
   return (
     <Box textAlign={"center"}>
       <Typography variant="h2" color={"black"} fontSize={28} fontWeight={700}>
         <Grid container>
-          {assets.fetchingPrices && (
+          {assets.isLoading && (
             <CircularProgress
               size={24}
               sx={{
@@ -59,7 +57,10 @@ export const BalanceFooter = () => {
                 : {}),
             }}
           >
-            <span>1€ = {assets.eurUSDRate}</span>
+            <span>
+              1 {assets.secondaryISO_4217} = $
+              {getCurrencyRate(prices, assets.secondaryISO_4217)}
+            </span>
           </Grid>
           <Grid
             item
@@ -67,9 +68,12 @@ export const BalanceFooter = () => {
             md={4.5}
             sx={{
               color:
-                EURChange >= 0
+                secondaryChange === -1
+                  ? theme.palette.textColor.dark
+                  : secondaryChange >= 0
                   ? theme.palette.positiveColor.main
                   : theme.palette.negativeColor.main,
+
               mb: 1,
               ...(userParams.discreetMode
                 ? {
@@ -82,8 +86,21 @@ export const BalanceFooter = () => {
             }}
           >
             <span>
-              Total (EUR): €{formatTotalCurrency(assets.totals.EUR)} (€
-              {formatTotalCurrency(EURChange)})
+              Total ({assets.secondaryISO_4217}):{" "}
+              {formatTotalCurrency(
+                assets.totals.secondaryCurrency,
+                assets.secondaryISO_4217 as keyof typeof currencySymbols,
+                0
+              )}{" "}
+              {secondaryChange === -1 || secondaryChange === 0
+                ? ""
+                : `( 
+                ${formatTotalCurrency(
+                  secondaryChange,
+                  assets.secondaryISO_4217 as keyof typeof currencySymbols,
+                  0
+                )}
+                   )`}
             </span>
           </Grid>
           <Grid
@@ -107,8 +124,9 @@ export const BalanceFooter = () => {
             }}
           >
             <span>
-              Total (USD): ${formatTotalCurrency(assets.totals.USD)} ($
-              {formatTotalCurrency(USDChange)})
+              Total (USD): {formatTotalCurrency(assets.totals.USD, "USD", 0)}
+              {USDChange !== 0 &&
+                ` ( ${formatTotalCurrency(USDChange, "USD", 0)} )`}
             </span>
           </Grid>
         </Grid>

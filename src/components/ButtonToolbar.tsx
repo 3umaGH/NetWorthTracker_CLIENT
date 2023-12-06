@@ -14,6 +14,8 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import { FirebaseAuth } from "../firebase/firebase";
+import { setSecondaryCurrency } from "../features/assets/assetsSlice";
+import { saveUserData, updateNumbers, updateTotals } from "../features/assets/thunks";
 
 export const ButtonToolbar = () => {
   const userParams = useSelector((state: RootState) => state.userParams);

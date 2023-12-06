@@ -1,4 +1,3 @@
-// Material-UI (MUI) related imports
 import { Button, Divider, Paper, Typography } from "@mui/material";
 
 import { FirebaseAuth, GoogleProvider } from "../firebase/firebase";

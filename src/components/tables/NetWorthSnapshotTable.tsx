@@ -1,9 +1,5 @@
 import { useState, useEffect } from "react";
-
-// React-Redux related imports
 import { useDispatch, useSelector } from "react-redux";
-
-// Material-UI (MUI) related imports
 import { Box, Button, Tooltip, useMediaQuery } from "@mui/material";
 import {
   DataGrid,
@@ -12,30 +8,23 @@ import {
   GridRenderCellParams,
   GridTreeNodeWithRender,
 } from "@mui/x-data-grid";
-
-// Constants related imports
-import { currencySymbol } from "../../constants";
-
-// Utility functions related imports
-import { formatBTC, formatCurrency, formatTimeMillis } from "../../util";
-
-// Emotion-related imports
+import {
+  formatBTC,
+  formatCurrency,
+  formatTimeMillis,
+  formatTotalCurrency,
+  getCurrencySymbol,
+} from "../../util";
 import { useTheme } from "@emotion/react";
-
-// App-related imports
 import { RootState } from "../../app/Store";
 import { AppDispatch } from "../../app/Store";
-
-// Redux actions related imports
 import {
-  addSnapshot,
   deleteSnapshot,
   updateSnapshot,
 } from "../../features/assets/assetsSlice";
-import { saveUserData } from "../../features/assets/thunks";
+import { createSnapshot, saveUserData } from "../../features/assets/thunks";
 import { DataGridToolBar } from "./components/DataGridToolBar";
 import { NoRowsComponent } from "./components/NoRowsComponent";
-
 import PostAddIcon from "@mui/icons-material/PostAdd";
 import ClearIcon from "@mui/icons-material/Clear";
 
@@ -46,6 +35,7 @@ export const NetWorthSnapshotTable = () => {
   const theme = useTheme();
 
   const rows = assets.networthSnapshots;
+
   const mobileVersion = useMediaQuery(theme.breakpoints.down("md"));
 
   const [columnVisibilityModel, setColumnVisibilityModel] =
@@ -53,7 +43,7 @@ export const NetWorthSnapshotTable = () => {
 
   const HIDE_COLUMNS_MOBILE = {
     btcPrice: false,
-    eurUSD: false,
+    secondaryCurrency: false,
     totalBTC: false,
     totalUSD: false,
     note: false,
@@ -88,8 +78,9 @@ export const NetWorthSnapshotTable = () => {
                   variant="text"
                   color="success"
                   onClick={() => {
-                    dispatch(addSnapshot());
-                    dispatch(saveUserData());
+                    dispatch(createSnapshot()).then(() =>
+                      dispatch(saveUserData())
+                    );
                   }}
                 >
                   <PostAddIcon />
@@ -146,11 +137,11 @@ export const NetWorthSnapshotTable = () => {
                 : {}),
             }}
           >
-            {currencySymbol}
+            {getCurrencySymbol("USD")}
             {value}
           </Box>
         );
-      case "eurUSD":
+      case "secondaryRate":
         return (
           <Box
             sx={{
@@ -166,15 +157,17 @@ export const NetWorthSnapshotTable = () => {
                 : {}),
             }}
           >
-            {currencySymbol}
-            {value}
+            {formatTotalCurrency(
+              parseFloat(value) || -1,
+              params.row.secondaryISO_4217
+            )}
           </Box>
         );
-      case "totalEUR":
+      case "totalSecondary":
         return (
           <Box
             sx={{
-              color: getColor(params.row.changeEUR),
+              color: getColor(params.row.changeSecondary),
               fontWeight: "500",
               ...(userParams.discreetMode
                 ? {
@@ -186,11 +179,14 @@ export const NetWorthSnapshotTable = () => {
                 : {}),
             }}
           >
-            {`${formatCurrency(value, "EUR")} (${formatCurrency(
-              params.row.changeEUR,
-              "EUR",
-              0
-            )})`}
+            {`${formatCurrency(value, params.row.secondaryISO_4217)} 
+            `}{" "}
+            {params.row.changeSecondary !== 0 &&
+              `(${formatCurrency(
+                params.row.changeSecondary,
+                params.row.secondaryISO_4217,
+                0
+              )})`}
           </Box>
         );
       case "totalUSD":
@@ -255,6 +251,81 @@ export const NetWorthSnapshotTable = () => {
     }
   };
 
+  const columns: GridColDef[] = [
+    {
+      field: "dateTime",
+      headerName: "Date & Time",
+      flex: 0.125,
+      minWidth: 150,
+
+      align: "center",
+      headerAlign: "center",
+    },
+    {
+      field: "btcPrice",
+      headerName: "BTC Price",
+      flex: 0.125,
+      minWidth: 150,
+
+      align: "center",
+      headerAlign: "center",
+    },
+    {
+      field: "secondaryRate",
+      headerName: `${assets.secondaryISO_4217}/USD`,
+      flex: 0.125,
+      minWidth: 150,
+
+      align: "center",
+      headerAlign: "center",
+    },
+    {
+      field: "totalSecondary",
+      headerName: `Total ${assets.secondaryISO_4217}`,
+      flex: 0.225,
+      minWidth: 180,
+
+      align: "center",
+      headerAlign: "center",
+    },
+    {
+      field: "totalUSD",
+      headerName: "Total USD",
+      flex: 0.225,
+      minWidth: 180,
+
+      align: "center",
+      headerAlign: "center",
+    },
+    {
+      field: "totalBTC",
+      headerName: "Total BTC",
+      flex: 0.125,
+      minWidth: 150,
+
+      align: "center",
+      headerAlign: "center",
+    },
+    {
+      field: "note",
+      headerName: "Note",
+      editable: true,
+      flex: 0.25,
+      minWidth: 150,
+
+      align: "center",
+      headerAlign: "center",
+    },
+    {
+      field: "actions",
+      headerName: "Actions",
+      flex: 0.07,
+
+      align: "center",
+      headerAlign: "center",
+    },
+  ];
+
   return (
     <DataGrid
       rows={rows}
@@ -275,8 +346,7 @@ export const NetWorthSnapshotTable = () => {
             text="No snapshots here yet..."
             buttonText="Create Snapshot"
             buttonOnClick={() => {
-              dispatch(addSnapshot());
-              dispatch(saveUserData());
+              dispatch(createSnapshot()).then(() => dispatch(saveUserData()));
             }}
           />
         ),
@@ -297,78 +367,3 @@ export const NetWorthSnapshotTable = () => {
     />
   );
 };
-
-const columns: GridColDef[] = [
-  {
-    field: "dateTime",
-    headerName: "Date & Time",
-    flex: 0.125,
-    minWidth:150,
-
-    align: "center",
-    headerAlign: "center",
-  },
-  {
-    field: "btcPrice",
-    headerName: "BTC Price",
-    flex: 0.125,
-    minWidth:150,
-
-    align: "center",
-    headerAlign: "center",
-  },
-  {
-    field: "eurUSD",
-    headerName: "EUR/USD",
-    flex: 0.125,
-    minWidth:150,
-
-    align: "center",
-    headerAlign: "center",
-  },
-  {
-    field: "totalEUR",
-    headerName: "Total EUR",
-    flex: 0.225,
-    minWidth:180,
-
-    align: "center",
-    headerAlign: "center",
-  },
-  {
-    field: "totalUSD",
-    headerName: "Total USD",
-    flex: 0.225,
-    minWidth:180,
-
-    align: "center",
-    headerAlign: "center",
-  },
-  {
-    field: "totalBTC",
-    headerName: "Total BTC",
-    flex: 0.125,
-    minWidth:150,
-
-    align: "center",
-    headerAlign: "center",
-  },
-  {
-    field: "note",
-    headerName: "Note",
-    editable: true,
-    flex: 0.25,
-    minWidth:150,
-
-    align: "center",
-    headerAlign: "center",
-  },
-  {
-    field: "actions",
-    headerName: "Actions",
-    flex: 0.07,
-
-    align: "center",
-    headerAlign: "center",
-  },
-];

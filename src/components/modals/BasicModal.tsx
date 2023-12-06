@@ -1,4 +1,3 @@
-// Material-UI (MUI) related imports
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import { CSSProperties } from "@mui/material/styles/createTypography";

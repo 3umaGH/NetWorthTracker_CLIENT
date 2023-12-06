@@ -1,8 +1,5 @@
-// React-related imports
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
-// Material-UI (MUI) related imports
 import {
   Box,
   Button,
@@ -14,28 +11,21 @@ import {
 } from "@mui/material";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import Autocomplete from "@mui/material/Autocomplete";
-
-// App-related imports
 import { AppDispatch, RootState } from "../../app/Store";
-
-// Redux actions related imports
-import { addAsset } from "../../features/assets/assetsSlice";
-
-// Constants related imports
-import { Asset } from "../../constants";
-import { saveUserData } from "../../features/assets/thunks";
+import { addNewAsset, saveUserData } from "../../features/assets/thunks";
 import { getStockCurrency } from "../../util";
 
 export const AddAsset = ({ onClose }: { onClose: () => void }) => {
-  const assets = useSelector((state: RootState) => state.assets);
+  const prices = useSelector((state: RootState) => state.prices);
+
   const dispatch = useDispatch<AppDispatch>();
   const [viewingCrypto, setViewingCrypto] = useState(true);
 
-  const stockTickers = assets.stockPrices.map((stock) => stock.ticker);
-  const cryptoTickers = assets.cryptoPrices
+  const stockTickers = prices.stockPrices.map((stock) => stock.ticker);
+  const cryptoTickers = prices.cryptoPrices
     .filter((crypto) => crypto.symbol.endsWith("USDT"))
     .map((crypto) => crypto.symbol);
-  const currencyTickers = assets.currencyRates.map((cur) => cur.ticker);
+  const currencyTickers = prices.currencyRates.map((cur) => cur.ticker);
 
   const [formData, setFormData] = useState({
     note: "-",
@@ -67,7 +57,7 @@ export const AddAsset = ({ onClose }: { onClose: () => void }) => {
       ticker: selectedValue as string,
       currency: viewingCrypto
         ? "USD" // Supporting only USD for crypto atm.
-        : getStockCurrency(assets, selectedValue as string),
+        : getStockCurrency(prices, selectedValue as string),
       type: viewingCrypto ? "Crypto" : "Stock",
     }));
   };
@@ -100,20 +90,20 @@ export const AddAsset = ({ onClose }: { onClose: () => void }) => {
         : formData.type;
 
     dispatch(
-      addAsset({
+      addNewAsset({
         id: 0, // Id is assigned automatically
         note: objNote,
         ticker: objTicker,
-        type: objType,
+        type: objType as "Crypto" | "Stock",
         currency: formData.currency,
         amount: parseFloat(formData.amount),
         lastPrice: 0,
         totalPrice: 0,
         price: 0,
-      } as Asset)
-    );
-
-    dispatch(saveUserData());
+      })
+    ).then(() => {
+      dispatch(saveUserData());
+    });
 
     onClose();
   };
@@ -184,9 +174,7 @@ export const AddAsset = ({ onClose }: { onClose: () => void }) => {
             id="amount"
             disablePortal
             onChange={(_e, newValue) => handleAutocompleteChange(newValue)}
-            value={formData.ticker 
-
-            }
+            value={formData.ticker}
             options={cryptoTickers}
             renderInput={(params) => (
               <TextField {...params} label="Crypto ticker" />
@@ -197,9 +185,7 @@ export const AddAsset = ({ onClose }: { onClose: () => void }) => {
             id="amount"
             disablePortal
             onChange={(_e, newValue) => handleAutocompleteChange(newValue)}
-            value={formData.ticker 
-
-            }
+            value={formData.ticker}
             options={stockTickers}
             renderInput={(params) => (
               <TextField {...params} label="Stock ticker" />
@@ -211,10 +197,11 @@ export const AddAsset = ({ onClose }: { onClose: () => void }) => {
           variant="outlined"
           color={viewingCrypto ? "stockColor" : "cryptoColor"}
           onClick={() => {
-            setFormData({...formData, ticker: !viewingCrypto ? cryptoTickers[0] : stockTickers[0]});
-            setViewingCrypto(!viewingCrypto)
-
-            console.log(formData)
+            setFormData({
+              ...formData,
+              ticker: !viewingCrypto ? cryptoTickers[0] : stockTickers[0],
+            });
+            setViewingCrypto(!viewingCrypto);
           }}
         >
           View {viewingCrypto ? "Stock pairs" : "Crypto pairs"}

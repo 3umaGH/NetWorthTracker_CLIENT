@@ -1,8 +1,5 @@
-// React-related imports
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
-// Material-UI (MUI) related imports
 import {
   Box,
   Button,
@@ -13,25 +10,16 @@ import {
   FormControl,
 } from "@mui/material";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
-
-// Redux actions related imports
 import { addFiatAsset } from "../../features/assets/assetsSlice";
-
-// Constants related imports
 import { FiatAsset } from "../../constants";
 import { saveUserData } from "../../features/assets/thunks";
 import { AppDispatch, RootState } from "../../app/Store";
 
-export const AddFiatAsset = ({
-  onClose,
-}: {
-  onClose: () => void;
-}) => {
-  const assets = useSelector((state: RootState) => state.assets);
+export const AddFiatAsset = ({ onClose }: { onClose: () => void }) => {
+  const prices = useSelector((state: RootState) => state.prices);
   const dispatch = useDispatch<AppDispatch>();
 
-  const currencyTickers = assets.currencyRates.map((curr) => curr.ticker);
-
+  const currencyTickers = prices.currencyRates.map((curr) => curr.ticker);
 
   const [formData, setFormData] = useState({
     note: "-",

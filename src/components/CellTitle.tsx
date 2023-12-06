@@ -1,7 +1,4 @@
-// Emotion-related imports
 import { useTheme } from "@emotion/react";
-
-// Material-UI (MUI) related imports
 import { Box, Typography, Divider } from "@mui/material";
 
 export const CellTitle = ({ title }: { title: string }) => {

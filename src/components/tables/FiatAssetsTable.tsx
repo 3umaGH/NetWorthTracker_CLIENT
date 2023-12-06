@@ -1,8 +1,5 @@
-// React-related imports
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
-// Material-UI (MUI) related imports
 import { Box, Button, useMediaQuery } from "@mui/material";
 import {
   DataGrid,
@@ -11,38 +8,32 @@ import {
   GridRenderCellParams,
   GridTreeNodeWithRender,
 } from "@mui/x-data-grid";
-
-// Utility functions related imports
 import { formatCurrency } from "../../util";
-
-// Emotion-related imports
 import { useTheme } from "@emotion/react";
-
-// App-related imports
 import { RootState } from "../../app/Store";
 import { AppDispatch } from "../../app/Store";
-
-// Redux actions related imports
 import {
   deleteFiatAsset,
   updateFiatAsset,
 } from "../../features/assets/assetsSlice";
-
-// Component-related imports
 import BasicModal from "../modals/BasicModal";
 import { AddFiatAsset } from "../modals/AddFiatAsset";
-
-// Constants related imports
-import { saveUserData } from "../../features/assets/thunks";
+import {
+  saveUserData,
+  updateNumbers,
+  updateTotals,
+} from "../../features/assets/thunks";
 import { DataGridToolBar } from "./components/DataGridToolBar";
 import { NoRowsComponent } from "./components/NoRowsComponent";
-
 import AddIcon from "@mui/icons-material/Add";
 import ClearIcon from "@mui/icons-material/Clear";
 
 export const FiatAssetsTable = () => {
   const assets = useSelector((state: RootState) => state.assets);
+  const prices = useSelector((state: RootState) => state.prices);
+
   const userParams = useSelector((state: RootState) => state.userParams);
+
   const dispatch = useDispatch<AppDispatch>();
   const theme = useTheme();
 
@@ -52,7 +43,7 @@ export const FiatAssetsTable = () => {
   const mobileVersion = useMediaQuery(theme.breakpoints.down("md"));
 
   const rows = assets.fiatAssets;
-  const currencyTickers = assets.currencyRates.map((curr) => curr.ticker);
+  const currencyTickers = prices.currencyRates.map((curr) => curr.ticker);
 
   const HIDE_COLUMNS_MOBILE = {
     /*None, it fits well*/
@@ -228,7 +219,13 @@ export const FiatAssetsTable = () => {
           if (updatedRow.amount >= 1000000000) return originalRow;
 
           dispatch(updateFiatAsset(updatedRow));
-          dispatch(saveUserData());
+
+          dispatch(updateNumbers()).then(() =>
+            dispatch(updateTotals()).then(() => {
+              dispatch(saveUserData());
+            })
+          );
+
           return updatedRow;
         }}
         onProcessRowUpdateError={(e) => console.log(e)}

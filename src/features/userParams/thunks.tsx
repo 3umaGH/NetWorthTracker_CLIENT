@@ -4,7 +4,7 @@ import { getDoc, doc, setDoc } from "firebase/firestore";
 import { UserParams } from "./userParamsSlice";
 
 export const saveUserConfig = createAsyncThunk(
-  "assets/saveConfig",
+  "userParams/saveConfig",
   async (_arg, { getState }) => {
     return new Promise<void>(async (resolve, reject) => {
       const id = FirebaseAuth.currentUser?.uid;
@@ -36,7 +36,7 @@ export const saveUserConfig = createAsyncThunk(
 );
 
 export const fetchUserConfig = createAsyncThunk(
-  "assets/fetchUserConfig",
+  "userParams/fetchUserConfig",
   async () => {
     return new Promise<UserParams>(async (resolve, reject) => {
       const id = FirebaseAuth.currentUser?.uid;

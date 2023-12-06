@@ -1,6 +1,44 @@
 export const currencySymbol = "$";
 
-export const pregeneratedKey = "564bhBF324S653SDF" // Not secure TODO: make secure
+export const pregeneratedKey = "564bhBF324S653SDF"; // Not secure TODO: make secure
+
+export const currencySymbols = {
+  EUR: "€",
+  USD: "$",
+  JPY: "¥",
+  GBP: "£",
+  AUD: "A$",
+  CAD: "CA$",
+  CHF: "CHF",
+  HKD: "HK$",
+  NZD: "NZ$",
+  CNY: "CN¥",
+  SEK: "kr",
+  MXN: "MX$",
+  SGD: "S$",
+  NOK: "kr",
+  KRW: "₩",
+  TRY: "₺",
+  INR: "₹",
+  RUB: "₽",
+  BRL: "R$",
+  ZAR: "R",
+  DKK: "kr",
+  THB: "฿",
+};
+
+export const currencySymbolBackPosition = [
+  // List of currencies that usually have their symbol at the back of the number
+  "CAD",
+  "CHF",
+  "CNY",
+  "MXN",
+  "KRW",
+  "TRY",
+  "INR",
+  "RUB",
+  "THB",
+];
 
 export type Ticker = string;
 
@@ -27,9 +65,10 @@ export type NetworthSnapshot = {
   id: number;
   dateTime: number;
   btcPrice: number;
-  eurUSD: number;
-  totalEUR: number;
-  changeEUR: number;
+  secondaryISO_4217: string;
+  secondaryRate: number;
+  totalSecondary: number;
+  changeSecondary: number;
   totalUSD: number;
   changeUSD: number;
   totalBTC: number;

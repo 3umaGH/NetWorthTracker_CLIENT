@@ -1,8 +1,5 @@
-// React-related imports
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
-// Material-UI (MUI) related imports
 import { Box, Button, useMediaQuery } from "@mui/material";
 import {
   DataGrid,
@@ -11,29 +8,20 @@ import {
   GridRenderCellParams,
   GridTreeNodeWithRender,
 } from "@mui/x-data-grid";
-
-// Utility functions related imports
 import { formatCurrency } from "../../util";
-
-// Emotion-related imports
 import { useTheme } from "@emotion/react";
-
-// App-related imports
 import { RootState } from "../../app/Store";
 import { AppDispatch } from "../../app/Store";
-
-// Redux actions related imports
 import { deleteAsset, updateAsset } from "../../features/assets/assetsSlice";
-
-// Component-related imports
 import BasicModal from "../modals/BasicModal";
 import { AddAsset } from "../modals/AddAsset";
-
-// Constants related imports
-import { saveUserData } from "../../features/assets/thunks";
+import {
+  saveUserData,
+  updateNumbers,
+  updateTotals,
+} from "../../features/assets/thunks";
 import { DataGridToolBar } from "./components/DataGridToolBar";
 import { NoRowsComponent } from "./components/NoRowsComponent";
-
 import AddIcon from "@mui/icons-material/Add";
 import ClearIcon from "@mui/icons-material/Clear";
 
@@ -219,11 +207,10 @@ export const AssetsTable = () => {
           onClose={() => setAddIsOpen(false)}
           sx={{ minWidth: "260px", maxWidth: "500px" }}
         >
-          <AddAsset
-            onClose={() => setAddIsOpen(false)}
-          />
+          <AddAsset onClose={() => setAddIsOpen(false)} />
         </BasicModal>
       )}
+
       <DataGrid
         rows={rows}
         columnVisibilityModel={columnVisibilityModel}
@@ -257,7 +244,12 @@ export const AssetsTable = () => {
             return originalRow;
 
           dispatch(updateAsset(updatedRow));
-          dispatch(saveUserData());
+
+          dispatch(updateNumbers()).then(() =>
+            dispatch(updateTotals()).then(() => {
+              dispatch(saveUserData());
+            })
+          );
 
           return updatedRow;
         }}
@@ -273,14 +265,14 @@ const columns: GridColDef[] = [
     headerName: "Note",
     editable: true,
     flex: 0.15,
-    minWidth:150,
+    minWidth: 150,
   },
   {
     field: "ticker",
     headerName: "Ticker",
 
     flex: 0.125,
-    minWidth:100,
+    minWidth: 100,
 
     align: "center",
     headerAlign: "center",
@@ -289,7 +281,7 @@ const columns: GridColDef[] = [
     field: "type",
     headerName: "Type",
     flex: 0.125,
-    minWidth:100,
+    minWidth: 100,
 
     align: "center",
     headerAlign: "center",
@@ -300,7 +292,7 @@ const columns: GridColDef[] = [
     type: "number",
     editable: true,
     flex: 0.125,
-    minWidth:150,
+    minWidth: 150,
 
     align: "center",
     headerAlign: "center",
@@ -309,7 +301,7 @@ const columns: GridColDef[] = [
     field: "price",
     headerName: "Last Price",
     flex: 0.125,
-    minWidth:150,
+    minWidth: 150,
 
     align: "center",
     headerAlign: "center",
@@ -318,7 +310,7 @@ const columns: GridColDef[] = [
     field: "totalPrice",
     headerName: "Total Price",
     flex: 0.125,
-    minWidth:150,
+    minWidth: 150,
 
     align: "center",
     headerAlign: "center",
