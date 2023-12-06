@@ -2,13 +2,20 @@ import { useTheme } from "@emotion/react";
 import { useSelector } from "react-redux";
 import { PieChart, pieArcLabelClasses } from "@mui/x-charts/PieChart";
 import { RootState } from "../../app/Store";
-import { formatCurrency } from "../../util";
+import { convertCurrency, formatTotalCurrency } from "../../util";
+import { currencySymbols } from "../../constants";
 
 export const AssetAllocationChart = () => {
   const assets = useSelector((state: RootState) => state.assets);
+  const prices = useSelector((state: RootState) => state.prices);
   const theme = useTheme();
 
-  const formatter = (data: any) => formatCurrency(data.data, "USD", 0);
+  const formatter = (data: any) =>
+    `${formatTotalCurrency(
+      convertCurrency("from", prices, assets.secondaryISO_4217, data.value),
+      assets.secondaryISO_4217 as keyof typeof currencySymbols,
+      0
+    )}  /  ${formatTotalCurrency(data.value, "USD", 0)}`;
 
   return (
     <PieChart
