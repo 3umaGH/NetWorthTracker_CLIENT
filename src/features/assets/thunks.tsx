@@ -217,11 +217,6 @@ export const saveUserData = createAsyncThunk(
 
       if (!id) reject();
 
-      console.log(
-        state.userParams.useCustomEncryption,
-        state.userParams.encryptionKey
-      );
-
       const obj = {
         ...state.assets,
       };
