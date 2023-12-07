@@ -124,7 +124,10 @@ export const FiatAssetsTable = () => {
         return (
           <Box
             sx={{
-              color: theme.palette.fiatColor.main,
+              color:
+                value >= 0
+                  ? theme.palette.fiatColor.main
+                  : theme.palette.negativeColor.main,
               fontWeight: "500",
               cursor: params.isEditable ? "pointer" : "default",
               ...(userParams.discreetMode
