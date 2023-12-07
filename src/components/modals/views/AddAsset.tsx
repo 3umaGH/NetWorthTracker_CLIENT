@@ -197,7 +197,7 @@ export const AddAsset = ({ onClose }: { onClose: () => void }) => {
               option.value === value.value
             }
             renderInput={(params) => (
-              <TextField {...params} label="Stock ticker" />
+              <TextField required {...params} label="Stock ticker" />
             )}
           />
         )}
