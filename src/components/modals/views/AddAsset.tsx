@@ -65,15 +65,17 @@ export const AddAsset = ({ onClose }: { onClose: () => void }) => {
   };
 
   const handleAutocompleteChange = (newValue: ValueProps | null) => {
-    const selectedValue =
-      newValue ?? (viewingCrypto ? cryptoTickers[0] : stockTickers[0]);
+    const selectedValue = newValue;
 
     setFormData((prevFields) => ({
       ...prevFields,
       ticker: selectedValue,
       currency: viewingCrypto
         ? "USD" // Supporting only USD for crypto atm.
-        : getStockCurrency(prices, selectedValue.value),
+        : getStockCurrency(
+            prices,
+            selectedValue?.value ?? cryptoTickers[0].label
+          ),
     }));
   };
 
@@ -81,7 +83,8 @@ export const AddAsset = ({ onClose }: { onClose: () => void }) => {
     e.preventDefault();
 
     if (formData.ticker === null) {
-      formData.ticker = viewingCrypto ? cryptoTickers[0] : stockTickers[0];
+      alert("Please select correct ticker.");
+      return;
     }
 
     const objNote =
