@@ -215,8 +215,6 @@ export const saveUserData = createAsyncThunk(
         ? FirebaseAuth.currentUser?.uid + state.userParams.encryptionKey
         : FirebaseAuth.currentUser?.uid + pregeneratedKey;
 
-      console.log("enc", key);
-
       if (!id) reject();
 
       console.log(
@@ -259,8 +257,6 @@ export const fetchUserData = createAsyncThunk(
       const key = state.userParams.useCustomEncryption
         ? FirebaseAuth.currentUser?.uid + state.userParams.encryptionKey
         : FirebaseAuth.currentUser?.uid + pregeneratedKey;
-
-      console.log(key);
 
       try {
         const docs = await getDoc(doc(FirebaseDB, "userData", `${id}`));
