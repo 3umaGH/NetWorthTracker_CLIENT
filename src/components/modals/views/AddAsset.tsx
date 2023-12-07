@@ -23,7 +23,10 @@ export const AddAsset = ({ onClose }: { onClose: () => void }) => {
 
   let stockTickers: ValueProps[] = prices.stockPrices.map((stock) => ({
     value: stock.ticker,
-    label: `${stock.name} (${stock.ticker})`,
+    label: `${stock.name
+      .replace("&#174;", "®")
+      .replace("&amp;", "&")
+      .replace("&#39;", "'")} (${stock.ticker})`,
   }));
 
   const cryptoTickers: ValueProps[] = prices.cryptoPrices
