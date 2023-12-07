@@ -15,6 +15,7 @@ export const saveUserConfig = createAsyncThunk(
 
       const obj = {
         ...state.userParams,
+        encryptionKey: "", // Do not save encryption key to DB.
       };
 
       try {

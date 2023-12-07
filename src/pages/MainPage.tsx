@@ -23,19 +23,30 @@ import { fetchUserConfig } from "../features/userParams/thunks";
 import { fetchCryptoPrices, fetchStockPrices } from "../features/prices/thunks";
 import BasicModal from "../components/modals/BasicModal";
 import { CurrencySelector } from "../components/modals/views/CurrencySelector";
+import { PasswordPrompt } from "../components/modals/views/PasswordPrompt";
+import { SetPasswordPrompt } from "../components/modals/views/SetPasswordPrompt";
 
 export const MainPage = () => {
   const assets = useSelector((state: RootState) => state.assets);
+  const userParams = useSelector((state: RootState) => state.userParams);
   const prices = useSelector((state: RootState) => state.prices);
   const dispatch = useDispatch<AppDispatch>();
   const [isLoading, setLoading] = useState(true);
+
   const [isCurrencySelectorOpen, setCurrencySelector] = useState(false);
+  const [isSetPasswordOpen, setSetPasswordOpen] = useState(false);
+  const [isPasswordPromptOpen, setPasswordPromptOpen] = useState(false);
+
+  useEffect(() => {
+    if (userParams.useCustomEncryption && !userParams.encryptionKey)
+      setPasswordPromptOpen(true);
+    else dispatch(fetchUserData());
+  }, [userParams]); // Watch for changes in userParams
 
   useEffect(() => {
     const fetchData = async () => {
       if (FirebaseAuth.currentUser) {
-        await dispatch(fetchUserData());
-        await dispatch(fetchUserConfig());
+        dispatch(fetchUserConfig());
         await dispatch(fetchCryptoPrices());
         await dispatch(fetchStockPrices());
 
@@ -72,6 +83,28 @@ export const MainPage = () => {
 
   return (
     <Box>
+      {isPasswordPromptOpen && (
+        <BasicModal
+          onClose={() => null}
+          sx={{ minWidth: "260px", maxWidth: "400px" }}
+        >
+          <PasswordPrompt
+            onClose={() => setPasswordPromptOpen(!isPasswordPromptOpen)}
+          />
+        </BasicModal>
+      )}
+
+      {isSetPasswordOpen && (
+        <BasicModal
+          onClose={() => setSetPasswordOpen(!isSetPasswordOpen)}
+          sx={{ minWidth: "260px", maxWidth: "400px" }}
+        >
+          <SetPasswordPrompt
+            onClose={() => setSetPasswordOpen(!isSetPasswordOpen)}
+          />
+        </BasicModal>
+      )}
+
       {isCurrencySelectorOpen && (
         <BasicModal
           onClose={() => setCurrencySelector(!isCurrencySelectorOpen)}
@@ -101,6 +134,7 @@ export const MainPage = () => {
               <CellTitle title="Asset Allocation" />
               <ButtonToolbar
                 handleCurrencySelectorOpen={() => setCurrencySelector(true)}
+                handleSetPasswordOpen={() => setSetPasswordOpen(true)}
               />
 
               <Box

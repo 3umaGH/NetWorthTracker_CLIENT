@@ -210,10 +210,19 @@ export const saveUserData = createAsyncThunk(
   async (_arg, { getState }) => {
     return new Promise<void>(async (resolve, reject) => {
       const id = FirebaseAuth.currentUser?.uid;
-      const key = FirebaseAuth.currentUser?.uid + pregeneratedKey;
       const state = getState() as RootState;
+      const key = state.userParams.useCustomEncryption
+        ? FirebaseAuth.currentUser?.uid + state.userParams.encryptionKey
+        : FirebaseAuth.currentUser?.uid + pregeneratedKey;
+
+      console.log("enc", key);
 
       if (!id) reject();
+
+      console.log(
+        state.userParams.useCustomEncryption,
+        state.userParams.encryptionKey
+      );
 
       const obj = {
         ...state.assets,
@@ -241,33 +250,41 @@ export const saveUserData = createAsyncThunk(
   }
 );
 
-export const fetchUserData = createAsyncThunk("assets/fetchUserData", () => {
-  return new Promise<AssetsState>(async (resolve, reject) => {
-    const id = FirebaseAuth.currentUser?.uid;
-    const key = FirebaseAuth.currentUser?.uid + pregeneratedKey;
+export const fetchUserData = createAsyncThunk(
+  "assets/fetchUserData",
+  async (_arg, { getState }) => {
+    return new Promise<AssetsState>(async (resolve, reject) => {
+      const id = FirebaseAuth.currentUser?.uid;
+      const state = getState() as RootState;
+      const key = state.userParams.useCustomEncryption
+        ? FirebaseAuth.currentUser?.uid + state.userParams.encryptionKey
+        : FirebaseAuth.currentUser?.uid + pregeneratedKey;
 
-    try {
-      const docs = await getDoc(doc(FirebaseDB, "userData", `${id}`));
+      console.log(key);
 
-      if (!docs.exists() || !id) {
-        reject();
-        return;
+      try {
+        const docs = await getDoc(doc(FirebaseDB, "userData", `${id}`));
+
+        if (!docs.exists() || !id) {
+          reject();
+          return;
+        }
+
+        try {
+          const bytes = CryptoJS.AES.decrypt(docs.data().encString, key);
+          const decryptedData = JSON.parse(
+            bytes.toString(CryptoJS.enc.Utf8)
+          ) as AssetsState;
+          resolve(decryptedData);
+        } catch (err) {
+          reject(
+            "Encryption Error: Unable to decrypt. Please verify the key provided."
+          );
+        }
+      } catch (err) {
+        console.log(err);
+        reject(err);
       }
-
-      const encString = await docs.data().encString;
-      if (!encString) {
-        console.error("Encrypted string is undefined or empty.");
-      }
-
-      const bytes = CryptoJS.AES.decrypt(docs.data().encString, key);
-      const decryptedData = JSON.parse(
-        bytes.toString(CryptoJS.enc.Utf8)
-      ) as AssetsState;
-
-      resolve(decryptedData);
-    } catch (err) {
-      console.log(err);
-      reject();
-    }
-  });
-});
+    });
+  }
+);

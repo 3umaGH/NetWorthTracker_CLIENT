@@ -2,6 +2,11 @@ export const currencySymbol = "$";
 
 export const pregeneratedKey = "564bhBF324S653SDF"; // Not secure TODO: make secure
 
+export const encryptionPasswordProps = {
+  maxLength: 100,
+  minLength: 4,
+}
+
 export const currencySymbols = {
   EUR: "€",
   USD: "$",

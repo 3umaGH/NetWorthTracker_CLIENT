@@ -15,12 +15,15 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
+import LockIcon from "@mui/icons-material/Lock";
 import { FirebaseAuth } from "../firebase/firebase";
 
 export const ButtonToolbar = ({
   handleCurrencySelectorOpen,
+  handleSetPasswordOpen,
 }: {
   handleCurrencySelectorOpen: () => void;
+  handleSetPasswordOpen: () => void;
 }) => {
   const userParams = useSelector((state: RootState) => state.userParams);
   const dispatch = useDispatch<AppDispatch>();
@@ -82,6 +85,19 @@ export const ButtonToolbar = ({
             }}
           >
             <AttachMoneyIcon fontSize="medium" />
+          </Button>
+        </Tooltip>
+
+        <Tooltip
+          title={`Setup encryption for your portfolio`}
+        >
+          <Button
+            color="textColor"
+            onClick={() => {
+              handleSetPasswordOpen();
+            }}
+          >
+            <LockIcon/>
           </Button>
         </Tooltip>
       </Box>
