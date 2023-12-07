@@ -20,8 +20,9 @@ type CurrencyRate = {
   price: number;
 };
 
-type StockPrice = {
+export type StockPrice = {
   ticker: string;
+  name: string;
   type: string;
   currency: string;
   price: number;

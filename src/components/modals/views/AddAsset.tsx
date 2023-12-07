@@ -21,18 +21,36 @@ export const AddAsset = ({ onClose }: { onClose: () => void }) => {
   const dispatch = useDispatch<AppDispatch>();
   const [viewingCrypto, setViewingCrypto] = useState(true);
 
-  const stockTickers = prices.stockPrices.map((stock) => stock.ticker);
-  const cryptoTickers = prices.cryptoPrices
+  let stockTickers: ValueProps[] = prices.stockPrices.map((stock) => ({
+    value: stock.ticker,
+    label: `${stock.name} (${stock.ticker})`,
+  }));
+
+  const cryptoTickers: ValueProps[] = prices.cryptoPrices
     .filter((crypto) => crypto.symbol.endsWith("USDT"))
-    .map((crypto) => crypto.symbol);
+    .map((crypto) => ({ label: crypto.symbol, value: crypto.symbol }));
+
+  type ValueProps = {
+    label: string;
+    value: string;
+  };
+
+  type FormDataProps = {
+    note: string;
+    currency: string;
+    amount: string;
+    type: string;
+    ticker: ValueProps | undefined;
+  };
+
   const currencyTickers = prices.currencyRates.map((cur) => cur.ticker);
 
-  const [formData, setFormData] = useState({
-    note: "-",
+  const [formData, setFormData] = useState<FormDataProps>({
+    note: "",
     currency: "USD",
-    amount: "0",
-    type: "Crypto",
-    ticker: "BTCUSDT",
+    amount: "",
+    type: "",
+    ticker: undefined,
   });
 
   const handleChange = (
@@ -48,16 +66,16 @@ export const AddAsset = ({ onClose }: { onClose: () => void }) => {
     }));
   };
 
-  const handleAutocompleteChange = (newValue: String | null) => {
+  const handleAutocompleteChange = (newValue: ValueProps | null) => {
     const selectedValue =
       newValue ?? (viewingCrypto ? cryptoTickers[0] : stockTickers[0]);
 
     setFormData((prevFields) => ({
       ...prevFields,
-      ticker: selectedValue as string,
+      ticker: selectedValue,
       currency: viewingCrypto
         ? "USD" // Supporting only USD for crypto atm.
-        : getStockCurrency(prices, selectedValue as string),
+        : getStockCurrency(prices, selectedValue.value),
       type: viewingCrypto ? "Crypto" : "Stock",
     }));
   };
@@ -65,36 +83,21 @@ export const AddAsset = ({ onClose }: { onClose: () => void }) => {
   const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (formData.ticker === null) {
-      alert("Please select correct ticker.");
-      return;
+    if (formData.ticker === undefined) {
+      formData.ticker = viewingCrypto ? cryptoTickers[0] : stockTickers[0];
     }
 
     const objNote =
-      formData.note === "-"
-        ? `My ${formData.ticker} Investment`
+      formData.note === ""
+        ? `My ${formData.ticker?.label} Investment`
         : formData.note;
-
-    const objTicker =
-      formData.ticker === ""
-        ? viewingCrypto
-          ? cryptoTickers[0]
-          : stockTickers[0]
-        : formData.ticker;
-
-    const objType =
-      formData.type === ""
-        ? viewingCrypto
-          ? "Crypto"
-          : "Stock"
-        : formData.type;
 
     dispatch(
       addNewAsset({
         id: 0, // Id is assigned automatically
         note: objNote,
-        ticker: objTicker,
-        type: objType as "Crypto" | "Stock",
+        ticker: formData.ticker.value,
+        type: viewingCrypto ? "Crypto" : "Stock",
         currency: formData.currency,
         amount: parseFloat(formData.amount),
         lastPrice: 0,
@@ -174,8 +177,11 @@ export const AddAsset = ({ onClose }: { onClose: () => void }) => {
             id="amount"
             disablePortal
             onChange={(_e, newValue) => handleAutocompleteChange(newValue)}
-            value={formData.ticker}
+            value={formData.ticker ?? cryptoTickers[0]}
             options={cryptoTickers}
+            isOptionEqualToValue={(option, value) =>
+              option.value === value.value
+            }
             renderInput={(params) => (
               <TextField {...params} label="Crypto ticker" />
             )}
@@ -185,8 +191,11 @@ export const AddAsset = ({ onClose }: { onClose: () => void }) => {
             id="amount"
             disablePortal
             onChange={(_e, newValue) => handleAutocompleteChange(newValue)}
-            value={formData.ticker}
+            value={formData.ticker ?? stockTickers[0]}
             options={stockTickers}
+            isOptionEqualToValue={(option, value) =>
+              option.value === value.value
+            }
             renderInput={(params) => (
               <TextField {...params} label="Stock ticker" />
             )}
@@ -200,7 +209,12 @@ export const AddAsset = ({ onClose }: { onClose: () => void }) => {
             setFormData({
               ...formData,
               ticker: !viewingCrypto ? cryptoTickers[0] : stockTickers[0],
+              currency: !viewingCrypto
+                ? "USD"
+                : getStockCurrency(prices, stockTickers[0].value),
+              type: !viewingCrypto ? "Crypto" : "Stock",
             });
+
             setViewingCrypto(!viewingCrypto);
           }}
         >
