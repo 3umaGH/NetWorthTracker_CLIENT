@@ -2,13 +2,14 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { FirebaseAuth, FirebaseDB } from "../../firebase/firebase";
 import { getDoc, doc, setDoc } from "firebase/firestore";
 import { UserParams } from "./userParamsSlice";
+import { RootState } from "../../app/Store";
 
 export const saveUserConfig = createAsyncThunk(
   "userParams/saveConfig",
   async (_arg, { getState }) => {
     return new Promise<void>(async (resolve, reject) => {
       const id = FirebaseAuth.currentUser?.uid;
-      const state = getState() as any;
+      const state = getState() as RootState;
 
       if (!id) reject();
 

@@ -211,7 +211,7 @@ export const saveUserData = createAsyncThunk(
     return new Promise<void>(async (resolve, reject) => {
       const id = FirebaseAuth.currentUser?.uid;
       const key = FirebaseAuth.currentUser?.uid + pregeneratedKey;
-      const state = getState() as any;
+      const state = getState() as RootState;
 
       if (!id) reject();
 
