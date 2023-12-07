@@ -23,7 +23,17 @@ export const CurrencySelector = ({ onClose }: { onClose: () => void }) => {
         Secondary currency
       </Typography>
 
-      <Box sx={{ mt: 3, height: "220px", overflowY: "auto" }}>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "row",
+          flexWrap: "wrap",
+          justifyContent: "center",
+          mt: 3,
+          height: "220px",
+          overflowY: "auto",
+        }}
+      >
         {prices.currencyRates.map((currency) => (
           <Tooltip
             placement="top"
