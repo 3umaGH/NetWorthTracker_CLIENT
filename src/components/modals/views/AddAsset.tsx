@@ -39,8 +39,7 @@ export const AddAsset = ({ onClose }: { onClose: () => void }) => {
     note: string;
     currency: string;
     amount: string;
-    type: string;
-    ticker: ValueProps | undefined;
+    ticker: ValueProps | null;
   };
 
   const currencyTickers = prices.currencyRates.map((cur) => cur.ticker);
@@ -49,8 +48,7 @@ export const AddAsset = ({ onClose }: { onClose: () => void }) => {
     note: "",
     currency: "USD",
     amount: "",
-    type: "",
-    ticker: undefined,
+    ticker: cryptoTickers[0],
   });
 
   const handleChange = (
@@ -76,14 +74,13 @@ export const AddAsset = ({ onClose }: { onClose: () => void }) => {
       currency: viewingCrypto
         ? "USD" // Supporting only USD for crypto atm.
         : getStockCurrency(prices, selectedValue.value),
-      type: viewingCrypto ? "Crypto" : "Stock",
     }));
   };
 
   const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (formData.ticker === undefined) {
+    if (formData.ticker === null) {
       formData.ticker = viewingCrypto ? cryptoTickers[0] : stockTickers[0];
     }
 
@@ -177,7 +174,7 @@ export const AddAsset = ({ onClose }: { onClose: () => void }) => {
             id="amount"
             disablePortal
             onChange={(_e, newValue) => handleAutocompleteChange(newValue)}
-            value={formData.ticker ?? cryptoTickers[0]}
+            value={formData.ticker}
             options={cryptoTickers}
             isOptionEqualToValue={(option, value) =>
               option.value === value.value
@@ -191,7 +188,7 @@ export const AddAsset = ({ onClose }: { onClose: () => void }) => {
             id="amount"
             disablePortal
             onChange={(_e, newValue) => handleAutocompleteChange(newValue)}
-            value={formData.ticker ?? stockTickers[0]}
+            value={formData.ticker}
             options={stockTickers}
             isOptionEqualToValue={(option, value) =>
               option.value === value.value
@@ -212,7 +209,6 @@ export const AddAsset = ({ onClose }: { onClose: () => void }) => {
               currency: !viewingCrypto
                 ? "USD"
                 : getStockCurrency(prices, stockTickers[0].value),
-              type: !viewingCrypto ? "Crypto" : "Stock",
             });
 
             setViewingCrypto(!viewingCrypto);
