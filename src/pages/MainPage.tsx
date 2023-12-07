@@ -62,6 +62,7 @@ export const MainPage = () => {
     dispatch(updateNumbers()).then(() => dispatch(updateTotals()));
   }, [
     assets.secondaryISO_4217,
+    assets.networthSnapshots.length,
     assets.assets.length,
     assets.fiatAssets.length,
     prices.cryptoPrices,
