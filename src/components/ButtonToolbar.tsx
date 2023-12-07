@@ -52,12 +52,12 @@ export const ButtonToolbar = ({
               dispatch(saveUserConfig());
             }}
           >
-            {userParams.isLightTheme ? <DarkModeIcon /> : <LightModeIcon />}
+            {userParams.isLightTheme ? <LightModeIcon /> : <DarkModeIcon />}
           </Button>
         </Tooltip>
 
         <Tooltip
-          title={`Turn ${userParams.discreetMode ? "on" : "off"} discreet mode`}
+          title={`Turn ${userParams.discreetMode ? "off" : "on"} discreet mode`}
         >
           <Button
             color="textColor"
@@ -67,9 +67,9 @@ export const ButtonToolbar = ({
             }}
           >
             {userParams.discreetMode ? (
-              <VisibilityIcon />
-            ) : (
               <VisibilityOffIcon />
+            ) : (
+              <VisibilityIcon />
             )}
           </Button>
         </Tooltip>
