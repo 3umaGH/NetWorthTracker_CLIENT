@@ -83,7 +83,7 @@ export const AddAsset = ({ onClose }: { onClose: () => void }) => {
     e.preventDefault();
 
     if (formData.ticker === null) {
-      alert("Please select correct ticker.");
+      // It's required though...
       return;
     }
 
@@ -183,7 +183,7 @@ export const AddAsset = ({ onClose }: { onClose: () => void }) => {
               option.value === value.value
             }
             renderInput={(params) => (
-              <TextField {...params} label="Crypto ticker" />
+              <TextField required {...params} label="Crypto ticker" />
             )}
           />
         ) : (
