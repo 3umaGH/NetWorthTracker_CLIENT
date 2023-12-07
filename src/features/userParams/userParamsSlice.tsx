@@ -47,7 +47,7 @@ export const userParamsSlice = createSlice({
     builder.addCase(fetchUserConfig.fulfilled, (state, action) => {
       state.discreetMode = action.payload.discreetMode;
       state.isLightTheme = action.payload.isLightTheme;
-      state.useCustomEncryption = action.payload.useCustomEncryption;
+      state.useCustomEncryption = action.payload.useCustomEncryption || false;
     });
   },
 });
