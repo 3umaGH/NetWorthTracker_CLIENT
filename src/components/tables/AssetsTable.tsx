@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Box, Button, useMediaQuery, Typography } from "@mui/material";
 import {
@@ -46,6 +46,10 @@ export const AssetsTable = () => {
         colIndex: 0,
       });
   };
+
+  useEffect(() => {
+    dispatch(updateNumbers()).then(() => dispatch(updateTotals()));
+  }, [assets.assets.length]);
 
   useEffect(() => {
     setTimeout(() => handleScrollToLastItem(), 100);
@@ -99,135 +103,138 @@ export const AssetsTable = () => {
     );
   };
 
-  const cellRenderer = (params: GridRenderCellParams) => {
-    const { field, value } = params;
+  const cellRenderer = useCallback(
+    (params: GridRenderCellParams) => {
+      const { field, value } = params;
 
-    switch (field) {
-      case "note":
-        return (
-          <Box
-            sx={{
-              color: theme.palette.textColor.main,
-              fontWeight: "200",
-              cursor: params.isEditable ? "pointer" : "default",
-            }}
-          >
-            {value === "" || value === "-" ? (
-              <Typography
-                variant="body2"
-                sx={{ color: theme.palette.textColor.main }}
-              >
-                Set Note
-              </Typography>
-            ) : (
-              value
-            )}
-          </Box>
-        );
-      case "ticker":
-        return (
-          <Box
-            sx={{
-              color: theme.palette.textColor.main,
-              fontWeight: "700",
-              cursor: params.isEditable ? "pointer" : "default",
-            }}
-          >
-            {value}
-          </Box>
-        );
-      case "type":
-        return (
-          <Box
-            sx={{
-              color:
-                value === "Crypto"
-                  ? theme.palette.cryptoColor.main
-                  : theme.palette.stockColor.main,
-              fontWeight: "600",
-              cursor: params.isEditable ? "pointer" : "default",
-            }}
-          >
-            {value}
-          </Box>
-        );
-      case "amount":
-        return (
-          <Box
-            sx={{
-              color: theme.palette.textColor.main,
-              fontWeight: "200",
-              cursor: params.isEditable ? "pointer" : "default",
-              ...(userParams.discreetMode
-                ? {
-                    filter: "blur(4px)",
-                    "&:hover": {
-                      filter: "blur(0px)",
-                    },
-                  }
-                : {}),
-            }}
-          >
-            {`${value.toFixed(params.row.type === "Crypto" ? 4 : 0)} ${
-              params.row.ticker
-            }`}
-          </Box>
-        );
+      switch (field) {
+        case "note":
+          return (
+            <Box
+              sx={{
+                color: theme.palette.textColor.main,
+                fontWeight: "200",
+                cursor: params.isEditable ? "pointer" : "default",
+              }}
+            >
+              {value === "" || value === "-" ? (
+                <Typography
+                  variant="body2"
+                  sx={{ color: theme.palette.textColor.main }}
+                >
+                  Set Note
+                </Typography>
+              ) : (
+                value
+              )}
+            </Box>
+          );
+        case "ticker":
+          return (
+            <Box
+              sx={{
+                color: theme.palette.textColor.main,
+                fontWeight: "700",
+                cursor: params.isEditable ? "pointer" : "default",
+              }}
+            >
+              {value}
+            </Box>
+          );
+        case "type":
+          return (
+            <Box
+              sx={{
+                color:
+                  value === "Crypto"
+                    ? theme.palette.cryptoColor.main
+                    : theme.palette.stockColor.main,
+                fontWeight: "600",
+                cursor: params.isEditable ? "pointer" : "default",
+              }}
+            >
+              {value}
+            </Box>
+          );
+        case "amount":
+          return (
+            <Box
+              sx={{
+                color: theme.palette.textColor.main,
+                fontWeight: "200",
+                cursor: params.isEditable ? "pointer" : "default",
+                ...(userParams.discreetMode
+                  ? {
+                      filter: "blur(4px)",
+                      "&:hover": {
+                        filter: "blur(0px)",
+                      },
+                    }
+                  : {}),
+              }}
+            >
+              {`${value.toFixed(params.row.type === "Crypto" ? 4 : 0)} ${
+                params.row.ticker
+              }`}
+            </Box>
+          );
 
-      case "price":
-        return (
-          <Box
-            sx={{
-              color: getColor(params.row.change),
-              fontWeight: "500",
-              cursor: params.isEditable ? "pointer" : "default",
-              ...(userParams.discreetMode
-                ? {
-                    filter: "blur(4px)",
-                    "&:hover": {
-                      filter: "blur(0px)",
-                    },
-                  }
-                : {}),
-            }}
-          >
-            {`${formatCurrency(value, params.row.currency)} (${formatCurrency(
-              params.row.change ?? 0,
-              params.row.currency,
-              0
-            )})`}
-          </Box>
-        );
-      case "totalPrice":
-        return (
-          <Box
-            sx={{
-              color: getColor(params.row.change * value),
-              fontWeight: "500",
-              cursor: params.isEditable ? "pointer" : "default",
-              ...(userParams.discreetMode
-                ? {
-                    filter: "blur(4px)",
-                    "&:hover": {
-                      filter: "blur(0px)",
-                    },
-                  }
-                : {}),
-            }}
-          >
-            {`${formatCurrency(value, params.row.currency)} (${formatCurrency(
-              (params.row.change ?? 0) * params.row.amount,
-              params.row.currency,
-              0
-            )})`}
-          </Box>
-        );
-      case "actions":
-        return <TableActions row={params.row} />;
-      default:
-        return value;
-    }
-  };
+        case "price":
+          return (
+            <Box
+              sx={{
+                color: getColor(params.row.change),
+                fontWeight: "500",
+                cursor: params.isEditable ? "pointer" : "default",
+                ...(userParams.discreetMode
+                  ? {
+                      filter: "blur(4px)",
+                      "&:hover": {
+                        filter: "blur(0px)",
+                      },
+                    }
+                  : {}),
+              }}
+            >
+              {`${formatCurrency(value, params.row.currency)} (${formatCurrency(
+                params.row.change ?? 0,
+                params.row.currency,
+                0
+              )})`}
+            </Box>
+          );
+        case "totalPrice":
+          return (
+            <Box
+              sx={{
+                color: getColor(params.row.change * value),
+                fontWeight: "500",
+                cursor: params.isEditable ? "pointer" : "default",
+                ...(userParams.discreetMode
+                  ? {
+                      filter: "blur(4px)",
+                      "&:hover": {
+                        filter: "blur(0px)",
+                      },
+                    }
+                  : {}),
+              }}
+            >
+              {`${formatCurrency(value, params.row.currency)} (${formatCurrency(
+                (params.row.change ?? 0) * params.row.amount,
+                params.row.currency,
+                0
+              )})`}
+            </Box>
+          );
+        case "actions":
+          return <TableActions row={params.row} />;
+        default:
+          return value;
+      }
+    },
+    [theme, userParams]
+  );
 
   return (
     <>

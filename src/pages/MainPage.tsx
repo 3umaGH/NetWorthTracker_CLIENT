@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { Container, Grid, Box, CircularProgress } from "@mui/material";
@@ -12,11 +12,7 @@ import { BalanceFooter } from "../components/BalanceFooter";
 
 import { AppDispatch, RootState } from "../app/Store";
 
-import {
-  fetchUserData,
-  updateNumbers,
-  updateTotals,
-} from "../features/assets/thunks";
+import { fetchUserData } from "../features/assets/thunks";
 import { ButtonToolbar } from "../components/ButtonToolbar";
 import { FirebaseAuth } from "../firebase/firebase";
 import { fetchUserConfig } from "../features/userParams/thunks";
@@ -27,12 +23,11 @@ import { PasswordPrompt } from "../components/modals/views/PasswordPrompt";
 import { SetPasswordPrompt } from "../components/modals/views/SetPasswordPrompt";
 
 export const MainPage = () => {
-  const assets = useSelector((state: RootState) => state.assets);
+  //const assets = useSelector((state: RootState) => state.assets);
   const userParams = useSelector((state: RootState) => state.userParams);
-  const prices = useSelector((state: RootState) => state.prices);
   const dispatch = useDispatch<AppDispatch>();
-  const [isLoading, setLoading] = useState(true);
 
+  const [isLoading, setLoading] = useState(true);
   const [isCurrencySelectorOpen, setCurrencySelector] = useState(false);
   const [isSetPasswordOpen, setSetPasswordOpen] = useState(false);
   const [isPasswordPromptOpen, setPasswordPromptOpen] = useState(false);
@@ -55,7 +50,9 @@ export const MainPage = () => {
     };
 
     fetchData();
+  }, []);
 
+  useEffect(() => {
     const cryptoIntervalId = setInterval(() => {
       dispatch(fetchCryptoPrices());
     }, 10000);
@@ -68,18 +65,6 @@ export const MainPage = () => {
       clearInterval(stockIntervalId);
     };
   }, []);
-
-  useEffect(() => {
-    dispatch(updateNumbers()).then(() => dispatch(updateTotals()));
-  }, [
-    assets.secondaryISO_4217,
-    assets.networthSnapshots.length,
-    assets.assets.length,
-    assets.fiatAssets.length,
-    prices.cryptoPrices,
-    prices.currencyRates,
-    prices.stockPrices,
-  ]);
 
   return (
     <Box>

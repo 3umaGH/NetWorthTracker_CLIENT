@@ -113,6 +113,7 @@ export const updateNumbers = createAsyncThunk(
   }
 );
 
+
 export const updateTotals = createAsyncThunk(
   "assets/updateTotals",
   (_arg, { getState }) => {

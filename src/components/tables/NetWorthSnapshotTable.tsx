@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Box, Button, Tooltip, useMediaQuery, Typography } from "@mui/material";
 import {
@@ -23,7 +23,11 @@ import {
   deleteSnapshot,
   updateSnapshot,
 } from "../../features/assets/assetsSlice";
-import { createSnapshot, saveUserData } from "../../features/assets/thunks";
+import {
+  createSnapshot,
+  saveUserData,
+  updateNumbers,
+} from "../../features/assets/thunks";
 import { DataGridToolBar } from "./components/DataGridToolBar";
 import { NoRowsComponent } from "./components/NoRowsComponent";
 import PostAddIcon from "@mui/icons-material/PostAdd";
@@ -57,6 +61,10 @@ export const NetWorthSnapshotTable = () => {
   };
 
   useEffect(() => {
+    dispatch(updateNumbers());
+  }, [assets.networthSnapshots.length]);
+
+  useEffect(() => {
     setTimeout(() => handleScrollToLastItem(), 100);
   }, [rows.length]);
 
@@ -65,7 +73,8 @@ export const NetWorthSnapshotTable = () => {
   }, [mobileVersion]);
 
   const getColor = (inputNum: number) => {
-    if (inputNum === null || inputNum === undefined) return theme.palette.textColor.main;
+    if (inputNum === null || inputNum === undefined)
+      return theme.palette.textColor.main;
 
     if (inputNum >= 0) return theme.palette.positiveColor.main;
     else if (inputNum < 0) return theme.palette.negativeColor.main;
@@ -117,157 +126,169 @@ export const NetWorthSnapshotTable = () => {
     );
   };
 
-  const cellRenderer = (params: GridRenderCellParams) => {
-    const { field, value } = params;
+  const cellRenderer = useCallback(
+    (params: GridRenderCellParams) => {
+      const { field, value } = params;
 
-    switch (field) {
-      case "dateTime":
-        return (
-          <Box
-            sx={{
-              color: theme.palette.textColor.main,
-              fontWeight: "300",
-              cursor: params.isEditable ? "pointer" :"default",
-            }}
-          >
-            {formatTimeMillis(value)}
-          </Box>
-        );
-      case "btcPrice":
-        return (
-          <Box
-            sx={{
-              color: theme.palette.cryptoColor.main,
-              fontWeight: "500",
-              cursor: params.isEditable ? "pointer" :"default",
-              ...(userParams.discreetMode
-                ? {
-                    filter: "blur(4px)",
-                    "&:hover": {
-                      filter: "blur(0px)",
-                    },
-                  }
-                : {}),
-            }}
-          >
-            {getCurrencySymbol("USD")}
-            {value}
-          </Box>
-        );
-      case "secondaryRate":
-        return (
-          <Box
-            sx={{
-              color: theme.palette.conversionColor.main,
-              fontWeight: "500",
-              cursor: params.isEditable ? "pointer" :"default",
-              ...(userParams.discreetMode
-                ? {
-                    filter: "blur(4px)",
-                    "&:hover": {
-                      filter: "blur(0px)",
-                    },
-                  }
-                : {}),
-            }}
-          >
-            {formatTotalCurrency(
-              parseFloat(value) || -1,
-              params.row.secondaryISO_4217
-            )}
-          </Box>
-        );
-      case "totalSecondary":
-        return (
-          <Box
-            sx={{
-              color: getColor(params.row.changeSecondary),
-              fontWeight: "500",
-              cursor: params.isEditable ? "pointer" :"default",
-              ...(userParams.discreetMode
-                ? {
-                    filter: "blur(4px)",
-                    "&:hover": {
-                      filter: "blur(0px)",
-                    },
-                  }
-                : {}),
-            }}
-          >
-            {`${formatCurrency(value, params.row.secondaryISO_4217)} 
+      switch (field) {
+        case "dateTime":
+          return (
+            <Box
+              sx={{
+                color: theme.palette.textColor.main,
+                fontWeight: "300",
+                cursor: params.isEditable ? "pointer" : "default",
+              }}
+            >
+              {formatTimeMillis(value)}
+            </Box>
+          );
+        case "btcPrice":
+          return (
+            <Box
+              sx={{
+                color: theme.palette.cryptoColor.main,
+                fontWeight: "500",
+                cursor: params.isEditable ? "pointer" : "default",
+                ...(userParams.discreetMode
+                  ? {
+                      filter: "blur(4px)",
+                      "&:hover": {
+                        filter: "blur(0px)",
+                      },
+                    }
+                  : {}),
+              }}
+            >
+              {getCurrencySymbol("USD")}
+              {value}
+            </Box>
+          );
+        case "secondaryRate":
+          return (
+            <Box
+              sx={{
+                color: theme.palette.conversionColor.main,
+                fontWeight: "500",
+                cursor: params.isEditable ? "pointer" : "default",
+                ...(userParams.discreetMode
+                  ? {
+                      filter: "blur(4px)",
+                      "&:hover": {
+                        filter: "blur(0px)",
+                      },
+                    }
+                  : {}),
+              }}
+            >
+              {formatTotalCurrency(
+                parseFloat(value) || -1,
+                params.row.secondaryISO_4217
+              )}
+            </Box>
+          );
+        case "totalSecondary":
+          return (
+            <Box
+              sx={{
+                color: getColor(params.row.changeSecondary),
+                fontWeight: "500",
+                cursor: params.isEditable ? "pointer" : "default",
+                ...(userParams.discreetMode
+                  ? {
+                      filter: "blur(4px)",
+                      "&:hover": {
+                        filter: "blur(0px)",
+                      },
+                    }
+                  : {}),
+              }}
+            >
+              {`${formatCurrency(value, params.row.secondaryISO_4217)} 
             `}{" "}
-            {params.row.changeSecondary !== 0 &&
-              `(${formatCurrency(
-                params.row.changeSecondary,
-                params.row.secondaryISO_4217,
+              {params.row.changeSecondary !== 0 &&
+                `(${formatCurrency(
+                  params.row.changeSecondary,
+                  params.row.secondaryISO_4217,
+                  0
+                )})`}
+            </Box>
+          );
+        case "totalUSD":
+          return (
+            <Box
+              sx={{
+                color: getColor(params.row.changeUSD),
+                fontWeight: "500",
+                cursor: params.isEditable ? "pointer" : "default",
+                ...(userParams.discreetMode
+                  ? {
+                      filter: "blur(4px)",
+                      "&:hover": {
+                        filter: "blur(0px)",
+                      },
+                    }
+                  : {}),
+              }}
+            >
+              {`${formatCurrency(value, "USD")} (${formatCurrency(
+                params.row.changeUSD,
+                "USD",
                 0
               )})`}
-          </Box>
-        );
-      case "totalUSD":
-        return (
-          <Box
-            sx={{
-              color: getColor(params.row.changeUSD),
-              fontWeight: "500",
-              cursor: params.isEditable ? "pointer" :"default",
-              ...(userParams.discreetMode
-                ? {
-                    filter: "blur(4px)",
-                    "&:hover": {
-                      filter: "blur(0px)",
-                    },
-                  }
-                : {}),
-            }}
-          >
-            {`${formatCurrency(value, "USD")} (${formatCurrency(
-              params.row.changeUSD,
-              "USD",
-              0
-            )})`}
-          </Box>
-        );
-      case "totalBTC":
-        return (
-          <Box
-            sx={{
-              color: theme.palette.cryptoColor.main,
-              fontWeight: "500",
-              cursor: params.isEditable ? "pointer" :"default",
-              ...(userParams.discreetMode
-                ? {
-                    filter: "blur(4px)",
-                    "&:hover": {
-                      filter: "blur(0px)",
-                    },
-                  }
-                : {}),
-            }}
-          >
-            {formatBTC(value)}
-          </Box>
-        );
-      case "note":
-        return (
-          <Box
-            sx={{
-              color: theme.palette.textColor.main,
-              fontWeight: "200",
-              cursor: params.isEditable ? "pointer" :"default",
-            }}
-          >
-            {value === "" ? <Typography variant="body2" sx={{color: theme.palette.textColor.main}}>Set Note</Typography> : value}
-          </Box>
-        );
-      case "actions":
-        return (
-          <NetWorthTableActions row={params.row} totalRows={rows.length} />
-        );
-      default:
-        return value;
-    }
-  };
+            </Box>
+          );
+        case "totalBTC":
+          return (
+            <Box
+              sx={{
+                color: theme.palette.cryptoColor.main,
+                fontWeight: "500",
+                cursor: params.isEditable ? "pointer" : "default",
+                ...(userParams.discreetMode
+                  ? {
+                      filter: "blur(4px)",
+                      "&:hover": {
+                        filter: "blur(0px)",
+                      },
+                    }
+                  : {}),
+              }}
+            >
+              {formatBTC(value)}
+            </Box>
+          );
+        case "note":
+          return (
+            <Box
+              sx={{
+                color: theme.palette.textColor.main,
+                fontWeight: "200",
+                cursor: params.isEditable ? "pointer" : "default",
+              }}
+            >
+              {value === "" ? (
+                <Typography
+                  variant="body2"
+                  sx={{ color: theme.palette.textColor.main }}
+                >
+                  Set Note
+                </Typography>
+              ) : (
+                value
+              )}
+            </Box>
+          );
+        case "actions":
+          return (
+            <NetWorthTableActions row={params.row} totalRows={rows.length} />
+          );
+        default:
+          return value;
+      }
+    },
+    [theme, userParams, assets.networthSnapshots.length]
+  );
 
   const columns: GridColDef[] = [
     {

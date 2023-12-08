@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Box, Button, useMediaQuery, Typography } from "@mui/material";
 import {
@@ -57,6 +57,10 @@ export const FiatAssetsTable = () => {
   };
 
   useEffect(() => {
+    dispatch(updateNumbers()).then(() => dispatch(updateTotals()));
+  }, [assets.fiatAssets.length]);
+
+  useEffect(() => {
     setTimeout(() => handleScrollToLastItem(), 100);
   }, [rows.length]);
 
@@ -95,73 +99,76 @@ export const FiatAssetsTable = () => {
     );
   };
 
-  const cellRenderer = (params: GridRenderCellParams) => {
-    const { field, value } = params;
+  const cellRenderer = useCallback(
+    (params: GridRenderCellParams) => {
+      const { field, value } = params;
 
-    switch (field) {
-      case "note":
-        return (
-          <Box
-            sx={{
-              color: theme.palette.textColor.main,
-              fontWeight: "200",
-              cursor: params.isEditable ? "pointer" : "default",
-            }}
-          >
-            {value === "" || value === "-" ? (
-              <Typography
-                variant="body2"
-                sx={{ color: theme.palette.textColor.main }}
-              >
-                Set Note
-              </Typography>
-            ) : (
-              value
-            )}
-          </Box>
-        );
-      case "amount":
-        return (
-          <Box
-            sx={{
-              color:
-                value >= 0
-                  ? theme.palette.fiatColor.main
-                  : theme.palette.negativeColor.main,
-              fontWeight: "500",
-              cursor: params.isEditable ? "pointer" : "default",
-              ...(userParams.discreetMode
-                ? {
-                    filter: "blur(4px)",
-                    "&:hover": {
-                      filter: "blur(0px)",
-                    },
-                  }
-                : {}),
-            }}
-          >
-            {formatCurrency(value, params.row.currency)}
-          </Box>
-        );
-      case "currency":
-        return (
-          <Box
-            sx={{
-              color: theme.palette.textColor.main,
-              fontWeight: "500",
-              cursor: params.isEditable ? "pointer" : "default",
-            }}
-          >
-            {value}
-          </Box>
-        );
+      switch (field) {
+        case "note":
+          return (
+            <Box
+              sx={{
+                color: theme.palette.textColor.main,
+                fontWeight: "200",
+                cursor: params.isEditable ? "pointer" : "default",
+              }}
+            >
+              {value === "" || value === "-" ? (
+                <Typography
+                  variant="body2"
+                  sx={{ color: theme.palette.textColor.main }}
+                >
+                  Set Note
+                </Typography>
+              ) : (
+                value
+              )}
+            </Box>
+          );
+        case "amount":
+          return (
+            <Box
+              sx={{
+                color:
+                  value >= 0
+                    ? theme.palette.fiatColor.main
+                    : theme.palette.negativeColor.main,
+                fontWeight: "500",
+                cursor: params.isEditable ? "pointer" : "default",
+                ...(userParams.discreetMode
+                  ? {
+                      filter: "blur(4px)",
+                      "&:hover": {
+                        filter: "blur(0px)",
+                      },
+                    }
+                  : {}),
+              }}
+            >
+              {formatCurrency(value, params.row.currency)}
+            </Box>
+          );
+        case "currency":
+          return (
+            <Box
+              sx={{
+                color: theme.palette.textColor.main,
+                fontWeight: "500",
+                cursor: params.isEditable ? "pointer" : "default",
+              }}
+            >
+              {value}
+            </Box>
+          );
 
-      case "actions":
-        return <TableActions row={params.row} />;
-      default:
-        return value;
-    }
-  };
+        case "actions":
+          return <TableActions row={params.row} />;
+        default:
+          return value;
+      }
+    },
+    [theme, userParams]
+  );
 
   const columns: GridColDef[] = [
     {
