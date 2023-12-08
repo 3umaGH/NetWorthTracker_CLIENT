@@ -74,7 +74,7 @@ export const pricesSlice = createSlice({
           (ticker) => ticker.type == "stock"
         );
 
-        state.currencyRates = action.payload
+        const filteredRates = action.payload
           .filter((ticker) => ticker.type === "currency")
           .map((ticker) => ({
             ...ticker,
@@ -82,12 +82,13 @@ export const pricesSlice = createSlice({
           }));
 
         state.currencyRates = [
-          ...state.currencyRates,
+          ...filteredRates,
           {
             ticker: "USD",
             price: 1.0,
           },
-        ];
+        ].sort((a, b) => a.ticker.localeCompare(b.ticker));
+
 
         state.isFetchingPrices = false;
         state.error = "";
