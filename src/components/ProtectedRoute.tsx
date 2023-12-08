@@ -12,7 +12,7 @@ export const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
       if (!FirebaseAuth.currentUser) return navigate("/");
       setRefresh(refresh + 1);
     }, 500);
-  });
+  },[]);
 
   if (FirebaseAuth.currentUser) return children;
 };
