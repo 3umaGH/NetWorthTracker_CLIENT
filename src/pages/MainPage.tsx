@@ -1,7 +1,14 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { Container, Grid, Box, CircularProgress } from "@mui/material";
+import {
+  Container,
+  Grid,
+  Box,
+  CircularProgress,
+  Tooltip,
+  Button,
+} from "@mui/material";
 
 import { AssetAllocationChart } from "../components/charts/AssetAllocationChart";
 import { NetWorthSnapshotTable } from "../components/tables/NetWorthSnapshotTable";
@@ -21,6 +28,9 @@ import BasicModal from "../components/modals/BasicModal";
 import { CurrencySelector } from "../components/modals/views/CurrencySelector";
 import { PasswordPrompt } from "../components/modals/views/PasswordPrompt";
 import { SetPasswordPrompt } from "../components/modals/views/SetPasswordPrompt";
+import { DetailedChart } from "../components/charts/DetailedChart";
+
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 
 export const MainPage = () => {
   //const assets = useSelector((state: RootState) => state.assets);
@@ -31,6 +41,12 @@ export const MainPage = () => {
   const [isCurrencySelectorOpen, setCurrencySelector] = useState(false);
   const [isSetPasswordOpen, setSetPasswordOpen] = useState(false);
   const [isPasswordPromptOpen, setPasswordPromptOpen] = useState(false);
+
+  const [chartMode, setChartMode] = useState(false); // True will shift grid to make space for a new chart
+
+  const transitionEffect = {
+    transition: "all 0.5s ease-in-out",
+  };
 
   useEffect(() => {
     if (userParams.useCustomEncryption && !userParams.encryptionKey)
@@ -114,7 +130,12 @@ export const MainPage = () => {
         </Box>
       ) : (
         <Grid container rowSpacing={6} columnSpacing={0.25}>
-          <Grid item xs={12} md={3}>
+          <Grid
+            item
+            xs={12}
+            md={chartMode ? 12 : 3}
+            sx={{ ...transitionEffect }}
+          >
             <Container maxWidth={false} sx={{ height: "45vh" }}>
               <CellTitle title="Asset Allocation" />
               <ButtonToolbar
@@ -125,13 +146,48 @@ export const MainPage = () => {
               <Box
                 sx={{
                   height: "90%",
+                  position: "relative",
                 }}
               >
+                <Box
+                  sx={{ position: "absolute", right: 0, bottom: 5, zIndex: 1 }}
+                >
+                  <Tooltip title={`Expand charts`}>
+                    <Button
+                      color="textColor"
+                      onClick={() => {
+                        setChartMode(!chartMode);
+                      }}
+                    >
+                      <MoreVertIcon />
+                    </Button>
+                  </Tooltip>
+                </Box>
+
                 <AssetAllocationChart />
               </Box>
             </Container>
           </Grid>
-          <Grid item xs={12} md={9}>
+
+          <Grid
+            item
+            xs={chartMode ? 12 : 0}
+            md={chartMode ? 12 : 0}
+            sx={{
+              ...transitionEffect,
+              display: chartMode ? "block" : "none",
+            }}
+          >
+            <Container
+              maxWidth={false}
+              sx={{ height: "45vh", opacity: chartMode ? 100 : 0 }}
+            >
+              <CellTitle title="Chart" />
+              <DetailedChart />
+            </Container>
+          </Grid>
+
+          <Grid item xs={12} md={chartMode ? 12 : 9} sx={{}}>
             <Container maxWidth={false} disableGutters sx={{ height: "45vh" }}>
               <CellTitle title="Snapshots" />
               <NetWorthSnapshotTable />
