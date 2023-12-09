@@ -32,7 +32,7 @@ export const DetailedChart = () => {
       totalUSD,
       BTCPrices,
     };
-  }, [assets.networthSnapshots]);
+  }, [assets.networthSnapshots.length]);
 
   return (
     <Box
