@@ -4,7 +4,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../app/Store";
 import { getCurrencyRate, getCurrencySymbol } from "../../../util";
 import { setSecondaryCurrency } from "../../../features/assets/assetsSlice";
-import { saveUserData } from "../../../features/assets/thunks";
+import {
+  saveUserData,
+  updateNumbers,
+  updateTotals,
+} from "../../../features/assets/thunks";
 
 export const CurrencySelector = ({ onClose }: { onClose: () => void }) => {
   const prices = useSelector((state: RootState) => state.prices);
@@ -62,7 +66,9 @@ export const CurrencySelector = ({ onClose }: { onClose: () => void }) => {
           sx={{ mt: 3 }}
           onClick={() => {
             dispatch(setSecondaryCurrency(clickedButton as string));
-            dispatch(saveUserData());
+            dispatch(updateNumbers())
+              .then(() => dispatch(updateTotals()))
+              .then(() => dispatch(saveUserData()));
             onClose();
           }}
         >
