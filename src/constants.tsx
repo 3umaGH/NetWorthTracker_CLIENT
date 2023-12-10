@@ -5,7 +5,11 @@ export const pregeneratedKey = "564bhBF324S653SDF"; // Not secure TODO: make sec
 export const encryptionPasswordProps = {
   maxLength: 100,
   minLength: 4,
-}
+};
+
+export const noteCharLimit = {
+  maxLength: 50
+};
 
 export const currencySymbols = {
   EUR: "€",
@@ -83,5 +87,7 @@ export type NetworthSnapshot = {
   totalBTC: number;
   note: string;
 
-  lastAssetPrices: { ticker: string; lastPrice: number }[];
+  lastAssetPrices: { ticker: string; lastPrice: number; amount: number }[];
+
+  fiatAssets: FiatAsset[];
 };
