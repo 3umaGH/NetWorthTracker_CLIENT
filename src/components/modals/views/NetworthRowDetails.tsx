@@ -3,6 +3,8 @@ import { Box, Typography, Button } from "@mui/material";
 import { NetworthSnapshot } from "../../../constants";
 import { useTheme } from "@emotion/react";
 import { formatCurrency } from "../../../util";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../app/Store";
 
 export const NetworthRowDetails = ({
   row,
@@ -11,6 +13,7 @@ export const NetworthRowDetails = ({
   row: NetworthSnapshot;
   onClose: () => void;
 }) => {
+  const userParams = useSelector((state: RootState) => state.userParams);
   const theme = useTheme();
   return (
     <Box
@@ -64,6 +67,14 @@ export const NetworthRowDetails = ({
                   asset.amount >= 0
                     ? theme.palette.fiatColor.main
                     : theme.palette.negativeColor.main,
+                ...(userParams.discreetMode
+                  ? {
+                      filter: "blur(4px)",
+                      "&:hover": {
+                        filter: "blur(0px)",
+                      },
+                    }
+                  : {}),
               }}
             >{`${formatCurrency(
               asset.amount ?? 0 * asset.lastPrice,
@@ -109,6 +120,14 @@ export const NetworthRowDetails = ({
                     asset.amount >= 0
                       ? theme.palette.fiatColor.main
                       : theme.palette.negativeColor.main,
+                  ...(userParams.discreetMode
+                    ? {
+                        filter: "blur(4px)",
+                        "&:hover": {
+                          filter: "blur(0px)",
+                        },
+                      }
+                    : {}),
                 }}
               >{`${formatCurrency(
                 asset.amount,
