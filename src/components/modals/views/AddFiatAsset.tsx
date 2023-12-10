@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { addFiatAsset } from "../../../features/assets/assetsSlice";
-import { FiatAsset } from "../../../constants";
+import { FiatAsset, noteCharLimit } from "../../../constants";
 import { saveUserData } from "../../../features/assets/thunks";
 import { AppDispatch, RootState } from "../../../app/Store";
 
@@ -72,6 +72,7 @@ export const AddFiatAsset = ({ onClose }: { onClose: () => void }) => {
           Add Fiat Asset
         </Typography>
         <TextField
+          inputProps={noteCharLimit}
           name="note"
           label="Note"
           variant="standard"

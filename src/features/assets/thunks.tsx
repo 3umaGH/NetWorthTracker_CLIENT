@@ -73,8 +73,13 @@ export const createSnapshot = createAsyncThunk(
         lastAssetPrices: assets.assets.map((asset) => ({
           ticker: asset.ticker,
           lastPrice: asset.price,
+          amount: asset.amount,
         })),
+
+        fiatAssets: assets.fiatAssets
       };
+
+      console.log(snapshotObj)
 
       resolve(snapshotObj);
     });
