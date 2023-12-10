@@ -28,6 +28,7 @@ import { DataGridToolBar } from "./components/DataGridToolBar";
 import { NoRowsComponent } from "./components/NoRowsComponent";
 import AddIcon from "@mui/icons-material/Add";
 import ClearIcon from "@mui/icons-material/Clear";
+import { noteCharLimit } from "../../constants";
 
 export const FiatAssetsTable = () => {
   const assets = useSelector((state: RootState) => state.assets);
@@ -246,8 +247,8 @@ export const FiatAssetsTable = () => {
           toolbar: mobileVersion ? DataGridToolBar : null,
         }}
         processRowUpdate={(updatedRow, originalRow) => {
-          if (updatedRow.note.length > 100) {
-            alert("Maximum 100 symbols!");
+          if (updatedRow.note.length > noteCharLimit.maxLength) {
+            alert(`Maximum ${noteCharLimit.maxLength} symbols!`);
             return originalRow;
           }
 

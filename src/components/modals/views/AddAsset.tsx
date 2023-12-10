@@ -14,6 +14,7 @@ import Autocomplete from "@mui/material/Autocomplete";
 import { AppDispatch, RootState } from "../../../app/Store";
 import { addNewAsset, saveUserData } from "../../../features/assets/thunks";
 import { getStockCurrency } from "../../../util";
+import { noteCharLimit } from "../../../constants";
 
 export const AddAsset = ({ onClose }: { onClose: () => void }) => {
   const prices = useSelector((state: RootState) => state.prices);
@@ -129,6 +130,7 @@ export const AddAsset = ({ onClose }: { onClose: () => void }) => {
           Add Asset
         </Typography>
         <TextField
+          inputProps={noteCharLimit}
           name="note"
           label="Note"
           variant="standard"
