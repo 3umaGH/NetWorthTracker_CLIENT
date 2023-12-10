@@ -41,7 +41,7 @@ export const AddAsset = ({ onClose }: { onClose: () => void }) => {
   type FormDataProps = {
     note: string;
     currency: string;
-    amount: string;
+    amount: number;
     ticker: ValueProps | null;
   };
 
@@ -50,7 +50,7 @@ export const AddAsset = ({ onClose }: { onClose: () => void }) => {
   const [formData, setFormData] = useState<FormDataProps>({
     note: "",
     currency: "USD",
-    amount: "",
+    amount: 0,
     ticker: cryptoTickers[0],
   });
 
@@ -102,7 +102,7 @@ export const AddAsset = ({ onClose }: { onClose: () => void }) => {
         ticker: formData.ticker.value,
         type: viewingCrypto ? "Crypto" : "Stock",
         currency: formData.currency,
-        amount: parseFloat(formData.amount),
+        amount: formData.amount,
         lastPrice: 0,
         totalPrice: 0,
         price: 0,

@@ -173,7 +173,7 @@ export const AssetsTable = () => {
                   : {}),
               }}
             >
-              {`${value.toFixed(params.row.type === "Crypto" ? 4 : 0)} ${
+              {`${parseFloat(value).toFixed(params.row.type === "Crypto" ? 4 : 0)} ${
                 params.row.ticker
               }`}
             </Box>

@@ -70,15 +70,19 @@ export const pricesSlice = createSlice({
     builder.addCase(
       fetchStockPrices.fulfilled,
       (state, action: PayloadAction<StockPrice[]>) => {
-        state.stockPrices = action.payload.filter(
-          (ticker) => ticker.type == "stock"
-        );
+        const stockPrices = action.payload.filter((ticker) => ticker.type == "stock");
+
+        state.stockPrices = stockPrices.map((stock) => ({
+          ...stock,
+          price: parseFloat(String(stock.price))
+        }))
 
         const filteredRates = action.payload
           .filter((ticker) => ticker.type === "currency")
           .map((ticker) => ({
             ...ticker,
             ticker: ticker.ticker.replace("USD", ""), // remove USD part from the currency pair
+            price: parseFloat(String(ticker.price))
           }));
 
         state.currencyRates = [
