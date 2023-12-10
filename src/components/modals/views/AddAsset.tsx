@@ -102,7 +102,7 @@ export const AddAsset = ({ onClose }: { onClose: () => void }) => {
         ticker: formData.ticker.value,
         type: viewingCrypto ? "Crypto" : "Stock",
         currency: formData.currency,
-        amount: formData.amount,
+        amount: parseFloat(String(formData.amount)),
         lastPrice: 0,
         totalPrice: 0,
         price: 0,
