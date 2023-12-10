@@ -77,7 +77,7 @@ export const NetworthRowDetails = ({
                   : {}),
               }}
             >{`${formatCurrency(
-              asset.amount ?? 0 * asset.lastPrice,
+              asset.amount * asset.lastPrice,
               "USD",
               2
             )}`}</Typography>
