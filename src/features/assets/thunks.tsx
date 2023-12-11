@@ -77,10 +77,8 @@ export const createSnapshot = createAsyncThunk(
           currency: asset.currency,
         })),
 
-        fiatAssets: assets.fiatAssets
+        fiatAssets: assets.fiatAssets,
       };
-
-      console.log(snapshotObj)
 
       resolve(snapshotObj);
     });
@@ -118,7 +116,6 @@ export const updateNumbers = createAsyncThunk(
     });
   }
 );
-
 
 export const updateTotals = createAsyncThunk(
   "assets/updateTotals",
