@@ -33,11 +33,19 @@ import { NoRowsComponent } from "./components/NoRowsComponent";
 import PostAddIcon from "@mui/icons-material/PostAdd";
 import ClearIcon from "@mui/icons-material/Clear";
 import BasicModal from "../modals/BasicModal";
-import { NetworthSnapshot, noteCharLimit } from "../../constants";
+import {
+  ConfirmationProps,
+  NetworthSnapshot,
+  noteCharLimit,
+} from "../../constants";
 import { NetworthRowDetails } from "../modals/views/NetworthRowDetails";
 import InfoIcon from "@mui/icons-material/InfoOutlined";
 
-export const NetWorthSnapshotTable = () => {
+export const NetWorthSnapshotTable = ({
+  setConfirmation,
+}: {
+  setConfirmation: (props: ConfirmationProps) => void;
+}) => {
   const assets = useSelector((state: RootState) => state.assets);
   const userParams = useSelector((state: RootState) => state.userParams);
   const dispatch = useDispatch<AppDispatch>();
@@ -121,8 +129,16 @@ export const NetWorthSnapshotTable = () => {
                 variant="text"
                 color="error"
                 onClick={() => {
-                  dispatch(deleteSnapshot(row));
-                  dispatch(saveUserData());
+                  setConfirmation({
+                    title: "Delete snapshot?",
+                    subtitle: `Are you sure you want to delete ${formatTimeMillis(
+                      (row as any).dateTime
+                    )} snapshot?`,
+                    onConfirm: function (): void {
+                      dispatch(deleteSnapshot(row));
+                      dispatch(saveUserData());
+                    },
+                  });
                 }}
               >
                 <ClearIcon />

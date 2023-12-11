@@ -25,9 +25,13 @@ import { DataGridToolBar } from "./components/DataGridToolBar";
 import { NoRowsComponent } from "./components/NoRowsComponent";
 import AddIcon from "@mui/icons-material/Add";
 import ClearIcon from "@mui/icons-material/Clear";
-import { noteCharLimit } from "../../constants";
+import { ConfirmationProps, noteCharLimit } from "../../constants";
 
-export const AssetsTable = () => {
+export const AssetsTable = ({
+  setConfirmation,
+}: {
+  setConfirmation: (props: ConfirmationProps) => void;
+}) => {
   const assets = useSelector((state: RootState) => state.assets);
   const userParams = useSelector((state: RootState) => state.userParams);
   const dispatch = useDispatch<AppDispatch>();
@@ -94,8 +98,16 @@ export const AssetsTable = () => {
           color="error"
           sx={{ fontSize: 18 }}
           onClick={() => {
-            dispatch(deleteAsset(row));
-            dispatch(saveUserData());
+            setConfirmation({
+              title: "Delete snapshot?",
+              subtitle: `Are you sure you want to delete ${
+                (row as any).amount
+              } ${(row as any).ticker}?`,
+              onConfirm: function (): void {
+                dispatch(deleteAsset(row));
+                dispatch(saveUserData());
+              },
+            });
           }}
         >
           <ClearIcon />

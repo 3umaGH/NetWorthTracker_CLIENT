@@ -225,13 +225,17 @@ export const MainPage = () => {
           <Grid item xs={12} md={9}>
             <Container maxWidth={false} disableGutters sx={{ height: "38vh" }}>
               <CellTitle title="Assets" />
-              <AssetsTable />
+              <AssetsTable
+                setConfirmation={(props) => setCurrentConfirmation(props)}
+              />
             </Container>
           </Grid>
           <Grid item xs={12} md={3}>
             <Container maxWidth={false} disableGutters sx={{ height: "38vh" }}>
               <CellTitle title="Fiat Assets" />
-              <FiatAssetsTable />
+              <FiatAssetsTable
+                setConfirmation={(props) => setCurrentConfirmation(props)}
+              />
             </Container>
           </Grid>
           <Grid

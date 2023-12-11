@@ -28,9 +28,13 @@ import { DataGridToolBar } from "./components/DataGridToolBar";
 import { NoRowsComponent } from "./components/NoRowsComponent";
 import AddIcon from "@mui/icons-material/Add";
 import ClearIcon from "@mui/icons-material/Clear";
-import { noteCharLimit } from "../../constants";
+import { ConfirmationProps, noteCharLimit } from "../../constants";
 
-export const FiatAssetsTable = () => {
+export const FiatAssetsTable = ({
+  setConfirmation,
+}: {
+  setConfirmation: (props: ConfirmationProps) => void;
+}) => {
   const assets = useSelector((state: RootState) => state.assets);
   const prices = useSelector((state: RootState) => state.prices);
   const userParams = useSelector((state: RootState) => state.userParams);
@@ -90,8 +94,16 @@ export const FiatAssetsTable = () => {
           color="error"
           sx={{ fontSize: 18 }}
           onClick={() => {
-            dispatch(deleteFiatAsset(row));
-            dispatch(saveUserData());
+            setConfirmation({
+              title: "Delete asset?",
+              subtitle: `Are you sure you want to delete ${
+                (row as any).amount
+              } ${(row as any).currency}?`,
+              onConfirm: function (): void {
+                dispatch(deleteFiatAsset(row));
+                dispatch(saveUserData());
+              },
+            });
           }}
         >
           <ClearIcon />
