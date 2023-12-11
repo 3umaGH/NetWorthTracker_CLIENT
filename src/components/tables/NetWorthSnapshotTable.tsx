@@ -32,10 +32,10 @@ import { DataGridToolBar } from "./components/DataGridToolBar";
 import { NoRowsComponent } from "./components/NoRowsComponent";
 import PostAddIcon from "@mui/icons-material/PostAdd";
 import ClearIcon from "@mui/icons-material/Clear";
-import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import BasicModal from "../modals/BasicModal";
 import { NetworthSnapshot, noteCharLimit } from "../../constants";
 import { NetworthRowDetails } from "../modals/views/NetworthRowDetails";
+import InfoIcon from "@mui/icons-material/InfoOutlined";
 
 export const NetWorthSnapshotTable = () => {
   const assets = useSelector((state: RootState) => state.assets);
@@ -98,7 +98,7 @@ export const NetWorthSnapshotTable = () => {
       <Box
         sx={{ "& button": { m: 0, p: 0, minWidth: "30px" }, display: "flex" }}
       >
-        {row.id === totalRows ? (
+        {row.id === totalRows && (
           <div>
             {!(totalRows >= 1000) && (
               <Tooltip title="Create new snapshot">
@@ -129,23 +129,22 @@ export const NetWorthSnapshotTable = () => {
               </Button>
             </Tooltip>
           </div>
-        ) : (
-          <Tooltip title="View details">
-            <Button
-              variant="text"
-              sx={{ color: theme.palette.primary.dark }}
-              onClick={() => {
-                setViewingRow(
-                  assets.networthSnapshots.find(
-                    (snapshot) => snapshot.id === row.id
-                  ) || null
-                );
-              }}
-            >
-              <SearchOutlinedIcon sx={{ fontSize: 23, mt: 0.3 }} />
-            </Button>
-          </Tooltip>
         )}
+        <Tooltip title="View details">
+          <Button
+            variant="text"
+            sx={{ color: theme.palette.primary.main }}
+            onClick={() => {
+              setViewingRow(
+                assets.networthSnapshots.find(
+                  (snapshot) => snapshot.id === row.id
+                ) || null
+              );
+            }}
+          >
+            <InfoIcon sx={{ fontSize: 18, mt: 0.3 }} />
+          </Button>
+        </Tooltip>
       </Box>
     );
   };
