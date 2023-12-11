@@ -99,7 +99,7 @@ export const AssetsTable = ({
           sx={{ fontSize: 18 }}
           onClick={() => {
             setConfirmation({
-              title: "Delete snapshot?",
+              title: "Delete asset?",
               subtitle: `Are you sure you want to delete ${
                 (row as any).amount
               } ${(row as any).ticker}?`,
