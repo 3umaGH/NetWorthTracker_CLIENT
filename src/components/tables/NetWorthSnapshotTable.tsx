@@ -398,7 +398,9 @@ export const NetWorthSnapshotTable = () => {
         >
           <NetworthRowDetails
             row={isViewingRow}
-            onClose={() => setViewingRow(null)}
+            prevRow={assets.networthSnapshots.find(
+              (snapshot) => snapshot.id === isViewingRow.id - 1
+            )}
           />
         </BasicModal>
       )}

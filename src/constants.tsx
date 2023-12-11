@@ -8,7 +8,7 @@ export const encryptionPasswordProps = {
 };
 
 export const noteCharLimit = {
-  maxLength: 50
+  maxLength: 50,
 };
 
 export const currencySymbols = {
@@ -87,7 +87,14 @@ export type NetworthSnapshot = {
   totalBTC: number;
   note: string;
 
-  lastAssetPrices: { ticker: string; lastPrice: number; amount: number }[];
+  lastAssetPrices: LastAssetPrice[];
 
   fiatAssets: FiatAsset[];
+};
+
+export type LastAssetPrice = {
+  ticker: string;
+  lastPrice: number;
+  amount: number;
+  currency: string;
 };

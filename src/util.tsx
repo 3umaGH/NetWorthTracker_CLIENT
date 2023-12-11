@@ -78,7 +78,7 @@ export const getCurrencySymbol = (currencyCode: string) => {
 export const formatTotalCurrency = (
   inputNum: number,
   currency: keyof typeof currencySymbols,
-  maxDecimals: number = 3,
+  maxDecimals: number = 3
 ) => {
   const absNum = Math.abs(inputNum);
 
@@ -95,7 +95,6 @@ export const formatTotalCurrency = (
     number = inputNum.toFixed(maxDecimals).toString();
   }
 
-
   return currencySymbolBackPosition.includes(currency)
     ? `${number}${suffix} ${currencySymbols[currency]}`
     : `${currencySymbols[currency]}${number}${suffix}`;
@@ -107,4 +106,41 @@ export const getLastSnapshot = (state: AssetsState) => {
 
 export const calculateNextID = (array: any[]) => {
   return array.length > 0 ? array[array.length - 1].id + 1 : 0;
+};
+
+export const combineAssets = (
+  data: {
+    ticker: string;
+    total: number;
+    amount: number;
+    currency: string;
+  }[]
+) => {
+  const resultMap = data.reduce((result, item) => {
+    const { ticker, total, amount, currency } = item;
+
+    if (result.has(ticker)) {
+      result.set(ticker, {
+        total: result.get(ticker).total + total,
+        amount: result.get(ticker).amount + amount,
+        currency: currency,
+      });
+    } else {
+      result.set(ticker, { ticker, total, amount, currency });
+    }
+
+    return result;
+  }, new Map());
+
+  const resultArray = Array.from(
+    resultMap,
+    ([ticker, { total, amount, currency }]) => ({
+      ticker,
+      total,
+      amount,
+      currency: currency ?? "USD", // For older snapshot versions
+    })
+  );
+
+  return resultArray;
 };

@@ -74,6 +74,7 @@ export const createSnapshot = createAsyncThunk(
           ticker: asset.ticker,
           lastPrice: asset.price,
           amount: asset.amount,
+          currency: asset.currency,
         })),
 
         fiatAssets: assets.fiatAssets
