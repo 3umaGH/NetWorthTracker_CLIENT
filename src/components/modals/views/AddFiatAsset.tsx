@@ -83,6 +83,7 @@ export const AddFiatAsset = ({ onClose }: { onClose: () => void }) => {
         <div>
           <TextField
             required
+            autoFocus
             InputProps={{ inputProps: { min: -1000000000, max: 1000000000 } }}
             name="amount"
             label="Amount"

@@ -141,6 +141,7 @@ export const AddAsset = ({ onClose }: { onClose: () => void }) => {
         <div>
           <TextField
             required
+            autoFocus
             InputProps={{
               inputProps: {
                 min: 0.0000001,

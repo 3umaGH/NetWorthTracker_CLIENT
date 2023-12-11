@@ -41,6 +41,7 @@ export const PasswordPrompt = ({ onClose }: { onClose: () => void }) => {
         </Typography>
 
         <TextField
+          autoFocus
           label="Encryption Key"
           type="password"
           inputProps={encryptionPasswordProps}
