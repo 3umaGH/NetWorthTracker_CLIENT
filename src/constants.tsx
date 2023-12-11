@@ -98,3 +98,11 @@ export type LastAssetPrice = {
   amount: number;
   currency: string;
 };
+
+export type ConfirmationProps = {
+  title: string;
+  subtitle: string;
+  onConfirm: () => void;
+  onCancel?: () => void;
+  onClose?: () => void;
+};

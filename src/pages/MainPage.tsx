@@ -31,6 +31,8 @@ import { SetPasswordPrompt } from "../components/modals/views/SetPasswordPrompt"
 import { DetailedChart } from "../components/charts/DetailedChart";
 
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import { Confirmation } from "../components/modals/views/Confirmation";
+import { ConfirmationProps } from "../constants";
 
 export const MainPage = () => {
   //const assets = useSelector((state: RootState) => state.assets);
@@ -43,6 +45,8 @@ export const MainPage = () => {
   const [isPasswordPromptOpen, setPasswordPromptOpen] = useState(false);
 
   const [chartMode, setChartMode] = useState(false); // True will shift grid to make space for a new chart
+  const [currentConfirmation, setCurrentConfirmation] =
+    useState<ConfirmationProps | null>(null);
 
   const transitionEffect = {
     transition: "all 0.5s ease-in-out",
@@ -82,8 +86,30 @@ export const MainPage = () => {
     };
   }, []);
 
+  const handleConfirmationClose = () => {
+    if (currentConfirmation && currentConfirmation.onClose)
+      currentConfirmation.onClose();
+
+    setCurrentConfirmation(null);
+  };
+
   return (
     <Box>
+      {currentConfirmation && (
+        <BasicModal
+          onClose={handleConfirmationClose}
+          sx={{ minWidth: "150px", maxWidth: "max-content" }}
+        >
+          <Confirmation
+            title={currentConfirmation!.title}
+            subtitle={currentConfirmation!.subtitle}
+            onConfirm={currentConfirmation!.onConfirm}
+            onCancel={currentConfirmation!.onCancel}
+            onClose={handleConfirmationClose}
+          />
+        </BasicModal>
+      )}
+
       {isPasswordPromptOpen && (
         <BasicModal
           onClose={() => null}
@@ -190,7 +216,9 @@ export const MainPage = () => {
           <Grid item xs={12} md={chartMode ? 12 : 9} sx={{}}>
             <Container maxWidth={false} disableGutters sx={{ height: "45vh" }}>
               <CellTitle title="Snapshots" />
-              <NetWorthSnapshotTable />
+              <NetWorthSnapshotTable
+                setConfirmation={(props) => setCurrentConfirmation(props)}
+              />
             </Container>
           </Grid>
 
