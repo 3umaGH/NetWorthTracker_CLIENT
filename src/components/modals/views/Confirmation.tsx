@@ -19,7 +19,7 @@ export const Confirmation = ({
         maxWidth: "max-content",
         display: "flex",
         flexDirection: "column",
-        gap: 2,
+        gap: 3,
       }}
     >
       <Typography variant="h5" align="center">
