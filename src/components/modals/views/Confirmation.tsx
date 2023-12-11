@@ -15,14 +15,27 @@ export const Confirmation = ({
 }) => {
   return (
     <Box
-      sx={{ maxWidth: "max-content", display: "flex", flexDirection: "column" }}
+      sx={{
+        maxWidth: "max-content",
+        display: "flex",
+        flexDirection: "column",
+        gap: 2,
+      }}
     >
-      <Typography variant="h5">{title}</Typography>
-      <Typography variant="caption" sx={{ mt: 0.5 }}>
+      <Typography variant="h5" align="center">
+        {title}
+      </Typography>
+      <Typography variant="caption" align="center" sx={{ mt: -2 }}>
         {subtitle}
       </Typography>
 
-      <Box sx={{ mt: 1, display: "flex", flexDirection: "row-reverse" }}>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "row-reverse",
+          justifyContent: "center",
+        }}
+      >
         <Button
           onClick={() => {
             onConfirm();
