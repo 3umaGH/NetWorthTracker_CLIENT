@@ -249,7 +249,7 @@ export const saveUserData = createAsyncThunk(
 
 export const fetchUserData = createAsyncThunk(
   "assets/fetchUserData",
-  async (_arg, { getState }) => {
+  async (_arg, { getState, dispatch }) => {
     return new Promise<AssetsState>(async (resolve, reject) => {
       const id = FirebaseAuth.currentUser?.uid;
       const state = getState() as RootState;
@@ -271,6 +271,12 @@ export const fetchUserData = createAsyncThunk(
             bytes.toString(CryptoJS.enc.Utf8)
           ) as AssetsState;
           resolve(decryptedData);
+
+
+          setTimeout(() => {
+            dispatch(updateNumbers()).then(() => dispatch(updateTotals()));
+          })
+
         } catch (err) {
           reject(
             "Encryption Error: Unable to decrypt. Please verify the key provided."
